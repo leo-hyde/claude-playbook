@@ -7,7 +7,7 @@ The shared memory between Leo's phone and computer sessions. **Every Claude sess
 | | |
 |---|---|
 | Last session | <Phone (cloud) or Desktop (Mac)>, <date, time of day> |
-| Ended cleanly? | <Yes, all pushed to `main`, lock released / No: what's unsaved> |
+| Ended cleanly? | <Yes, all pushed to `main` / No: what's unsaved> |
 | Mid-flight work | <None / what's half-done and where> |
 | Next step | <the one thing to do next> |
 | Check first | <files or results to look at before starting> |

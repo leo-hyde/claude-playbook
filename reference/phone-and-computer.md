@@ -20,18 +20,23 @@ GitHub.
    (`claude/...` or `ccr-...`). Land work on main with
    `git push origin HEAD:main`, and say so. If the harness also insists on its
    own branch being pushed, push both.
-3. **A session lock** (`templates/scripts/session.sh`, a small text file
-   `.session/lock` committed on main). It works because GitHub refuses a push
-   that doesn't build on the latest main, so two devices can't both claim it.
-   - `session.sh start`: pulls main, **warns if the other device is active**,
-     claims the lock, prints the Handover block.
-   - `session.sh check`: refuses to let a turn finish with uncommitted work,
-     commits not on GitHub, or work done since STATUS.md was last updated.
-   - `session.sh end`: releases the lock when Leo says he's done or switching.
-   - A lock older than 12 hours is treated as stale.
+3. **A session lock** (`templates/scripts/session.sh`). It means **"Claude is
+   working on a reply right now"**, not "a session is open": an idle or closed
+   session holds no lock. It's a small file on its own `session-lock` branch,
+   so it doesn't clutter main's history or republish the site. It works
+   because GitHub refuses a push that doesn't build on the latest version of
+   a branch, so two devices can't both claim it.
+   - `session.sh start` (session opens): pulls main, **warns if the other
+     device is mid-reply**, prints the Handover block. Claims nothing.
+   - `session.sh busy` (Leo sends a message): pulls main, warns or claims the lock.
+   - `session.sh check` (a reply finishes): refuses to let it finish with
+     uncommitted work, commits not on GitHub, or work done since STATUS.md
+     was last updated; otherwise **releases the lock**.
+   - `session.sh end`: releases it by hand if a reply was cut off.
+   - A busy lock older than 2 hours is treated as left behind by a crash.
 4. **Hooks** (`templates/.claude/settings.json`) make Claude Code run
-   `start` when a session opens and `check` at the end of every turn, so
-   nobody has to remember.
+   `start` when a session opens, `busy` on every message and `check` at the
+   end of every reply, so nobody has to remember.
 
 ## Setting it up in a project
 
@@ -51,9 +56,12 @@ GitHub.
 Leo switches between his phone (cloud sessions) and his Mac. Neither can see
 the other's conversation; the repo is the only shared memory.
 `scripts/session.sh` enforces this, run automatically by hooks in `.claude/settings.json`.
-- If the start output says `ANOTHER DEVICE MAY STILL BE WORKING`, **tell Leo
-  straight away** and change nothing until he confirms the other session has
-  finished. Then run `scripts/session.sh start --force`.
+- **The lock means "Claude is working on a reply right now".** It's claimed when
+  Leo sends a message and released when the reply finishes cleanly, so an
+  idle or closed session holds no lock. It lives on its own `session-lock` branch.
+- If a message comes with `ANOTHER DEVICE IS WORKING`, **tell Leo straight
+  away**; read-only work is fine, but change nothing until Leo confirms that
+  reply has finished. Then run `scripts/session.sh busy --force`.
 - If a push is rejected or a merge conflicts, stop and tell Leo. Never force-push.
   (Exception: a push rejected because the project's own GitHub Action pushed
   results is expected; pull/merge and carry on, and say so.)
@@ -61,7 +69,8 @@ the other's conversation; the repo is the only shared memory.
 - After every finished step: overwrite the Handover block in `docs/STATUS.md`,
   update "Where we are", decisions and open questions, add a session log line,
   commit, push.
-- When Leo says he's done or switching device: run `scripts/session.sh end`.
+- The lock frees itself at the end of each reply. `scripts/session.sh end`
+  releases it by hand if a reply was cut off.
 - If the hooks didn't run (no "Session start" output), run `scripts/session.sh start` yourself.
 ```
 
@@ -88,6 +97,9 @@ the other's conversation; the repo is the only shared memory.
   background watcher, carry on with other work, and tell Leo what's running.
 - **`pkill -f <pattern>` can kill your own shell** if the pattern appears in
   the command itself. Stop servers by port or job instead.
+- **A lock held for the whole session was too blunt** (Sport Conditions,
+  22 Oct): a Mac session left open blocked the phone all morning. Holding it
+  only during a reply fixed that, and each message also pulls the latest main.
 - **A phone session started while the desktop was active** caught the
   overlap via the lock warning. Respect it: read-only work is fine, changes wait
   for Leo's go-ahead.
