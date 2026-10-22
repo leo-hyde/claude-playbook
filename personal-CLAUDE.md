@@ -33,6 +33,9 @@ Project CLAUDE.md files add to these, and win where they differ.
 - **Commit and push after every working, tested step**, so nothing is stuck on
   one computer and Leo can carry on from a phone. `git pull` before starting.
 - Plain-English commit messages that say what changed and why.
+- **Phone and Mac share one memory: the repo.** Projects worked on from both
+  have `docs/STATUS.md` (read first, update after every step) and a session
+  lock (`scripts/session.sh`). See the playbook's `reference/phone-and-computer.md`.
 
 ## Checking work
 - Don't say something works until it's been seen working: in the browser

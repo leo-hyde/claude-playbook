@@ -54,7 +54,10 @@ See `reference/github-and-hosting.md` for exact commands. In order:
    (public is needed for free GitHub Pages; check nothing private or
    third-party is in it), create it, push.
 4. Hosting: GitHub Pages (free) → `https://leo-hyde.github.io/<repo>/`.
-5. Only if needed: a Cloudflare Worker for secrets, sources that block browsers,
+5. **Phone + computer handover** (every project Leo works on from both):
+   `docs/STATUS.md`, a session lock and hooks, one branch. Follow
+   `reference/phone-and-computer.md`; templates are in `templates/`.
+6. Only if needed: a Cloudflare Worker for secrets, sources that block browsers,
    or syncing between devices (`reference/github-and-hosting.md`,
    `templates/worker.js`). Leo has a Cloudflare account; Claude can't create
    accounts or deploy to Cloudflare, so give Leo click-by-click steps.
@@ -82,4 +85,6 @@ Then push, wait for the live site to update, and check it there too.
 | `reference/ux-checklist.md` | The design and UX review checklist |
 | `reference/github-and-hosting.md` | GitHub, Pages, Actions, Cloudflare Worker, KV: exact steps |
 | `reference/gotchas.md` | Things that went wrong before, and their fixes |
+| `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: STATUS.md, session lock, hooks |
+| `templates/STATUS.md`, `templates/scripts/session.sh`, `templates/.claude/settings.json` | The handover kit to copy into a project |
 | `tools/serve.py` | No-cache preview server for the scratchpad copy |

@@ -12,7 +12,7 @@ at `~/.claude/skills/new-app/`, so any Claude Code session can use it: type
 | `SKILL.md` | The playbook: kick-off, plan documents, set-up, building, checking |
 | `personal-CLAUDE.md` | How we work together; a copy of `~/.claude/CLAUDE.md` (loaded in every session on the Mac) |
 | `templates/` | Starting points: SPEC.md, DESIGN.md, CLAUDE.md, style.css, a Cloudflare Worker, a GitHub Action |
-| `reference/` | UX checklist, GitHub/hosting/Cloudflare steps, gotchas |
+| `reference/` | UX checklist, GitHub/hosting/Cloudflare steps, gotchas, phone + computer handover |
 | `tools/serve.py` | No-cache preview server |
 
 ## Using it somewhere else
@@ -24,6 +24,10 @@ at `~/.claude/skills/new-app/`, so any Claude Code session can use it: type
   playbook copies in. To use the full playbook, start with: *"Read
   github.com/leo-hyde/claude-playbook (SKILL.md and the files it points to) and
   follow it."*
+- **Working on one project from both phone and Mac:** see
+  `reference/phone-and-computer.md`. To add it to an existing project, tell
+  that project's session: *"Read reference/phone-and-computer.md in
+  github.com/leo-hyde/claude-playbook and set this project up that way."*
 
 ## Keeping it up to date
 When we learn something new, edit the files here, then commit and push. If you
