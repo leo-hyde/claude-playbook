@@ -17,6 +17,12 @@ Set the author once per project if git asks:
 ## Create the GitHub repository and push
 Ask Leo first: public or private? (Public is needed for free GitHub Pages.
 Check nothing private, secret or someone else's data is in it.)
+
+**From a cloud (phone) session, Claude can't create the repository**: the
+GitHub connection there is refused (403) for creating repos (Oct 2026). Build
+the project locally in the session, then ask Leo to create an *empty*
+repository on github.com (no README, licence or .gitignore, so the first push
+doesn't conflict), and attach it with `add_repo` before pushing.
 ```bash
 /opt/homebrew/bin/gh repo create leo-hyde/<name> --private --source . --push
 # or: create it on github.com, then
