@@ -12,7 +12,7 @@ at `~/.claude/skills/new-app/`, so any Claude Code session can use it: type
 | `SKILL.md` | The playbook: kick-off, plan documents, set-up, building, checking |
 | `personal-CLAUDE.md` | How we work together; a copy of `~/.claude/CLAUDE.md` (loaded in every session on the Mac) |
 | `templates/` | Starting points: SPEC.md, DESIGN.md, CLAUDE.md, style.css, a Cloudflare Worker, a GitHub Action |
-| `reference/` | UX checklist, GitHub/hosting/Cloudflare steps, gotchas, phone + computer handover |
+| `reference/` | UX checklist, GitHub/hosting/Cloudflare steps, gotchas, phone + computer handover, understanding and quality |
 | `tools/serve.py` | No-cache preview server |
 
 ## Using it somewhere else

@@ -97,6 +97,10 @@ the other's conversation; the repo is the only shared memory.
   background watcher, carry on with other work, and tell Leo what's running.
 - **`pkill -f <pattern>` can kill your own shell** if the pattern appears in
   the command itself. Stop servers by port or job instead.
+- **The Mac runs its own (possibly old) copy of `session.sh` before pulling**,
+  so a session started with an outdated script can put back things the new
+  one removed (an old lock file reappeared on main). Ignore `.session/` in
+  `.gitignore` so old scripts can't commit it.
 - **A lock held for the whole session was too blunt** (Sport Conditions,
   22 Oct): a Mac session left open blocked the phone all morning. Holding it
   only during a reply fixed that, and each message also pulls the latest main.

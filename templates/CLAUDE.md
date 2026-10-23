@@ -3,11 +3,13 @@
 Claude reads this file automatically at the start of every session in this
 project, including cloud sessions started from Leo's phone. It says *how* we
 work; [SPEC.md](SPEC.md) says *what* we're building; [DESIGN.md](DESIGN.md)
-says how it looks.
+says how it looks; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) says how it's built.
 
 ## About this project
 - <One line: what the app does.> Live at https://leo-hyde.github.io/<repo>/
-- Leo is learning to code while building it. Teaching matters as much as the output.
+- Leo is learning to build apps with AI, aiming to be a proficient and
+  responsible AI developer. Understanding what's built, and that it's safe and
+  reliable, matters as much as the output.
 
 ## How to work
 - **Build from SPEC.md.** If something isn't in it, or is unclear, ask first.
@@ -26,11 +28,23 @@ says how it looks.
 - **Free services have usage limits** (often per internet connection, shared with
   Leo's devices): few test requests, cache data, made-up data for design work.
 
-## How to teach
-- After each step, explain in plain language what was added and why, pointing
-  to the 2–3 most important lines of code.
-- Suggest one small change Leo can try.
+## How to explain the work
+Leo learns by understanding and checking what's built, not by tinkering:
+don't suggest "try this" changes.
+- **Keep docs/ARCHITECTURE.md current** in the same commit as any change to
+  the structure, data flow, outside services or weak spots.
+- **After each feature, a short walkthrough:** what changed and why; which
+  files and how data flows; the 2–3 lines that matter most; **how it was
+  checked (and what wasn't)**; risks and anything unverified.
+- **Record decisions with their reasons** (STATUS.md).
+- **Flag safety and responsibility:** secrets, privacy, typed text and links,
+  data sources' terms, limits, and where the app could mislead.
 - Explain new terms the first time they come up. Keep it short.
+
+## Working efficiently (AI usage)
+- One feature or batch of feedback per session; STATUS.md carries the memory.
+- Don't read big data files whole; search them.
+- Check changes with the project's preview/check script, not new test code.
 
 ## Project notes
 - <Where data comes from, how it's stored, anything non-obvious.>

@@ -5,12 +5,19 @@ A copy lives in github.com/leo-hyde/claude-playbook (`personal-CLAUDE.md`).
 Project CLAUDE.md files add to these, and win where they differ.
 
 ## About Leo
-- Learning to code by building real apps with Claude. Teaching matters as much
-  as the result.
+- Learning to build apps with AI, aiming to be a proficient and responsible
+  AI developer. Understanding what's built, and that it's safe and reliable,
+  matters as much as the result.
+- Leo learns by understanding and checking the work, the way a developer
+  reviews a colleague's, **not** by tinkering: don't suggest "try this" changes.
+- After building something, give a short walkthrough: what changed and why,
+  which files and how data flows, the 2–3 lines that matter most, **how it
+  was checked and what wasn't**, and any risks or unverified data.
+- Keep each project's `docs/ARCHITECTURE.md` current. The playbook's
+  `reference/understanding-and-quality.md` says how we make sure AI-built
+  apps are understood, good and safe.
 - Explain in plain language. Introduce new terms the first time ("API", "JSON",
   "commit"…). Keep explanations short; Leo will ask for more if needed.
-- After building something, point to the 2–3 most important lines of code and
-  suggest one small change for Leo to try.
 
 ## How we work
 - **Plan first, then build.** For a new app or a big feature, agree the plan
@@ -36,6 +43,12 @@ Project CLAUDE.md files add to these, and win where they differ.
 - **Phone and Mac share one memory: the repo.** Projects worked on from both
   have `docs/STATUS.md` (read first, update after every step) and a session
   lock (`scripts/session.sh`). See the playbook's `reference/phone-and-computer.md`.
+
+## Using AI efficiently
+- One feature or batch of feedback per session; STATUS.md carries the memory.
+  Suggest a fresh session when one gets long.
+- Don't read big data files whole; search them. Keep a reusable check script
+  per project rather than writing new test code each time.
 
 ## Checking work
 - Don't say something works until it's been seen working: in the browser

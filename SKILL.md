@@ -40,6 +40,9 @@ Copy and fill in the templates in `templates/`:
 - **CLAUDE.md**: how to work on this project. **Include the key rules from
   `personal-CLAUDE.md`** so cloud sessions (which can't see this Mac's
   `~/.claude`) follow them too.
+- **docs/ARCHITECTURE.md** (once there's code): the parts, the data flow,
+  outside services, safety, weak spots. See `reference/understanding-and-quality.md`
+  for why, and how it fits with the other documents.
 
 Ask Leo to review them. Build nothing big until they're agreed.
 
@@ -64,10 +67,13 @@ See `reference/github-and-hosting.md` for exact commands. In order:
 
 ## 4. Build in small steps
 
-For each step: build → check in the browser (phone 375px and desktop, light and
-dark) → explain the 2–3 key lines in plain English → suggest one small thing
-Leo can try → commit and push. Use made-up data for design work so you don't
-burn through a free service's daily limit.
+For each step: (design note first if it changes the structure) → build →
+check with evidence (tests for logic; the browser at phone 375px and desktop,
+light and dark) → walkthrough: what changed, files and data flow, key lines,
+how it was checked and what wasn't, risks → update ARCHITECTURE.md and
+CHANGELOG.md → commit and push. Use made-up data for design work so you don't
+burn through a free service's daily limit; a reusable preview script (like
+Sport Conditions' `tools/preview.js`) saves writing test code each time.
 
 ## 5. Before calling a stage done
 
@@ -86,5 +92,7 @@ Then push, wait for the live site to update, and check it there too.
 | `reference/github-and-hosting.md` | GitHub, Pages, Actions, Cloudflare Worker, KV: exact steps |
 | `reference/gotchas.md` | Things that went wrong before, and their fixes |
 | `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: STATUS.md, session lock, hooks |
+| `reference/understanding-and-quality.md` | How we make sure AI-built apps are understood, good and safe; using AI efficiently |
+| `templates/ARCHITECTURE.md` | Starting point for a project's architecture overview |
 | `templates/STATUS.md`, `templates/scripts/session.sh`, `templates/.claude/settings.json` | The handover kit to copy into a project |
 | `tools/serve.py` | No-cache preview server for the scratchpad copy |
