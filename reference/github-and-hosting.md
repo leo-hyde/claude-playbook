@@ -10,7 +10,9 @@ printf '.claude/\n.DS_Store\n' > .gitignore
 git add -A && git commit -m "First version"
 ```
 Set the author once per project if git asks:
-`git config user.name "Leo Hyde"` and `git config user.email "leo@luanlabs.com"`.
+`git config user.name "Leo Hyde"` and `git config user.email "22234407+leo-hyde@users.noreply.github.com"`
+(GitHub → Settings → Emails → "Keep my email addresses private" shows it, ending
+`@users.noreply.github.com`). Never a real email address: public repos show it to anyone.
 
 ## Create the GitHub repository and push
 Ask Leo first: public or private? (Public is needed for free GitHub Pages.

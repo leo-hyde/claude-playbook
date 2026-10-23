@@ -58,6 +58,15 @@ transcript size. The rules' "Coaching" section says what Claude does with it
 (and with other signals, like mixed topics). 15 is a judgement call, not from
 Anthropic's docs.
 
+## Public or private
+At each session start `session.sh` asks GitHub's public API whether the repo
+is public, and compares with `.claude/repo-visibility` (the last reviewed
+answer, committed). If a repo has turned public, it prints `THIS REPO IS NOW
+PUBLIC`; the rules ("Public repos") then have Claude tell Leo and review the
+files and history before anything else. The warning repeats every session
+until `scripts/session.sh visibility-ok` records the review. If GitHub can't
+be reached it says nothing, so it's a safety net, not a guarantee.
+
 ## Why this design (and not the alternatives)
 Checked against Claude Code's documentation on 23 Oct 2026; see
 `docs/decisions.md`.

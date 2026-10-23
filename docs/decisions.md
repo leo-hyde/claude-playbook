@@ -3,6 +3,13 @@
 One entry per decision, newest first. If one is reversed, add a new entry and
 mark the old one "Replaced by <date>".
 
+## 23 Oct 2026: Warn when a repo turns public; Leo's email out of commits
+- **Why:** Leo's projects mix public and private repos and he may make one
+  public later. `session.sh` detects the change and the rules make Claude
+  review files and history with Leo. Commits use Leo's GitHub noreply address.
+- **Rejected:** rewriting history to remove the email from old commits (a
+  force-push on every repo; Leo's call, not done).
+
 ## 23 Oct 2026: The playbook repo is public
 - **Why:** Leo's call, so every cloud session can sync the shared rules
   without the repo being attached. Claude checks each change for private
