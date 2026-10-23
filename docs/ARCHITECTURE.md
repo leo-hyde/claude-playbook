@@ -70,10 +70,10 @@ Checked against Claude Code's documentation on 23 Oct 2026; see
   in git history exactly which rules a session had.
 
 ## Limits and weak spots
-- **The playbook repo is private.** A cloud session can only reach it if
-  `leo-hyde/claude-playbook` is attached to that session; otherwise it uses
-  the committed copy (from whichever session last synced, e.g. the Mac).
-  Making the repo public would remove this limit; it's Leo's call.
+- **The playbook repo is public** (since 23 Oct 2026), so any session can
+  sync from it without logging in. The flip side: anything committed here is
+  public. The shared rules tell Claude to check each change for private
+  details and ask Leo first; that's an instruction, not an automatic scan.
 - **Hooks don't always fire** in a cloud session started before they existed;
   then nothing syncs until `scripts/session.sh start` is run by hand.
 - **A broken `shared/session.sh` would spread to every project.** Test

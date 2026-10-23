@@ -68,10 +68,9 @@ which fetches the playbook's latest `main` and commits any changes as
 - **Cloud sessions can't see the Mac's `~/.claude`, and don't load plugins**
   (Claude Code docs, Oct 2026). Anything Claude must know on the phone goes in
   the project's repo: its CLAUDE.md, or the synced `.claude/rules/playbook.md`.
-- **The playbook repo is private**, so a cloud session can only sync from it
-  when `leo-hyde/claude-playbook` is attached to the session too. Otherwise
-  it uses the copy committed in the project (updated by the last session that
-  could reach it, e.g. on the Mac).
+- **The playbook repo is public** so any cloud session can sync from it.
+  Keep private details out of it (see "Keeping the playbook current" in
+  `shared/ai-dev-rules.md`).
 - **Hooks may not fire in a cloud session that started before they were
   added**, and the device detection depends on `CLAUDE_CODE_REMOTE`. If there's
   no "Session start" output, run `scripts/session.sh start` by hand

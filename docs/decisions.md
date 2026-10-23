@@ -3,6 +3,12 @@
 One entry per decision, newest first. If one is reversed, add a new entry and
 mark the old one "Replaced by <date>".
 
+## 23 Oct 2026: The playbook repo is public
+- **Why:** Leo's call, so every cloud session can sync the shared rules
+  without the repo being attached. Claude checks each change for private
+  details and asks Leo before pushing anything doubtful.
+- **Rejected:** staying private (phone sessions would often run on an old copy).
+
 ## 23 Oct 2026: Shared rules sync into each project as a committed copy
 - **Why:** Leo wants to update the playbook once and have every project
   follow, on phone and Mac. A copy in `.claude/rules/playbook.md`, refreshed

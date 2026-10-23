@@ -10,7 +10,7 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 | Ended cleanly? | Yes, all pushed to `main` |
 | Mid-flight work | None |
 | Next step | On the Mac: `git -C ~/.claude/skills/new-app pull`, then `cp ~/.claude/skills/new-app/personal-CLAUDE.md ~/.claude/CLAUDE.md` (it's now short and points to `shared/ai-dev-rules.md`) |
-| Check first | Leo to decide: make this repo public, so phone sessions can sync without attaching it? |
+| Check first | The repo is now public (Leo, 23 Oct): the shared rules make Claude check playbook changes for private details and ask first |
 
 ## Where we are
 `shared/` (rules, session lock, sync) is synced into Sport Conditions and
@@ -24,6 +24,4 @@ on sessions and credits unprompted.
    Adjust `COACH_EVERY` in `shared/session.sh` or the Coaching section.
 
 ## Open questions
-- Make `leo-hyde/claude-playbook` public? It holds no secrets (check
-  `personal-CLAUDE.md` first: it names Leo's Mac folders). Public means any
-  phone session can sync; private means attaching it to the session.
+- None.
