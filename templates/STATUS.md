@@ -1,6 +1,9 @@
 # Live status
 
-The shared memory between Leo's phone and computer sessions. **Every Claude session reads this first and updates it before finishing**, then commits and pushes. Newest information at the top of each section.
+The current state of the project, shared between Leo's phone and computer
+sessions. **Every Claude session reads this first and updates it after every
+finished step**, then commits and pushes. Current state only: overwrite, don't
+append. History is in `git log`; decisions are in `docs/decisions.md`.
 
 ## Handover (overwrite this block every session)
 
@@ -17,15 +20,10 @@ The shared memory between Leo's phone and computer sessions. **Every Claude sess
 
 <Two or three sentences: what works, what doesn't yet.>
 
-## Decisions made
+## Next steps
 
-| Date | Decision | Why |
-|---|---|---|
+1. <In order. Big ones get a spec in `specs/` and their own session.>
 
 ## Open questions
 
 - <Things only Leo can decide.>
-
-## Session log
-
-- **<date>, <phone/desktop>**: <what happened, in one line or two>

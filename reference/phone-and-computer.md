@@ -12,15 +12,17 @@ GitHub.
 1. **`docs/STATUS.md`**, the live record (template: `templates/STATUS.md`).
    - A **Handover block** at the top that every session *overwrites*: which
      device, did it end cleanly, anything half-done, the next step.
-   - Where we are, decisions (with why), open questions for Leo, and a
-     **session log** with one line per session (date, device, what happened).
+   - Where we are, next steps and open questions for Leo. **Current state
+     only**: decisions go in `docs/decisions.md`, history is `git log`.
+     (Until Oct 2026 it also held a session log; it grew to 100+ lines that
+     every session re-read, so it was dropped.)
    - Read it at the start of every session; update it after every finished
      step, not just at the end.
 2. **One branch: `main`.** Cloud sessions start on their own branch
    (`claude/...` or `ccr-...`). Land work on main with
    `git push origin HEAD:main`, and say so. If the harness also insists on its
    own branch being pushed, push both.
-3. **A session lock** (`templates/scripts/session.sh`). It means **"Claude is
+3. **A session lock** (`shared/session.sh`). It means **"Claude is
    working on a reply right now"**, not "a session is open": an idle or closed
    session holds no lock. It's a small file on its own `session-lock` branch,
    so it doesn't clutter main's history or republish the site. It works
@@ -34,50 +36,42 @@ GitHub.
      was last updated; otherwise **releases the lock**.
    - `session.sh end`: releases it by hand if a reply was cut off.
    - A busy lock older than 2 hours is treated as left behind by a crash.
+   - `busy` also counts Leo's messages and every 15 prints a `COACH:` line,
+     so Claude suggests a fresh session when one gets long.
 4. **Hooks** (`templates/.claude/settings.json`) make Claude Code run
    `start` when a session opens, `busy` on every message and `check` at the
-   end of every reply, so nobody has to remember.
+   end of every reply, so nobody has to remember. The rules Claude follows
+   around them are in `shared/ai-dev-rules.md` ("Git and the phone/Mac handover").
 
 ## Setting it up in a project
 
-1. Copy `templates/STATUS.md` to `docs/STATUS.md` and fill it in.
-2. Copy `templates/scripts/session.sh` to `scripts/session.sh`
-   (`chmod +x scripts/session.sh`).
+The shared files (`shared/` in the playbook) are copied in once and then keep
+themselves up to date: `session.sh start` runs `scripts/playbook-sync.sh`,
+which fetches the playbook's latest `main` and commits any changes as
+"Playbook: update shared files…". See `docs/ARCHITECTURE.md` in the playbook.
+
+1. Copy `templates/STATUS.md` to `docs/STATUS.md` and `templates/decisions.md`
+   to `docs/decisions.md`, and fill them in.
+2. Copy `shared/session.sh` and `shared/playbook-sync.sh` into `scripts/`
+   (`chmod +x scripts/*.sh`), then run `bash scripts/playbook-sync.sh` once:
+   it adds `.claude/rules/playbook.md` (the shared rules).
 3. Copy `templates/.claude/settings.json` to `.claude/settings.json`, and make
-   sure `.gitignore` has `.claude/*` then `!.claude/settings.json`, so the
-   hooks are shared but local Claude files aren't.
-4. Add the "Every session" section below to the project's CLAUDE.md.
+   sure `.gitignore` has `.claude/*`, `!.claude/settings.json`,
+   `!.claude/rules/` and `.session/`, so the hooks and rules are shared but
+   local Claude files and the session's scratch files aren't.
+4. Trim the project's CLAUDE.md to project-only rules (`templates/CLAUDE.md`):
+   the generic ones now come from `.claude/rules/playbook.md`.
 5. Commit and push to main.
-
-## Paste into the project's CLAUDE.md
-
-```markdown
-## Every session: start and finish with STATUS.md
-Leo switches between his phone (cloud sessions) and his Mac. Neither can see
-the other's conversation; the repo is the only shared memory.
-`scripts/session.sh` enforces this, run automatically by hooks in `.claude/settings.json`.
-- **The lock means "Claude is working on a reply right now".** It's claimed when
-  Leo sends a message and released when the reply finishes cleanly, so an
-  idle or closed session holds no lock. It lives on its own `session-lock` branch.
-- If a message comes with `ANOTHER DEVICE IS WORKING`, **tell Leo straight
-  away**; read-only work is fine, but change nothing until Leo confirms that
-  reply has finished. Then run `scripts/session.sh busy --force`.
-- If a push is rejected or a merge conflicts, stop and tell Leo. Never force-push.
-  (Exception: a push rejected because the project's own GitHub Action pushed
-  results is expected; pull/merge and carry on, and say so.)
-- One branch: `main`. Push with `git push origin HEAD:main`.
-- After every finished step: overwrite the Handover block in `docs/STATUS.md`,
-  update "Where we are", decisions and open questions, add a session log line,
-  commit, push.
-- The lock frees itself at the end of each reply. `scripts/session.sh end`
-  releases it by hand if a reply was cut off.
-- If the hooks didn't run (no "Session start" output), run `scripts/session.sh start` yourself.
-```
 
 ## Things we learned the hard way
 
-- **Cloud sessions can't see the Mac's `~/.claude`.** Anything Claude must
-  know on the phone goes in the project's own CLAUDE.md (or STATUS.md).
+- **Cloud sessions can't see the Mac's `~/.claude`, and don't load plugins**
+  (Claude Code docs, Oct 2026). Anything Claude must know on the phone goes in
+  the project's repo: its CLAUDE.md, or the synced `.claude/rules/playbook.md`.
+- **The playbook repo is private**, so a cloud session can only sync from it
+  when `leo-hyde/claude-playbook` is attached to the session too. Otherwise
+  it uses the copy committed in the project (updated by the last session that
+  could reach it, e.g. on the Mac).
 - **Hooks may not fire in a cloud session that started before they were
   added**, and the device detection depends on `CLAUDE_CODE_REMOTE`. If there's
   no "Session start" output, run `scripts/session.sh start` by hand

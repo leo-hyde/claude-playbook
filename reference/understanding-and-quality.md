@@ -11,13 +11,13 @@ What professionals use, and the lightweight version we keep in each project.
 
 | Industry practice | The question it answers | Ours |
 |---|---|---|
-| Product spec / requirements, with acceptance criteria | What are we building, for whom, and how do we know a step is done? | `SPEC.md`: numbered steps, each visible when done |
+| Product spec / requirements, with acceptance criteria | What are we building, for whom, and how do we know a step is done? | `SPEC.md`: numbered steps, each visible when done; `specs/<feature>.md` for bigger features (`templates/specs/feature.md`) |
 | Architecture overview (the "C4 model": a context diagram and a containers diagram) | What are the parts, how does data flow, what do we depend on? | `docs/ARCHITECTURE.md`, with a diagram GitHub draws from text ("Mermaid") |
-| Architecture Decision Records ("ADRs") | Why did we choose X over Y? | The decisions table in `docs/STATUS.md`: date, decision, why |
+| Architecture Decision Records ("ADRs") | Why did we choose X over Y? | `docs/decisions.md`: date, decision, why, what was rejected (`templates/decisions.md`) |
 | Design system | How does it look and behave? | `DESIGN.md` |
 | Threat model / security review | What could go wrong, and who could misuse it? | "Safety and security" in ARCHITECTURE.md; a `/security-review` before big releases |
 | Automated tests, and a test plan | Does it still work after a change? | Tests for the core rules; a preview script with made-up data |
-| Changelog / release notes | What changed, when? | `CHANGELOG.md` |
+| Changelog / release notes | What changed, when? | Commit messages; a `CHANGELOG.md` only where Leo needs one (Sport Conditions: for feedback) |
 | Runbook | How is it deployed and kept running? | "Outside services" in ARCHITECTURE.md; `reference/github-and-hosting.md` |
 | Code review (pull requests) | Did a second person check it before it went live? | Claude's walkthrough; a fresh session reviewing with `/code-review` |
 
@@ -25,7 +25,9 @@ Template: `templates/ARCHITECTURE.md`.
 
 ## 2. The loop for each feature
 
-1. **Spec it** in SPEC.md, including how we'll know it's done.
+1. **Spec it** in SPEC.md or `specs/<feature>.md`, including what's out of
+   scope and how we'll know it's done. Then build it in a **fresh session**
+   (Anthropic's best-practice guide: write the spec, then run it in a new session).
 2. **Design note first** for anything structural: which files change, how
    data flows, any new outside service, risks. Agree it before code.
 3. **Build in small commits**, each one working.
@@ -34,7 +36,7 @@ Template: `templates/ARCHITECTURE.md`.
    pushing. "It works" from an AI isn't evidence; a check you can see is.
 5. **Walkthrough:** what changed and why, which files, how data flows, the
    2–3 lines that matter, **how it was checked and what wasn't**, risks.
-6. **Record:** update ARCHITECTURE.md, the decisions table and CHANGELOG.md.
+6. **Record:** update ARCHITECTURE.md, `docs/decisions.md` and STATUS.md.
 
 ## 3. Telling good AI code from junk
 
@@ -88,11 +90,27 @@ AI is fast and usually right, but it can invent things confidently
 
 ## 6. Using AI efficiently
 
-Every message re-reads the whole conversation, so cost grows with length.
-- One feature (or one batch of feedback) per session; STATUS.md carries the
-  memory to the next one.
-- Keep CLAUDE.md lean: it's read at the start of every session.
-- Don't have Claude read big data files whole; search them.
-- Keep a reusable preview/check script in each project (Sport Conditions has
-  `tools/preview.js`) instead of new test code every time.
-- Be specific in requests, and batch small changes together.
+Source: Anthropic's [best practices for Claude Code](https://code.claude.com/docs/en/best-practices)
+(checked 23 Oct 2026). Its central point: "LLM performance degrades as
+context fills", and every message, file read and command output stays in the
+context. Each message also re-processes all of it, so long sessions cost more.
+- **One feature or task per session**; many sessions per repo is fine. Name
+  each after its feature. STATUS.md and git carry the memory.
+- **Don't mix unrelated tasks** (the guide's "kitchen sink session"); start
+  a new session or `/clear` between them.
+- **After two failed corrections, restart** with a better prompt: "a clean
+  session with a better prompt almost always outperforms a long session with
+  accumulated corrections."
+- **Spec first, then build in a fresh session.**
+- **Give Claude a check it can run** (tests, a check script), so it doesn't
+  loop guessing and you aren't the only check.
+- **Scope requests narrowly**, and batch small related changes.
+- **Keep CLAUDE.md lean** (the docs suggest under 200 lines; ours aim for
+  ~100): for each line ask "would removing this cause Claude to make
+  mistakes?" Leave out what Claude can read from the code and anything that
+  changes often.
+- **Don't read big data files or whole logs**; search them.
+- For long tasks, `/compact <what to keep>`; on the phone, a new session.
+
+Claude nudges Leo about these unprompted ("Coaching" in
+`shared/ai-dev-rules.md`), helped by a message counter in `session.sh`.

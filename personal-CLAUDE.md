@@ -1,65 +1,25 @@
-# How Leo and Claude work together (every project)
+# How Leo and Claude work together (Leo's Mac)
 
 Personal instructions, loaded in every Claude Code session on this Mac.
-A copy lives in github.com/leo-hyde/claude-playbook (`personal-CLAUDE.md`).
-Project CLAUDE.md files add to these, and win where they differ.
+A copy lives in github.com/leo-hyde/claude-playbook (`personal-CLAUDE.md`):
+after changing either, copy it over the other.
 
-## About Leo
-- Learning to build apps with AI, aiming to be a proficient and responsible
-  AI developer. Understanding what's built, and that it's safe and reliable,
-  matters as much as the result.
-- Leo learns by understanding and checking the work, the way a developer
-  reviews a colleague's, **not** by tinkering: don't suggest "try this" changes.
-- After building something, give a short walkthrough: what changed and why,
-  which files and how data flows, the 2–3 lines that matter most, **how it
-  was checked and what wasn't**, and any risks or unverified data.
-- Keep each project's `docs/ARCHITECTURE.md` current. The playbook's
-  `reference/understanding-and-quality.md` says how we make sure AI-built
-  apps are understood, good and safe.
-- Explain in plain language. Introduce new terms the first time ("API", "JSON",
-  "commit"…). Keep explanations short; Leo will ask for more if needed.
-
-## How we work
-- **Plan first, then build.** For a new app or a big feature, agree the plan
-  in short documents before writing code: SPEC.md (what), DESIGN.md (how it
-  looks), CLAUDE.md (how to work on this project). The `/new-app` skill has
-  templates. Don't do a lot of work that might go down the wrong path.
-- **Small steps.** Each step ends with something Leo can see working. If Leo
-  asks for several agreed steps in one go, build them all, commit after each,
-  and stop for review at the end.
-- **Ask about genuine ambiguity, decide the rest.** Spot contradictions in
-  requests (e.g. an "OK" range inside a "good" range) and check them.
-- **Say what's hard.** When asked for many things, flag the hard or expensive
-  ones and skip them unless Leo insists.
-- **Be honest about mistakes and limits**, including ones Claude caused.
-
-## Git and GitHub
-- Leo's GitHub account is `leo-hyde`; the GitHub CLI is at `/opt/homebrew/bin/gh`
-  (may not be on PATH). Push with:
-  `git -c credential.helper= -c credential.helper='!/opt/homebrew/bin/gh auth git-credential' push`
-- **Commit and push after every working, tested step**, so nothing is stuck on
-  one computer and Leo can carry on from a phone. `git pull` before starting.
-- Plain-English commit messages that say what changed and why.
-- **Phone and Mac share one memory: the repo.** Projects worked on from both
-  have `docs/STATUS.md` (read first, update after every step) and a session
-  lock (`scripts/session.sh`). See the playbook's `reference/phone-and-computer.md`.
-
-## Using AI efficiently
-- One feature or batch of feedback per session; STATUS.md carries the memory.
-  Suggest a fresh session when one gets long.
-- Don't read big data files whole; search them. Keep a reusable check script
-  per project rather than writing new test code each time.
-
-## Checking work
-- Don't say something works until it's been seen working: in the browser
-  preview, at phone width (375px) and desktop, light and dark mode, and on the
-  live site after pushing.
-- **Free services have usage limits, often per internet connection, shared with
-  Leo's own devices.** Keep test requests few, keep (cache) fetched data instead
-  of refetching, and use made-up data for design work.
+## The shared rules
+Leo's rules for every project (how we work, explaining and checking the work,
+the phone/Mac handover, coaching on sessions and credits) live in the
+playbook's `shared/ai-dev-rules.md`, cloned at `~/.claude/skills/new-app`.
+- Projects set up with the playbook load them automatically as
+  `.claude/rules/playbook.md`, refreshed at each session start.
+- **In any other project, read `~/.claude/skills/new-app/shared/ai-dev-rules.md`
+  at the start of the session and follow it.**
+- Learned something that applies to all projects? Update the playbook (see
+  "Keeping the playbook current" in those rules), not just this project.
 
 ## Leo's Mac
+- GitHub account `leo-hyde`; the GitHub CLI is at `/opt/homebrew/bin/gh`
+  (may not be on PATH). Push with:
+  `git -c credential.helper= -c credential.helper='!/opt/homebrew/bin/gh auth git-credential' push`
 - Projects live in `~/Documents/Documents - Leo’s MacBook Air/…`. macOS blocks
   the preview server from reading there, so copy files to the scratchpad and
-  serve from there (the `/new-app` skill has a no-cache preview server).
+  serve from there (the `/new-app` skill's `tools/serve.py`, no caching).
 - No Node.js or Homebrew Python tools assumed: plain HTML/CSS/JS and Python 3.9.

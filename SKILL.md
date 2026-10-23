@@ -10,8 +10,9 @@ Conditions (github.com/leo-hyde/sport-conditions), a weather-for-sports web app.
 It worked well: plan in short documents, build in small visible steps, teach
 along the way, push every step to GitHub, check everything in a real browser.
 
-Leo is learning to code. Follow `~/.claude/CLAUDE.md` (also in this folder as
-`personal-CLAUDE.md`) for how to explain things and work together.
+Leo is learning to code. Follow `shared/ai-dev-rules.md` (Leo's rules for
+every project; projects get a synced copy as `.claude/rules/playbook.md`) for
+how to work together, explain things and coach Leo on using AI well.
 
 ## 1. Kick-off: understand before building
 
@@ -37,9 +38,10 @@ Copy and fill in the templates in `templates/`:
 - **DESIGN.md**: how it looks. Start from the template's principles and tokens;
   fill in Leo's references. For anything visual, offer 2–3 quick mockups
   (shown inline) and let Leo pick or mix.
-- **CLAUDE.md**: how to work on this project. **Include the key rules from
-  `personal-CLAUDE.md`** so cloud sessions (which can't see this Mac's
-  `~/.claude`) follow them too.
+- **CLAUDE.md**: project-only rules, short. The general rules arrive by
+  themselves as `.claude/rules/playbook.md` (set-up step 5), which cloud sessions
+  see too; don't copy them in.
+- **docs/decisions.md**: one entry per decision (`templates/decisions.md`).
 - **docs/ARCHITECTURE.md** (once there's code): the parts, the data flow,
   outside services, safety, weak spots. See `reference/understanding-and-quality.md`
   for why, and how it fits with the other documents.
@@ -57,9 +59,9 @@ See `reference/github-and-hosting.md` for exact commands. In order:
    (public is needed for free GitHub Pages; check nothing private or
    third-party is in it), create it, push.
 4. Hosting: GitHub Pages (free) → `https://leo-hyde.github.io/<repo>/`.
-5. **Phone + computer handover** (every project Leo works on from both):
-   `docs/STATUS.md`, a session lock and hooks, one branch. Follow
-   `reference/phone-and-computer.md`; templates are in `templates/`.
+5. **Phone + computer handover and shared rules** (every project):
+   `docs/STATUS.md`, a session lock and hooks, one branch, and the playbook
+   sync. Follow "Setting it up in a project" in `reference/phone-and-computer.md`.
 6. Only if needed: a Cloudflare Worker for secrets, sources that block browsers,
    or syncing between devices (`reference/github-and-hosting.md`,
    `templates/worker.js`). Leo has a Cloudflare account; Claude can't create
@@ -67,11 +69,13 @@ See `reference/github-and-hosting.md` for exact commands. In order:
 
 ## 4. Build in small steps
 
-For each step: (design note first if it changes the structure) → build →
+Bigger features get a spec first (`templates/specs/feature.md` →
+`specs/<feature>.md`), built in a fresh session. For each step: (design note
+first if it changes the structure) → build →
 check with evidence (tests for logic; the browser at phone 375px and desktop,
 light and dark) → walkthrough: what changed, files and data flow, key lines,
-how it was checked and what wasn't, risks → update ARCHITECTURE.md and
-CHANGELOG.md → commit and push. Use made-up data for design work so you don't
+how it was checked and what wasn't, risks → update ARCHITECTURE.md,
+decisions.md and STATUS.md → commit and push. Use made-up data for design work so you don't
 burn through a free service's daily limit; a reusable preview script (like
 Sport Conditions' `tools/preview.js`) saves writing test code each time.
 
@@ -83,8 +87,10 @@ Then push, wait for the live site to update, and check it there too.
 ## Files here
 | File | What it's for |
 |---|---|
-| `personal-CLAUDE.md` | Copy of `~/.claude/CLAUDE.md` (how we work, every project) |
-| `templates/SPEC.md`, `DESIGN.md`, `CLAUDE.md` | Starting points for a new project's documents |
+| `shared/ai-dev-rules.md` | Leo's rules for every project; synced into each as `.claude/rules/playbook.md` |
+| `shared/session.sh`, `shared/playbook-sync.sh` | Session lock + coaching counter; the sync. Also synced into each project's `scripts/` |
+| `personal-CLAUDE.md` | Copy of `~/.claude/CLAUDE.md` (Mac-only notes; points to the shared rules) |
+| `templates/SPEC.md`, `DESIGN.md`, `CLAUDE.md`, `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |
 | `templates/style.css` | Design tokens (light/dark), buttons, cards, dialogs, phone layout |
 | `templates/worker.js` | Cloudflare Worker skeleton: CORS, caching, a secret key, KV sync |
 | `templates/site-check.yml` | GitHub Action pattern: check + rebuild data on every change |
@@ -94,5 +100,5 @@ Then push, wait for the live site to update, and check it there too.
 | `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: STATUS.md, session lock, hooks |
 | `reference/understanding-and-quality.md` | How we make sure AI-built apps are understood, good and safe; using AI efficiently |
 | `templates/ARCHITECTURE.md` | Starting point for a project's architecture overview |
-| `templates/STATUS.md`, `templates/scripts/session.sh`, `templates/.claude/settings.json` | The handover kit to copy into a project |
+| `templates/STATUS.md`, `templates/.claude/settings.json` | The handover kit to copy into a project (with `shared/`) |
 | `tools/serve.py` | No-cache preview server for the scratchpad copy |
