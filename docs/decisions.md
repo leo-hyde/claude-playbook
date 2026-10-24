@@ -3,6 +3,13 @@
 One entry per decision, newest first. If one is reversed, add a new entry and
 mark the old one "Replaced by <date>".
 
+## 24 Oct 2026: A "Writing for people" rule: UK plain English everywhere a person reads
+- **Why:** Leo said he couldn't follow what Claude was doing: replies were
+  full of jargon. One short section in the shared rules now reaches every
+  project, with a fixed shape for end-of-task summaries.
+- **Rejected:** a long style guide in `reference/` (read on demand, so it
+  wouldn't shape every reply).
+
 ## 23 Oct 2026: Warn when a repo turns public; Leo's email out of commits
 - **Why:** Leo's projects mix public and private repos and he may make one
   public later. `session.sh` detects the change and the rules make Claude

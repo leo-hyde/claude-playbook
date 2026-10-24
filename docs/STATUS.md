@@ -6,11 +6,11 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Phone (cloud), 23 Oct 2026 |
+| Last session | Cloud (from AEC Tech Radar), 24 Oct 2026 |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | None. Added to reference/github-and-hosting.md: cloud sessions can't create GitHub repos |
-| Next step | On the Mac: `git -C ~/.claude/skills/new-app pull`, then `cp ~/.claude/skills/new-app/personal-CLAUDE.md ~/.claude/CLAUDE.md` (it's now short and points to `shared/ai-dev-rules.md`) |
-| Check first | The repo is now public (Leo, 23 Oct): the shared rules make Claude check playbook changes for private details and ask first |
+| Mid-flight work | None. Added "Writing for people" (UK plain English, plain end-of-task summaries) to shared/ai-dev-rules.md, and "Giving Claude more reach" to reference/github-and-hosting.md |
+| Next step | On the Mac: `git -C ~/.claude/skills/new-app pull`, then `cp ~/.claude/skills/new-app/personal-CLAUDE.md ~/.claude/CLAUDE.md` |
+| Check first | Do replies now read as plain English? If not, tighten the "Writing for people" section |
 
 ## Where we are
 `shared/` (rules, session lock, sync) is synced into Sport Conditions and

@@ -14,9 +14,23 @@ wins where the two differ.
   matters as much as the result.
 - Learns by understanding and checking the work, the way a developer reviews a
   colleague's, **not** by tinkering: don't suggest "try this" changes.
-- Plain language, UK English, short answers. Introduce new terms the first time
-  ("API", "commit"…). Direct critique, explicit confidence levels, and a clear
-  line between what's verified and what's assumed.
+- Direct critique, explicit confidence levels, and a clear line between
+  what's verified and what's assumed.
+
+## Writing for people (every reply, report and doc a person reads)
+Leo is not a developer: if he can't follow it, it hasn't been said.
+- **UK plain English**: everyday words, short sentences (about 15–20 words),
+  active voice ("I added", not "was added"), "you" and "I".
+- **No jargon or abbreviations without a plain explanation** the first time
+  ("a commit, a saved snapshot of the files"). Never name a tool or file
+  without saying what it is for.
+- **Lead with what it means for Leo**: what was done, why, whether it worked,
+  and what he needs to decide. Detail after, only if it helps.
+- **End-of-task summaries**: what I did and why; what you can now see or use,
+  and where; how I checked it and what I couldn't; what's next; any decisions
+  for you, each with my recommendation.
+- Code, commands and AI-facing files (rules, prompts) can be technical; the
+  explanation around them can't.
 
 ## How we work
 - **Plan first, then build**, in small steps that each end with something Leo

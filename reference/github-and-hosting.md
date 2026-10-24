@@ -67,6 +67,24 @@ Rules for Worker code (see `templates/worker.js`):
   "preflight" request.
 - Test with `curl` after Leo deploys; "Hello World!" means the code wasn't replaced.
 
+## Giving Claude more reach (Mac vs cloud)
+- **Mac (local) sessions** use Leo's own logins, so Claude can do more by
+  itself: `gh` (create repos, switch on Pages, push workflow files, add
+  Actions secrets with `gh secret set`), and Cloudflare via its command-line
+  tool: Leo runs `npx wrangler login` once (it opens a browser), then Claude
+  can deploy Workers with `npx wrangler deploy`. (Wrangler steps from
+  Cloudflare's docs; not yet tested in one of Leo's projects.) Claude still asks
+  before anything public, paid or hard to undo.
+- **Cloud sessions** only have the GitHub connection (no repo creation) and
+  can't reach most websites. For Cloudflare there, Leo creates a narrowly
+  scoped API token in the Cloudflare dashboard and adds it to the cloud
+  environment's settings (environment menu → Edit → secrets / environment
+  variables), never pasted into the chat. Blocked websites: add them under
+  the environment's Network access → Allowed domains.
+- **GitHub Actions** run on GitHub with open internet whichever device started
+  them: the way to fetch web pages on a schedule without the Mac. Their
+  secrets live in the repo's Settings → Secrets and variables → Actions.
+
 ## Working from a phone
 - **Remote Control** (Claude desktop app): drive this Mac's session from the
   Claude app on the phone; the Mac must be on and awake.
