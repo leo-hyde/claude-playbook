@@ -67,6 +67,19 @@ which fetches the playbook's latest `main` and commits any changes as
    the generic ones now come from `.claude/rules/playbook.md`.
 5. Commit and push to main.
 
+**Helper repos** (a data store, saved sources, a tool, often written mostly
+by a GitHub Action) get the same set-up, just smaller: every repo of Leo's
+follows the playbook, so a session there knows the rules. Skip SPEC, DESIGN
+and ARCHITECTURE unless it needs them. CLAUDE.md says in a few lines what the
+repo is, which project it serves, and what must never happen (for example
+"private: never copy this into the public repo"). STATUS.md can be short.
+Commits by Action bots (`…[bot]@…` authors) don't count as unrecorded work,
+so a daily data run doesn't make every session update STATUS.md.
+
+**Sessions with several repos.** Hooks only run in the repo the session was
+opened in. Run `bash scripts/session.sh start` in each other repo before
+changing it, so it pulls, takes the lock and syncs the playbook.
+
 ## Things we learned the hard way
 
 - **Cloud sessions can't see the Mac's `~/.claude`, and don't load plugins**

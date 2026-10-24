@@ -31,7 +31,11 @@ flowchart LR
    project's copy. If they differ it replaces the copy (as a new file, so a
    script that's running isn't disturbed) and commits just those files as
    "Playbook: update shared files from claude-playbook". The commit is pushed
-   with the session's other work.
+   with the session's other work. If the sync script replaced itself, it runs
+   the new version straight away, so a new check (like catch-ups) works in
+   that same session, not only the next one. (Added 24 Oct 2026; a project
+   whose script is older than that still sees a new check one session late,
+   once.)
 4. Claude Code loads `.claude/rules/playbook.md` (every `.md` in
    `.claude/rules/` is loaded at launch, like CLAUDE.md). If the sync changed
    it, the script tells Claude to read it again.
@@ -92,6 +96,12 @@ Checked against Claude Code's documentation on 23 Oct 2026; see
   details and ask Leo first; that's an instruction, not an automatic scan.
 - **Hooks don't always fire** in a cloud session started before they existed;
   then nothing syncs until `scripts/session.sh start` is run by hand.
+- **A session with several repos attached runs hooks in none of them**, or
+  only in the one it opened in. The rules tell Claude to run session start in
+  each repo it changes; that's an instruction, not automatic.
+- **A repo that was never set up gets nothing.** The sync only reaches repos
+  that have `scripts/playbook-sync.sh`. The rules say every repo of Leo's is
+  set up, and tell Claude to offer when it finds one that isn't.
 - **A broken `shared/session.sh` would spread to every project.** Test
   changes in a throwaway repo before pushing (see CLAUDE.md).
 - **Claude Code may load `.claude/rules/` before the hook runs**, so a session

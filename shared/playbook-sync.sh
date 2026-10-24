@@ -31,8 +31,9 @@ G=(git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=15)
 GH=/opt/homebrew/bin/gh
 [ -x "$GH" ] && G+=(-c credential.helper= -c "credential.helper=!$GH auth git-credential")
 
-src=""
-for d in "${PLAYBOOK_DIR:-}" "$HOME/.claude/skills/new-app" "../claude-playbook" ".session/playbook"; do
+# Second run after this script updated itself (see below): the playbook is already fetched.
+src="${PLAYBOOK_SYNC_SRC:-}"
+[ -n "$src" ] || for d in "${PLAYBOOK_DIR:-}" "$HOME/.claude/skills/new-app" "../claude-playbook" ".session/playbook"; do
   [ -n "$d" ] && [ -d "$d/.git" ] || continue
   depth=""; [ "$d" = .session/playbook ] && depth="--depth 1"   # keep Leo's own clones whole
   "${G[@]}" -C "$d" fetch -q $depth origin main 2>/dev/null &&
@@ -70,6 +71,14 @@ if [ -n "$changed" ]; then
   echo "Playbook: updated$changed from claude-playbook (committed, not yet pushed)."
   case "$changed" in *playbook.md*)
     echo "Playbook: the shared rules changed; read .claude/rules/playbook.md again before starting." ;;
+  esac
+  # This script just replaced itself: run the new version now, so anything it
+  # adds (a new check, like catch-ups) works this session, not only the next.
+  case "$changed" in *scripts/playbook-sync.sh*)
+    if [ -z "${PLAYBOOK_SYNC_SRC:-}" ]; then
+      export PLAYBOOK_SYNC_SRC="$src"
+      exec bash scripts/playbook-sync.sh
+    fi ;;
   esac
 else
   echo "Playbook: shared rules are up to date."

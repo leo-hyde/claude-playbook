@@ -3,6 +3,34 @@
 One entry per decision, newest first. If one is reversed, add a new entry and
 mark the old one "Replaced by <date>".
 
+## 24 Oct 2026: Every repo follows the playbook, helper repos included
+- **What:** every repo of Leo's gets the playbook set-up, with a smaller
+  version for helper repos (data stores, saved sources, tools). Claude offers
+  to set up any repo it finds without it. Action bots' commits no longer count
+  as work needing a STATUS update. The playbook applies its own rules and
+  catch-ups to itself.
+- **Why:** a helper repo made from another project's session was never set
+  up, so no rule change ever reached it; sessions working there had no rules.
+- **Rejected:** a list of "exempt" repo types (each exemption is a gap that
+  has to be remembered); a script that checks all Leo's repos (needs GitHub
+  access a session may not have; the rule plus the offer covers it).
+
+## 24 Oct 2026: Fix small problems found along the way; ask first for bigger ones
+- **What:** Claude fixes small problems it finds (broken link, stale doc,
+  typo, failing check) in their own commit and lists them; anything that
+  changes behaviour, deletes data, costs money, touches secrets or public
+  content, undoes a decision, or is more than a small step waits for Leo.
+- **Why:** Leo asked for it (24 Oct 2026): obvious fixes shouldn't wait a
+  round trip, but bigger changes still need his review.
+- **Rejected:** fixing everything found (big changes need Leo's review);
+  only reporting (wastes a round trip on obvious fixes).
+
+## 24 Oct 2026: The sync runs its new self after updating itself
+- **Why:** the catch-up check arrived in a new version of the sync script,
+  but the old version ran that session, so the reminder came one session late.
+- **Rejected:** a rule telling Claude to re-run it (costs a line in every
+  session for a one-off).
+
 ## 24 Oct 2026: Catch-ups, so a new rule reaches files projects already have
 - **What:** `shared/catch-up.md` lists rule changes that existing files need
   too. At session start, `playbook-sync.sh` prints any entry a project hasn't

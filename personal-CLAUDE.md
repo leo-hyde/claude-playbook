@@ -11,7 +11,8 @@ playbook's `shared/ai-dev-rules.md`, cloned at `~/.claude/skills/new-app`.
 - Projects set up with the playbook load them automatically as
   `.claude/rules/playbook.md`, refreshed at each session start.
 - **In any other project, read `~/.claude/skills/new-app/shared/ai-dev-rules.md`
-  at the start of the session and follow it.**
+  at the start of the session and follow it**, and offer to set the repo up
+  with the playbook (every repo of Leo's should be).
 - Learned something that applies to all projects? Update the playbook (see
   "Keeping the playbook current" in those rules), not just this project.
 

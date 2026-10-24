@@ -26,7 +26,8 @@ something general, the rules tell Claude to add it here. How it works, and its
 limits: `docs/ARCHITECTURE.md`.
 
 Projects using it: [Sport Conditions](https://github.com/leo-hyde/sport-conditions),
-JobSeekHelper.
+JobSeekHelper, [AEC Tech Radar](https://github.com/leo-hyde/AECTechRadar) and
+its helper repo. Every repo of Leo's should be: see `shared/ai-dev-rules.md`.
 
 ## Using it somewhere else
 - **Another Mac:**

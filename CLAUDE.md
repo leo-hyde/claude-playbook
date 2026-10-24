@@ -16,6 +16,8 @@ skill (`new-app`) on Leo's Mac, at `~/.claude/skills/new-app`. How it works:
 - Projects' copies must not be edited there; this repo is the source.
 - Templates (`templates/`) are copied once into new projects and don't update.
   `reference/` is read on demand, so detail belongs there, not in `shared/`.
-- This repo has no session hooks: update docs/STATUS.md by hand after each
-  step, commit and push to `main` (`git push origin HEAD:main`).
+- **The rules apply here too.** This repo has no session hooks: update
+  docs/STATUS.md by hand after each step, commit and push to `main`
+  (`git push origin HEAD:main`). A new catch-up in `shared/catch-up.md` is
+  applied here as well, and recorded in `docs/playbook-catch-up.md`.
 - `personal-CLAUDE.md` mirrors `~/.claude/CLAUDE.md` on the Mac.
