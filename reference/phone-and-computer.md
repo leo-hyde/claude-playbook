@@ -55,6 +55,10 @@ which fetches the playbook's latest `main` and commits any changes as
 2. Copy `shared/session.sh` and `shared/playbook-sync.sh` into `scripts/`
    (`chmod +x scripts/*.sh`), then run `bash scripts/playbook-sync.sh` once:
    it adds `.claude/rules/playbook.md` (the shared rules).
+   For a **new** project, also create `docs/playbook-catch-up.md` listing
+   every id in the playbook's `shared/catch-up.md` as "not needed: started
+   under this rule", so session start doesn't ask for catch-ups it was born
+   with. An **existing** project skips this: the catch-ups are due.
 3. Copy `templates/.claude/settings.json` to `.claude/settings.json`, and make
    sure `.gitignore` has `.claude/*`, `!.claude/settings.json`,
    `!.claude/rules/` and `.session/`, so the hooks and rules are shared but

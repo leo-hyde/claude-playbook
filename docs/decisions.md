@@ -3,6 +3,17 @@
 One entry per decision, newest first. If one is reversed, add a new entry and
 mark the old one "Replaced by <date>".
 
+## 24 Oct 2026: Catch-ups, so a new rule reaches files projects already have
+- **What:** `shared/catch-up.md` lists rule changes that existing files need
+  too. At session start, `playbook-sync.sh` prints any entry a project hasn't
+  recorded in its `docs/playbook-catch-up.md`, until it does.
+- **Why:** the plain-English rule synced into every project but only changed
+  what Claude wrote next; nobody rewrote the existing docs, because the rule
+  read as a style for new writing and nothing asked for the old files.
+- **Rejected:** relying on Claude to remember (it didn't); a script that
+  rewrites docs by itself (needs judgement, and Leo's review); writing the
+  catch-up into each project's STATUS.md by hand (misses projects).
+
 ## 24 Oct 2026: A "Writing for people" rule: UK plain English everywhere a person reads
 - **Why:** Leo said he couldn't follow what Claude was doing: replies were
   full of jargon. One short section in the shared rules now reaches every

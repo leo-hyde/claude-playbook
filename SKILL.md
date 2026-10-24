@@ -88,6 +88,7 @@ Then push, wait for the live site to update, and check it there too.
 | File | What it's for |
 |---|---|
 | `shared/ai-dev-rules.md` | Leo's rules for every project; synced into each as `.claude/rules/playbook.md` |
+| `shared/catch-up.md` | Rule changes that existing projects must apply once to files they already have; session start lists the ones still due |
 | `shared/session.sh`, `shared/playbook-sync.sh` | Session lock + coaching counter; the sync. Also synced into each project's `scripts/` |
 | `personal-CLAUDE.md` | Copy of `~/.claude/CLAUDE.md` (Mac-only notes; points to the shared rules) |
 | `templates/SPEC.md`, `DESIGN.md`, `CLAUDE.md`, `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |

@@ -6,11 +6,11 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Cloud (from AEC Tech Radar), 24 Oct 2026 |
+| Last session | Mac (from AEC Tech Radar), 24 Oct 2026 |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | None. Added "Writing for people" (UK plain English, plain end-of-task summaries) to shared/ai-dev-rules.md, and "Giving Claude more reach" to reference/github-and-hosting.md |
-| Next step | On the Mac: `git -C ~/.claude/skills/new-app pull`, then `cp ~/.claude/skills/new-app/personal-CLAUDE.md ~/.claude/CLAUDE.md` |
-| Check first | Do replies now read as plain English? If not, tighten the "Writing for people" section |
+| Mid-flight work | None. Added catch-ups: `shared/catch-up.md` lists rule changes existing projects must apply; session start prints "CATCH-UP DUE" until each project records it in `docs/playbook-catch-up.md`. First entry: rewrite docs in plain English |
+| Next step | Sport Conditions and JobSeekHelper will show the plain-English catch-up at their next session start: do it there |
+| Check first | Did the catch-up message appear in those projects' session start? |
 
 ## Where we are
 `shared/` (rules, session lock, sync) is synced into Sport Conditions and

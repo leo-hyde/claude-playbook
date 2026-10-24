@@ -35,6 +35,12 @@ flowchart LR
 4. Claude Code loads `.claude/rules/playbook.md` (every `.md` in
    `.claude/rules/` is loaded at launch, like CLAUDE.md). If the sync changed
    it, the script tells Claude to read it again.
+5. **Catch-ups.** The script reads the playbook's `shared/catch-up.md`: rule
+   changes that existing files need too, not just new work (for example
+   "rewrite the docs in plain English"). Any entry whose id isn't in the
+   project's `docs/playbook-catch-up.md` is printed as "CATCH-UP DUE", and the
+   rules tell Claude to tell Leo, apply it, and record it there. Without this,
+   a new rule only changed what Claude wrote next, never what was already there.
 
 ## The files
 
@@ -43,6 +49,7 @@ flowchart LR
 | `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | Leo's rules for every project, including coaching |
 | `shared/session.sh` | `scripts/session.sh` | Session lock, handover checks, the message counter for coaching |
 | `shared/playbook-sync.sh` | `scripts/playbook-sync.sh` | The sync itself (so it can update too) |
+| `shared/catch-up.md` | not copied (read by the sync) | Rule changes each project must apply once to its existing files; each project records the ones it has done in `docs/playbook-catch-up.md` |
 | `templates/*` | copied once by hand | Starting points; they don't update |
 | `reference/*` | not copied | Read on demand by Claude when needed |
 
@@ -90,3 +97,6 @@ Checked against Claude Code's documentation on 23 Oct 2026; see
 - **Claude Code may load `.claude/rules/` before the hook runs**, so a session
   can start on the previous rules. The sync's message asks Claude to re-read them.
 - Playbook syncs add small commits to each project's history.
+- **Catch-ups rely on Claude doing them.** The sync only prints the reminder;
+  it keeps printing at every session start until the project records the id,
+  so it can't be missed, but it can be put off.

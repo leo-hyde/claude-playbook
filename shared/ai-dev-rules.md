@@ -148,3 +148,8 @@ it's done. Put it in a code block so Leo can copy it on his phone.
   docs folder"), not with a project's private details.
 - Project-only lessons go in this project's CLAUDE.md or docs.
 - Every project picks up playbook changes at its next session start.
+- **A rule that changes how files should look applies to existing files
+  too**, not only to new work. Apply it in the project where it's made, and
+  add an entry to the playbook's `shared/catch-up.md` for the others.
+- **If session start prints `CATCH-UP DUE`**, tell Leo, apply it (or offer a
+  separate session if it's big), then record it in `docs/playbook-catch-up.md`.
