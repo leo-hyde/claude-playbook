@@ -12,7 +12,8 @@ flowchart LR
   Pages["GitHub Pages"] --> Browser
 ```
 
-<One paragraph: what runs where, and why (e.g. "no server of our own").>
+<One paragraph: what runs where, and why (e.g. "no server of our own").
+Explain each technical term the first time it appears.>
 
 ## What happens when you open the page
 1. <Step by step, from loading the files to drawing the screen.>

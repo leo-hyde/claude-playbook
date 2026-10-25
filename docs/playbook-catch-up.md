@@ -1,11 +1,15 @@
-# Playbook catch-ups for the playbook itself
+# Catch-ups for the playbook itself
 
-The playbook follows its own rules. Each entry in `shared/catch-up.md` is
-applied here too and recorded below: id, date, what changed. (This repo has
-no session hooks, so nothing prints a reminder: check this list when adding
-a catch-up.)
+The playbook follows its own rules. Some rule changes also apply to files
+that already exist; the playbook lists these in `shared/catch-up.md`. Each one
+is applied here too, and recorded below: its id, the date, and what changed.
+This repo has no hooks (scripts that run automatically when a session opens),
+so nothing prints a reminder here: check this list whenever you add a
+catch-up.
 
-- 2026-10-24-plain-english: **not done yet** (noted 24 Oct 2026). New text
-  since 24 Oct follows the rule; README, SKILL.md, `docs/` and `reference/`
-  were written before it and still use unexplained terms (hooks, sync,
-  skill). Needs its own session.
+- 2026-10-24-plain-english: done 25 Oct 2026. Rewrote README,
+  `docs/ARCHITECTURE.md` and `docs/decisions.md` in UK plain English, facts
+  unchanged, each with the technical words explained. Small wording fixes in
+  the SPEC, DESIGN and ARCHITECTURE templates. Left technical on purpose,
+  because Claude is their reader: `SKILL.md`, `CLAUDE.md`, `shared/`,
+  `reference/` and `personal-CLAUDE.md`.

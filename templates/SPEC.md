@@ -23,12 +23,14 @@ Status: **draft for Leo's review**. See [DESIGN.md](DESIGN.md) for how it looks.
 | 2 | … | |
 
 ### How it's built
-- **Plain HTML, CSS and JavaScript, no frameworks:** easy to read and learn
-  from, and it opens by double-clicking `index.html`.
-- **Data from <source>:** <free? key needed? usage limits? works from a browser?>
+- **Plain HTML, CSS and JavaScript (the basic languages of web pages), no
+  frameworks (big ready-made toolkits):** easy to read and learn from, and it
+  opens by double-clicking `index.html`.
+- **Data from <source>:** <free? needs a key (a password for the service)?
+  usage limits? can a browser fetch it directly?>
 - **Saved in the browser** (per device) unless sync is needed.
-- **Git and GitHub:** a commit and push after each working step; live on
-  GitHub Pages.
+- **Git and GitHub:** after each working step, a commit (a saved snapshot)
+  sent to GitHub; the site is published free on GitHub Pages.
 
 ---
 

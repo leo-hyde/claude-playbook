@@ -11,10 +11,10 @@ feature. Change it here first, then in the code.
 1. **Glance first.** The main question is answered in under 2 seconds, with a
    headline at the top. Detail comes on tap.
 2. **Colour carries meaning.** Bright colours only for what matters;
-   everything else (chrome, "no", empty, past) is calm grey.
+   everything else (frames and buttons, "no", empty, past) is calm grey.
 3. **Never colour alone.** Also words, symbols, shape or brightness.
 4. **Phone first.** Designed for one hand on a phone, then scaled up.
-   Tap targets 44px or more. Nothing wider than the screen.
+   Anything you tap is at least 44 pixels across. Nothing wider than the screen.
 5. **Follow the phone.** Light or dark theme comes from the device.
 
 ## Design tokens (in `:root` in style.css; see the skill's templates/style.css)

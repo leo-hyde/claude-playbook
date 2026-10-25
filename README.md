@@ -1,49 +1,65 @@
 # Claude playbook
 
-How Leo and Claude build apps together, learned while building
+How Leo and Claude build apps together. We learned it while building
 [Sport Conditions](https://github.com/leo-hyde/sport-conditions).
 
-This folder is a Claude Code **skill** called `new-app`. On Leo's Mac it lives
-at `~/.claude/skills/new-app/`, so any Claude Code session can use it: type
-`/new-app`, or just say you're starting a new app.
+## What this is
+This folder is a set of instructions and starting files for Claude Code, the
+AI coding tool. Claude Code calls a folder like this a **skill**: a packaged
+set of instructions it can load when needed. This one is called `new-app`.
 
-| File | What it's for |
+On Leo's Mac it lives at `~/.claude/skills/new-app/`, so any Claude Code
+session there can use it. Type `/new-app`, or just say you're starting a new
+app.
+
+## What's in it
+
+| Folder or file | What it's for |
 |---|---|
-| `shared/` | **Goes to every project automatically**: the shared rules (`ai-dev-rules.md`), the session lock script and the sync script |
-| `SKILL.md` | The playbook: kick-off, plan documents, set-up, building, checking |
-| `personal-CLAUDE.md` | Mac-only notes; a copy of `~/.claude/CLAUDE.md` |
-| `templates/` | One-off starting points: SPEC, DESIGN, CLAUDE.md, STATUS, decisions, feature spec, style.css, a Cloudflare Worker, a GitHub Action |
-| `reference/` | UX checklist, GitHub/hosting/Cloudflare steps, gotchas, phone + computer handover, understanding and quality |
-| `tools/serve.py` | No-cache preview server |
-| `docs/` | How this playbook itself works (ARCHITECTURE), its decisions and status |
+| `shared/` | **Copied into every project automatically.** Leo's rules for Claude (`ai-dev-rules.md`), plus two small programs (scripts): one stops two devices working at once, the other keeps each project's copy up to date |
+| `SKILL.md` | The playbook itself: first questions, planning documents, setting up, building, checking |
+| `personal-CLAUDE.md` | Notes for Claude that only apply on Leo's Mac. A copy of `~/.claude/CLAUDE.md` |
+| `templates/` | Starting points copied once into a new project: the plan (SPEC), the look (DESIGN), Claude's instructions (CLAUDE.md), the status page, the decisions log, a feature plan, a style sheet, a Cloudflare Worker (a small program that runs online) and a GitHub Action (a job GitHub runs for you) |
+| `reference/` | Know-how Claude reads when it needs it: a design checklist, GitHub and hosting steps, past mistakes and their fixes, working from phone and Mac, and making sure AI-built work is understood and safe |
+| `tools/serve.py` | A small program that shows a project in the browser on the Mac, always with the latest files |
+| `docs/` | How this playbook works, the decisions behind it, and where it's up to |
 
 ## Change it once, every project follows
-Edit `shared/ai-dev-rules.md` (or the scripts next to it), commit and push to
-`main`. At each project's next session start, `scripts/playbook-sync.sh`
-copies the new version into the project (`.claude/rules/playbook.md`) and
-commits it. It works the other way too: when a session in any project learns
-something general, the rules tell Claude to add it here. How it works, and its
-limits: `docs/ARCHITECTURE.md`.
+Leo's rules live in one file here: `shared/ai-dev-rules.md`. To change them,
+edit that file and save the change to GitHub. (In git terms: **commit**, a
+saved snapshot of the files, and **push**, sending it to GitHub's `main`, the
+one main copy.)
+
+Each project then picks up the change by itself. When a Claude session opens
+in a project, a script there (`scripts/playbook-sync.sh`) copies the new
+rules in as `.claude/rules/playbook.md`, and saves that change in the project.
+
+It works the other way too. When a session in any project learns something
+that would help every project, the rules tell Claude to add it here. How this
+works, and where it can fail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Projects using it: [Sport Conditions](https://github.com/leo-hyde/sport-conditions),
 JobSeekHelper, [AEC Tech Radar](https://github.com/leo-hyde/AECTechRadar) and
-its helper repo. Every repo of Leo's should be: see `shared/ai-dev-rules.md`.
+its helper repo. Every repo (project folder on GitHub) of Leo's should use it:
+see `shared/ai-dev-rules.md`.
 
 ## Using it somewhere else
-- **Another Mac:**
+- **On another Mac:** copy the playbook into place, then copy the Mac notes:
   `git clone https://github.com/leo-hyde/claude-playbook ~/.claude/skills/new-app`
   then `cp ~/.claude/skills/new-app/personal-CLAUDE.md ~/.claude/CLAUDE.md`
-- **A cloud session from a phone** (claude.ai/code): it can't see the Mac's
-  `~/.claude`. Each project carries the shared rules in
-  `.claude/rules/playbook.md`, synced from here. To use the full playbook, start with: *"Read
-  github.com/leo-hyde/claude-playbook (SKILL.md and the files it points to) and
-  follow it."*
+- **In a cloud session from Leo's phone** (claude.ai/code): the session runs
+  on Anthropic's computers, so it can't see the Mac's `~/.claude` folder.
+  Each project carries its own copy of the rules instead
+  (`.claude/rules/playbook.md`). To use the whole playbook, start the session
+  with: *"Read github.com/leo-hyde/claude-playbook (SKILL.md and the files it
+  points to) and follow it."*
 - **Working on one project from both phone and Mac:** see
-  `reference/phone-and-computer.md`. To add it to an existing project, tell
-  that project's session: *"Read reference/phone-and-computer.md in
+  `reference/phone-and-computer.md`. To set an existing project up that way,
+  tell a session in that project: *"Read reference/phone-and-computer.md in
   github.com/leo-hyde/claude-playbook and set this project up that way."*
 
 ## Keeping it up to date
-Rules every session needs: `shared/ai-dev-rules.md` (keep it short; it's read
-in every session of every project). Longer know-how: `reference/`. If you
-change `~/.claude/CLAUDE.md`, copy it over `personal-CLAUDE.md` too.
+Rules every session needs go in `shared/ai-dev-rules.md`. Keep it short:
+every session of every project reads all of it. Longer know-how goes in
+`reference/`, which Claude reads only when needed. If you change
+`~/.claude/CLAUDE.md` on the Mac, copy it over `personal-CLAUDE.md` too.
