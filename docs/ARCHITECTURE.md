@@ -71,6 +71,22 @@ something useful for every project, it adds it back to the playbook.
    `docs/playbook-catch-up.md`, under "CATCH-UP DUE". The rules tell Claude
    to tell Leo, apply it, and record it. Before catch-ups existed, a new rule
    only changed what Claude wrote next, never what was already there.
+7. **Set-up check.** The playbook's `shared/setup.txt` lists what every
+   project needs besides the copied files: lines in `.gitignore` (the list
+   of files git leaves out), the hooks in `.claude/settings.json`, and a few
+   files such as `docs/STATUS.md`. The sync checks the project against that
+   list. It adds a missing `.gitignore` line or hook itself, and commits it
+   as "Playbook: complete the project set-up". It keeps the project's other
+   settings. A missing file is only reported, under `SETUP:`, because its
+   content belongs to the project. So a new hook added to the playbook
+   reaches every project, where before it only reached new ones. I added
+   this on 25 Oct 2026.
+8. **Other repos in the same cloud session.** Hooks only run in the repo the
+   session opened in. So in a cloud session, session start also lists the
+   other repos sitting next to it. It says which ones to start by hand, and
+   flags any that don't follow the playbook (`NOT SET UP`). At the end of
+   every reply, the check also refuses to finish while another attached repo
+   has unsaved or unpushed work.
 
 ## The files
 
@@ -80,7 +96,8 @@ something useful for every project, it adds it back to the playbook.
 | `shared/session.sh` | `scripts/session.sh` | The session lock, the end-of-reply checks, and the message counter for coaching |
 | `shared/playbook-sync.sh` | `scripts/playbook-sync.sh` | The sync itself (copied too, so it can update itself) |
 | `shared/catch-up.md` | not copied (the sync reads it) | Rule changes each project must apply once to files it already has. Each project records the ones it has done in `docs/playbook-catch-up.md` |
-| `templates/*` | copied once, by hand | Starting points for a new project. They don't update afterwards |
+| `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |
+| `templates/*` | copied once, by hand | Starting points for a new project. They don't update afterwards, except the hooks (through `setup.txt`). Any other template change that existing projects need gets a catch-up entry |
 | `reference/*` | not copied | Know-how Claude reads only when it needs it |
 
 Changes also flow the other way. The rules tell Claude that a lesson useful
@@ -130,9 +147,22 @@ detail in `docs/decisions.md`.
 - **Hooks don't always run.** In a cloud session that started before a
   project had hooks, nothing syncs until someone runs `scripts/session.sh
   start` by hand.
-- **A session with several repos attached may run hooks in none of them**,
-  or only in the one it opened in. The rules tell Claude to run session start
-  in each repo it changes. That's an instruction, not automatic.
+- **A session with several repos attached runs hooks only in the one it
+  opened in.** Session start lists the other attached repos, and the
+  end-of-reply check catches their unsaved or unpushed work. But running
+  session start in them (so they sync) is still Claude following a rule. A
+  repo attached in the middle of a session isn't listed at start, though
+  the end-of-reply check still covers it.
+- **The set-up check only adds.** Removing or renaming a hook, or a
+  `.gitignore` line, needs a catch-up entry. A hook it adds starts working
+  from the next session. It needs `python3` to check the hooks (there on
+  Leo's Mac with Apple's developer tools, and in cloud sessions); without
+  it, it says so.
+- **If GitHub can't be reached,** the sync prints `PLAYBOOK NOT SYNCED` with
+  the date of the copy in use, and the rules tell Claude to tell Leo.
+- **A project nobody opens doesn't update.** Each project catches up at its
+  next session, not before. That's fine, because the rules only matter while
+  Claude works there.
 - **A repo that was never set up gets nothing.** The sync only reaches repos
   that have `scripts/playbook-sync.sh`. The rules say every repo of Leo's is
   set up, and tell Claude to offer when it finds one that isn't.

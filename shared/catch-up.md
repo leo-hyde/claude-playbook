@@ -5,6 +5,10 @@ change how files a project **already has** should look. Those get an entry
 here, so every older project applies them once, not just the one where the
 rule was made.
 
+Set-up additions (a new hook, `.gitignore` line or required file) don't
+need an entry: add them to `shared/setup.txt`, which the sync checks and
+fills in automatically. Removing or renaming set-up does need an entry.
+
 How it works: at session start, `playbook-sync.sh` prints every entry below
 whose id isn't yet mentioned in the project's `docs/playbook-catch-up.md`,
 under "CATCH-UP DUE". Claude tells Leo, applies it (or offers a separate

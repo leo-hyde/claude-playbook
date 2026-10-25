@@ -63,6 +63,8 @@ which fetches the playbook's latest `main` and commits any changes as
    sure `.gitignore` has `.claude/*`, `!.claude/settings.json`,
    `!.claude/rules/` and `.session/`, so the hooks and rules are shared but
    local Claude files and the session's scratch files aren't.
+   From then on, every session start checks these against the playbook's
+   `shared/setup.txt` and adds any missing hook or line itself.
 4. Trim the project's CLAUDE.md to project-only rules (`templates/CLAUDE.md`):
    the generic ones now come from `.claude/rules/playbook.md`.
 5. Commit and push to main.

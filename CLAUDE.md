@@ -14,7 +14,10 @@ skill (`new-app`) on Leo's Mac, at `~/.claude/skills/new-app`. How it works:
   `bash -n` on the scripts and test a changed script in a throwaway git repo
   before pushing; scripts must work on macOS (bash 3.2, BSD tools) and Linux.
 - Projects' copies must not be edited there; this repo is the source.
-- Templates (`templates/`) are copied once into new projects and don't update.
+- Templates (`templates/`) are copied once into new projects and don't update,
+  except the hooks in `templates/.claude/settings.json`, which every session
+  checks through `shared/setup.txt`. So any other template change that
+  existing projects need also gets a catch-up entry.
   `reference/` is read on demand, so detail belongs there, not in `shared/`.
 - **The rules apply here too.** This repo has no session hooks: update
   docs/STATUS.md by hand after each step, commit and push to `main`

@@ -11,6 +11,19 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 25 Oct 2026: Every playbook change must reach existing projects
+- **What:** a set-up list (`shared/setup.txt`) checked at every session
+  start, which adds missing hooks and `.gitignore` lines itself. Checks of
+  other repos attached to a cloud session. A louder warning when the sync
+  can't reach GitHub. And a rule: any other change that existing files need
+  gets a catch-up entry.
+- **Why:** Leo asked how to make sure future playbook changes reach every
+  repo. Before this, only three files updated themselves. A new hook or
+  template change reached new projects only, and nothing said so.
+- **Rejected:** copying `.claude/settings.json` over each project's own
+  (it would wipe a project's own settings); a GitHub Action pushing to every
+  project (rejected on 23 Oct: it needs a token that can change every repo).
+
 ## 25 Oct 2026: Act on a repo's open GitHub Issues; ask first for bigger ones
 - **What:** GitHub Issues are to-do notes attached to a repo. When a session
   opens, Claude lists the open ones and tells Leo. After doing what Leo

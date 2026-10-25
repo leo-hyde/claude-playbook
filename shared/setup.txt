@@ -1,0 +1,23 @@
+# The set-up every project needs. playbook-sync.sh reads this file from the
+# playbook's main at every session start and checks each project against it,
+# so a change here reaches every project without a catch-up.
+#
+#   gitignore: <line>   the project's .gitignore must have this exact line
+#                       (missing ones are added, in this order, and committed)
+#   hooks: <file>       the project's .claude/settings.json must have every hook
+#                       in this playbook file (missing ones are added and committed;
+#                       other settings and hooks are kept)
+#   file: <path>        the project must have this file (only reported, as the
+#                       content is the project's own)
+#
+# Only additions are automatic. Removing or renaming something needs a catch-up
+# entry in shared/catch-up.md.
+
+gitignore: .claude/*
+gitignore: !.claude/settings.json
+gitignore: !.claude/rules/
+gitignore: .session/
+hooks: templates/.claude/settings.json
+file: CLAUDE.md
+file: docs/STATUS.md
+file: docs/decisions.md

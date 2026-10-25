@@ -8,9 +8,9 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 |---|---|
 | Last session | Phone (cloud), 25 Oct 2026 |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | None. Done today: a rule to act on a repo's open GitHub Issues (replacing the "fix small problems" rule), and the plain-English catch-up for the playbook's own docs (see `docs/playbook-catch-up.md`) |
-| Next step | Trim `shared/ai-dev-rules.md` back under ~150 lines (it's 163) |
-| Check first | Sport Conditions and JobSeekHelper still have the old sync script, so their next session shows "CATCH-UP DUE" one session late, once (Leo is bringing them up to date himself) |
+| Mid-flight work | None. Done today: issues rule; plain-English catch-up; and playbook changes now reach existing projects (set-up check in `shared/setup.txt`, checks of other attached repos, louder "not synced" warning) |
+| Next step | Trim `shared/ai-dev-rules.md` back under ~150 lines (it's 167) |
+| Check first | The new set-up check reaches each project at its next session start (scripts update themselves, then run their new version) |
 
 ## Where we are
 The shared folder (the rules, the session lock and the sync) is copied into
