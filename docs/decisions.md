@@ -11,6 +11,23 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 25 Oct 2026: Keep the docs true: a rule for which doc each change updates, and a check
+- **What:** a "Keeping the docs true" section in the rules: each kind of
+  change (plan, choice, step, structure) names the doc it updates, in the
+  same commit. SPEC.md is now "the plan, in one place", with every step's
+  status. The end-of-reply check blocks when `specs/` changed but SPEC.md
+  didn't. A catch-up makes every project's SPEC.md match its plan once.
+- **Why:** in AEC Tech Radar the plan changed (a new direction, written as a
+  spec in `specs/`), but SPEC.md and decisions.md weren't updated. The rules
+  listed what to record after a step, but not SPEC.md, and treated a spec as
+  something written before building, not as the plan. Only STATUS.md was
+  checked automatically, so that was the only doc kept current.
+- **Rejected:** a separate Claude-only notes file (it would be a second copy
+  of the plan, and drift the same way: the shared docs already are Claude's
+  memory); blocking whenever any code changes without a doc change (too many
+  false alarms, so it would be ignored); a scheduled doc audit (costs credits
+  every time, and finds the problem late rather than stopping it).
+
 ## 25 Oct 2026: Every playbook change must reach existing projects
 - **What:** a set-up list (`shared/setup.txt`) checked at every session
   start, which adds missing hooks and `.gitignore` lines itself. Checks of

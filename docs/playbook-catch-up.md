@@ -13,3 +13,6 @@ catch-up.
   the SPEC, DESIGN and ARCHITECTURE templates. Left technical on purpose,
   because Claude is their reader: `SKILL.md`, `CLAUDE.md`, `shared/`,
   `reference/` and `personal-CLAUDE.md`.
+- 2026-10-25-spec-is-the-plan: done 25 Oct 2026. Nothing to change: the
+  playbook has no SPEC.md or `specs/` (its plan is docs/STATUS.md). The SPEC
+  and STATUS templates were updated with the rule.

@@ -36,7 +36,10 @@ Template: `templates/ARCHITECTURE.md`.
    pushing. "It works" from an AI isn't evidence; a check you can see is.
 5. **Walkthrough:** what changed and why, which files, how data flows, the
    2–3 lines that matter, **how it was checked and what wasn't**, risks.
-6. **Record:** update ARCHITECTURE.md, `docs/decisions.md` and STATUS.md.
+6. **Record:** update the docs the change touched, in the same commit:
+   SPEC.md if the plan, scope or a step's status changed; `docs/decisions.md`
+   for a choice; ARCHITECTURE.md for structure; always STATUS.md ("Keeping
+   the docs true" in `shared/ai-dev-rules.md`).
 
 ## 3. Telling good AI code from junk
 

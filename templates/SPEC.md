@@ -1,6 +1,11 @@
 # <App name>: Product Spec
 
-Status: **draft for Leo's review**. See [DESIGN.md](DESIGN.md) for how it looks.
+Status: **draft for Leo's review** (updated <date>). See [DESIGN.md](DESIGN.md)
+for how it looks.
+
+<!-- This is the plan, and the only place it lives. Update it in the same
+commit as any change of goal, scope or steps, even one agreed only in
+conversation; log the reason in docs/decisions.md. -->
 
 ## The idea
 <One or two sentences: the problem, and who it's for.>
@@ -19,8 +24,8 @@ Status: **draft for Leo's review**. See [DESIGN.md](DESIGN.md) for how it looks.
 ### Steps (each one ends with something you can see working)
 | # | Step | Status |
 |---|---|---|
-| 1 | <smallest useful thing, e.g. show real data for one item> | |
-| 2 | … | |
+| 1 | <smallest useful thing, e.g. show real data for one item> | <Not started / Under way / Done> |
+| 2 | <a bigger step: link its spec, e.g. [spec](specs/feature.md)> | |
 
 ### How it's built
 - **Plain HTML, CSS and JavaScript (the basic languages of web pages), no

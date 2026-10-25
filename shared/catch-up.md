@@ -32,3 +32,15 @@ what to leave alone, how to check. Keep each entry short; it's printed in full.
   separate session for the full pass.
 - Check: the project's build and tests still pass, and the diff changes
   wording only.
+
+## 2026-10-25-spec-is-the-plan: Make SPEC.md match the current plan
+- Read SPEC.md, every file in `specs/`, docs/STATUS.md, docs/decisions.md and
+  recent `git log`. Where the plan, goal, scope or steps have moved on, update
+  SPEC.md: a step table with each step's status, a link to each spec, and an
+  "(updated <date>)" on its status line.
+- Any change of plan not yet in decisions.md: add an entry under the date it
+  was made (from git log), saying it was recorded late.
+- STATUS.md's next steps: point at SPEC.md's step numbers, don't copy them.
+- Leave the meaning alone: record what was decided, don't decide anything.
+  Anything unclear goes to Leo as a question.
+- Check: a fresh session reading only the docs would plan the same next step.

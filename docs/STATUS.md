@@ -8,9 +8,9 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 |---|---|
 | Last session | Phone (cloud), 25 Oct 2026 |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | None. Done today: issues rule; plain-English catch-up; and playbook changes now reach existing projects (set-up check in `shared/setup.txt`, checks of other attached repos, louder "not synced" warning) |
-| Next step | Trim `shared/ai-dev-rules.md` back under ~150 lines (it's 167) |
-| Check first | The new set-up check reaches each project at its next session start (scripts update themselves, then run their new version) |
+| Mid-flight work | None. Done today: "Keeping the docs true" rule, an end-of-reply check that SPEC.md moves with `specs/`, SPEC/STATUS template changes and catch-up `2026-10-25-spec-is-the-plan` |
+| Next step | Trim `shared/ai-dev-rules.md` back under ~150 lines (it's now about 180) |
+| Check first | The first session in each project after this: the catch-up should leave SPEC.md matching the plan, and the new check may block once where a spec changed after SPEC.md |
 
 ## Where we are
 The shared folder (the rules, the session lock and the sync) is copied into

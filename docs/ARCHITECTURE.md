@@ -87,6 +87,10 @@ something useful for every project, it adds it back to the playbook.
    flags any that don't follow the playbook (`NOT SET UP`). At the end of
    every reply, the check also refuses to finish while another attached repo
    has unsaved or unpushed work.
+9. **Docs kept true.** The end-of-reply check also refuses to finish when a
+   file in `specs/` changed after SPEC.md last did: a feature plan moved on
+   but the overall plan didn't. Projects without a SPEC.md are skipped. The
+   rule behind it is "Keeping the docs true" in `shared/ai-dev-rules.md`.
 
 ## The files
 

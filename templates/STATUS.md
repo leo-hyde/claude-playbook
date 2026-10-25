@@ -22,7 +22,8 @@ append. History is in `git log`; decisions are in `docs/decisions.md`.
 
 ## Next steps
 
-1. <In order. Big ones get a spec in `specs/` and their own session.>
+1. <The next one or two, by their number in SPEC.md's steps; don't copy the
+   whole plan here. Big ones get a spec in `specs/` and their own session.>
 
 ## Open questions
 
