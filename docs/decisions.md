@@ -11,6 +11,11 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 26 Oct 2026: Suggest a fresh session for a change of work or clutter, not for length
+- **What:** the Coaching rules now judge whether the conversation still helps the work at hand. A fresh session is suggested for a new piece of work or a cluttered context; a long but focused session carries on. The `COACH:` hook line asks Claude to judge rather than to suggest wrapping up. New: save state to STATUS.md before the app compacts the conversation.
+- **Why:** a session was told it had "grown long" after 3 of Leo's messages, at 12% of its context window. The real reason was a change of topic. Message counts and sizes go stale as context windows and models grow; relevance doesn't. Leo asked for guidance that stays true as AI improves.
+- **Rejected:** a higher message count or a context-percentage threshold (both go stale); dropping the hook (a periodic prompt to judge is still useful).
+
 ## 25 Oct 2026: Keep the docs true: a rule for which doc each change updates, and a check
 - **What:** a "Keeping the docs true" section in the rules: each kind of
   change (plan, choice, step, structure) names the doc it updates, in the
