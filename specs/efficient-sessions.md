@@ -1,7 +1,6 @@
 # Spec: efficient sessions (using tokens well)
 
-Status: **draft for the user's review** (27 Oct 2026). Nothing here is built
-yet. Builds after [playbook-releases.md](playbook-releases.md), so it ships
+Status: **built** (27 Oct 2026), waiting for the canary and the second release. Builds after [playbook-releases.md](playbook-releases.md), so it ships
 as a tested release, not straight to every project.
 
 ## Goal
@@ -325,3 +324,36 @@ What to build:
   checked in the session that wrote it. Updated the same day with the next
   morning's sessions (cold resume, bulk data in the conversation) and
   part 7 (fix now or file an issue).
+- 27 Oct 2026: built, with every recommended decision (the user's yes),
+  on branch `second-release`, for the second release.
+  - Cost hook (`session.sh busy`), push-to-main check (`session.sh
+    push-check`, `PreToolUse` hook on Bash), end-of-reply check for lost
+    work only, catch-ups one line each, `reference/efficient-sessions.md`
+    (with the monthly review script, tried on this Mac's 21 transcripts),
+    `scout` and `checker` subagents, rules trimmed to 149 lines.
+  - Tests: 98 cases; new ones for each changed script (cost notes, push
+    check, one-line catch-ups, owner file, subagents, a fork). The rules-size
+    test is now a hard 150-line limit.
+  - Not done here: testing that project subagents load in a cloud session
+    (they're synced anyway; the rules work without them), and the `opusplan`
+    trial line in the canary's settings (done in the canary session).
+
+### Where every rule went (before → after)
+| Before (197 lines) | After (149 lines) |
+|---|---|
+| About Leo (learning, checks not tinkering, direct critique) | `owner/profile.md` → `.claude/rules/owner.md` |
+| Writing for people: plain English, no jargon, lead with meaning, technical files | Kept, "the user" |
+| End-of-task summary shape | Kept, now "As short as the reader needs" (full shape for finished steps) |
+| How we work: plan first, ask about ambiguity, say what's hard, never guess facts | Kept; "ask questions together, each with a default" added |
+| Open GitHub Issues | "Found something outside the task?" (part 7) and "Open issues" |
+| Where things live (table) | Kept; `.claude/rules/playbook.md` row dropped (said in the header), `docs/CONTEXT.md` row moved to `reference/understanding-and-quality.md` |
+| Each feature (5 steps) + Keeping the docs true | Merged into "Each feature, and keeping the docs true"; `checker` subagent added; the hook now refuses a push to main |
+| Safety and responsibility | Kept, shortened |
+| Public repos: check before committing | Kept as a bullet in Safety; the private-topics list moved to owner.md ("Never public") |
+| `THIS REPO IS NOW PUBLIC` review steps, history grep, `visibility-ok`, no force-push | `reference/github-and-hosting.md` ("When a repo turns public"); the rules keep the trigger |
+| The noreply commit address | owner.md; the rules say "commit only with the address in owner.md" |
+| Git: repo as shared memory, `OTHER WORK`, branches, commit/push each step, progress notes in spec, other repos, session-start lines, every repo follows the playbook | Kept, shortened; "the session's own branch needn't match main" added |
+| Coaching (all bullets) | "Using tokens well": fresh session on a change of work or `COST:`, unrelated topics, corrected twice, vague request, no check; starter prompt now names a model |
+| Coaching: context nearly full, `/compact`, `/code-review`, better habits | `reference/efficient-sessions.md` |
+| Keeping the playbook current (edit the playbook, public, setup.txt and catch-ups) | "Ideas for the playbook" (file an `idea` issue); the setup.txt and catch-up mechanics stay in the playbook's own CLAUDE.md and `shared/catch-up.md` |
+| `CATCH-UP DUE`: tell, apply, record | In "Session start lines are for the user" |

@@ -16,3 +16,8 @@ catch-up.
 - 2026-10-25-spec-is-the-plan: done 25 Oct 2026. Nothing to change: the
   playbook has no SPEC.md or `specs/` (its plan is docs/STATUS.md). The SPEC
   and STATUS templates were updated with the rule.
+- 2026-10-27-no-lock: checked 27 Oct 2026. Nothing to change: the playbook
+  has no session script, lock branch or STATUS wording about locks.
+- 2026-10-27-tokens: done 27 Oct 2026. The playbook's ARCHITECTURE.md and
+  `reference/` describe cost notes and the push-to-main check; no `COACH`
+  mentions left outside history.

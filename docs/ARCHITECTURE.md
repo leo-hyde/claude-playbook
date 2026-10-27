@@ -70,7 +70,8 @@ something useful for every project, it adds it back to the playbook.
    just new work (for example, "rewrite the docs in plain English"). These
    are listed in the playbook's `shared/catch-up.md`. The sync prints any
    entry the project hasn't recorded as done in its
-   `docs/playbook-catch-up.md`, under "CATCH-UP DUE". The rules tell Claude
+   `docs/playbook-catch-up.md`, under "CATCH-UP DUE", one line each (id and
+   title); Claude reads the entry from the playbook. The rules tell Claude
    to tell the user, apply it, and record it. Before catch-ups existed, a new rule
    only changed what Claude wrote next, never what was already there.
 7. **Set-up check.** The playbook's `shared/setup.txt` lists what every
@@ -89,10 +90,17 @@ something useful for every project, it adds it back to the playbook.
    flags any that don't follow the playbook (`NOT SET UP`). At the end of
    every reply, the check also refuses to finish while another attached repo
    has unsaved or unpushed work.
-9. **Docs kept true.** The end-of-reply check also refuses to finish when a
-   file in `specs/` changed after SPEC.md last did: a feature plan moved on
-   but the overall plan didn't. Projects without a SPEC.md are skipped. The
-   rule behind it is "Keeping the docs true" in `shared/ai-dev-rules.md`.
+9. **Docs kept true, checked as work lands.** A hook runs `session.sh
+   push-check` before every shell command Claude runs; it leaves at once
+   unless the command is a push. A `git push` to `main` (in any of its usual
+   forms) is refused until docs/STATUS.md is part of what's pushed, and
+   SPEC.md too if a file in `specs/` changed (projects without a SPEC.md are
+   skipped). Playbook sync commits and GitHub Action bots' commits don't
+   count. Claude is mid-turn when it's refused, so it adds the docs and
+   pushes again without an extra turn. Until 27 Oct 2026 the end-of-reply
+   check did this, which cost a whole extra turn each time; it now only
+   checks for lost work. The rule behind it: "Each feature, and keeping the
+   docs true" in `shared/ai-dev-rules.md`.
 
 ## Releases: how a change reaches the projects
 Work lands on the playbook's `main`. Projects don't read `main`: they read
@@ -125,8 +133,8 @@ macOS with Apple's bash 3.2.
 
 | Playbook file | Copy in each project | What it does |
 |---|---|---|
-| `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | The shared rules for every project, including coaching |
-| `shared/session.sh` | `scripts/session.sh` | Session start (pull, other work, issues, handover), the end-of-reply checks, and the message counter for coaching |
+| `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | The shared rules for every project, including using tokens well |
+| `shared/session.sh` | `scripts/session.sh` | Session start (pull, other work, issues, handover), the end-of-reply check for lost work, the push-to-main docs check, and the cost notes |
 | `shared/playbook-sync.sh` | `scripts/playbook-sync.sh` | The sync itself (copied too, so it can update itself) |
 | `shared/catch-up.md` | not copied (the sync reads it) | Rule changes each project must apply once to files it already has. Each project records the ones it has done in `docs/playbook-catch-up.md` |
 | `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |
@@ -136,29 +144,40 @@ macOS with Apple's bash 3.2.
 | `scripts/release.sh` | not copied | Makes a release: tests, note, the user's yes, then `stable` moved to `main` and tagged |
 | `tests/run.sh` | not copied | The kept tests, run by the GitHub Action on Linux and macOS |
 | (none) | `.claude/playbook-channel` | Only in the canary: reads `main`, so it syncs from `main` |
-| `owner/profile.md` | not copied yet | The owner's accounts, devices and preferences, kept apart so others can copy the playbook. Planned: synced as `.claude/rules/owner.md` (`specs/shareable-playbook.md`) |
+| `owner/profile.md` | `.claude/rules/owner.md` | The owner's accounts, devices and preferences, kept apart so others can copy the playbook (a fork replaces `owner/` and `PLAYBOOK_URL` in `shared/playbook-sync.sh`) |
+| `templates/.claude/agents/*.md` | `.claude/agents/*.md` | The `scout` (cheap model: searching, boiling down data) and `checker` (mid model: checking a step against its spec) subagents |
 
-Changes also flow the other way. The rules tell Claude that a lesson useful
-for every project goes into this repo, not just the project. That's an
+Changes also flow the other way. The rules tell Claude to file a lesson
+useful for every project as an `idea` issue on this repo, in general terms
+(it's public), instead of editing the playbook from a project session. A
+playbook session then works through the ideas in a batch. That's an
 instruction Claude follows, not something automatic.
 
-## Coaching
-Coaching means Claude nudging the user to use sessions well, for example
-suggesting a fresh session when one gets long. Here's how it's triggered.
+## Cost notes
+The rules' "Using tokens well" section says how Claude keeps sessions
+efficient. One signal comes from a script. A hook runs `session.sh busy`
+every time the user sends a message. It reads the session's transcript (the
+log Claude Code keeps, whose path the hook passes in) and compares the size
+of the latest request's context with the first one's, which is about what a
+fresh session costs. Subagents' requests are left out.
+- Past 3× it prints one `COST:` line (each message now re-reads about N
+  tokens, about R× a fresh session's), and past 6× one more. Each is said
+  once per session (remembered in `.session/cost-<session id>`, not saved
+  to GitHub).
+- If the last reply was more than 55 minutes ago and the context is over 2×
+  a fresh one's, it says the cache has likely expired, so this message pays
+  full price: a natural moment to start fresh.
+- The numbers sit at the top of `session.sh` and match the assumptions table
+  in `reference/efficient-sessions.md`. Without `python3` it says nothing.
 
-A hook runs `session.sh busy` every time the user sends a message. It counts the
-messages in each session, in a file that isn't saved to GitHub
-(`.session/messages-<session id>`). Every 15 messages it prints a line
-starting `COACH:`, with the size of the conversation so far. Claude Code
-passes that line to Claude. The rules' "Coaching" section says what Claude
-does with it, and with other signs, such as several topics in one message.
-The number 15 is our own judgement, not a figure from Anthropic.
+This replaced a message counter (a `COACH:` line every 15 messages) on 27 Oct
+2026: a count says nothing about cost, and a long but small session is fine.
 
 ## Public or private
 When a session opens, `session.sh` asks GitHub whether the repo is public.
 It compares the answer with `.claude/repo-visibility`, a saved file holding
 the last answer that was reviewed. If a repo has become public, it prints
-`THIS REPO IS NOW PUBLIC`. The rules ("Public repos") then make Claude tell
+`THIS REPO IS NOW PUBLIC`. The rules ("Safety and responsibility") then make Claude tell
 the user, and check the files and their history for private details, before doing
 anything else. The warning repeats at every session start until
 `scripts/session.sh visibility-ok` records that the review is done. If

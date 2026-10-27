@@ -164,3 +164,10 @@ monthly review re-checks them. A mismatch becomes an idea issue.
     command to run on the Mac, if the tag is refused. It also counts
     releases from `stable`'s `RELEASES.md`, so a missing tag doesn't break
     the `-2` numbering. Tests added for both (69 cases).
+  - 27 Oct: the tag `release-2026-10-27` pushed from the Mac, and the
+    leftover branches deleted (the six older ones held nothing that wasn't
+    on `main`; checked with `git cherry`).
+  - 27 Oct: part 4 (ideas as issues) built with the second release: the
+    rules' "Ideas for the playbook" section. The rules-size test is now a
+    hard 150-line limit. Part 6 (the assumptions table) is in
+    `reference/efficient-sessions.md`.

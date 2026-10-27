@@ -1,6 +1,6 @@
 # Spec: a playbook others can copy
 
-Status: **part done, the rest a draft for the user's review** (27 Oct 2026).
+Status: **built** (27 Oct 2026), waiting for the second release.
 
 ## Goal
 Anyone can read, copy or fork the playbook and use it for their own work.
@@ -69,3 +69,12 @@ same rules file as the trim, so doing both at once avoids two rewrites.
 
 ## Progress
 - 27 Oct 2026: non-synced files made general; `owner/profile.md` created.
+- 27 Oct 2026: the rest built on branch `second-release`, for the second
+  release. `shared/` says "the user"; "About Leo" and the private-topics list
+  are in `owner/profile.md`, synced as `.claude/rules/owner.md`;
+  `PLAYBOOK_URL` is the first line of `playbook-sync.sh` and the only one
+  naming the owner (the tests check this); `personal-CLAUDE.md` moved to
+  `owner/`; README has "Using this playbook yourself"; MIT licence (the
+  user's choice). Templates had no owner names left. A test syncs a project
+  from a local fork that changed only `owner/` and `PLAYBOOK_URL`.
+  The example projects stay named in the README (recommended decision 2).

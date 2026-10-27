@@ -11,6 +11,40 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 27 Oct 2026: Second release: tokens used well, a shareable playbook, ideas as issues
+Built from `specs/efficient-sessions.md`, the rest of
+`specs/shareable-playbook.md` and part 4 of `specs/playbook-releases.md`,
+with every recommendation in their "Decisions for the user" (the user's yes, 27 Oct).
+- **Cost measured, not counted:** `session.sh busy` reads the transcript and
+  compares the latest context with the first; notes at 3× and 6×, and a
+  cold-cache note after 55 minutes when over 2×. **Why:** a message count
+  said nothing about cost; the ratio doesn't go stale when prices or windows
+  change. **Rejected:** absolute token limits (they go stale).
+- **Docs checked at push-to-main, not end of reply:** a `PreToolUse` hook
+  refuses a push to main without STATUS.md (and SPEC.md if `specs/`
+  changed). The end-of-reply check now blocks only for lost work. **Why:**
+  the old block forced a whole extra turn; mid-turn, Claude just adds the
+  docs. **Rejected:** dropping the docs check (stale docs mislead the next session).
+- **Short replies for small changes**; the five-part summary for finished steps.
+- **Fix now, stop and tell, or file an issue** (`claude-found`), filed by
+  Claude without asking. **Why:** filing while the evidence is at hand is
+  cheap, and a later session can batch them on a suitable model.
+- **Ideas for the playbook are issues** (`idea`) on the playbook repo, not
+  edits from project sessions. **Why:** a project session knows one project,
+  not how a change lands in the others; issues get batched and released.
+- **`scout` (Haiku) and `checker` (Sonnet) subagents** synced into every
+  project, and an `opusplan` trial as the canary's default model. Whether
+  project subagents load in cloud sessions is not yet tested: the rules work
+  without them (a per-call `model`).
+- **Catch-ups print one line each**; Claude reads the entry itself.
+- **Rules trimmed to 149 lines**, now a hard 150-line test. Owner details
+  moved to `owner/profile.md`, synced as `.claude/rules/owner.md`; the public
+  repo and git detail moved to `reference/`. Every rule's place is listed in
+  the efficient-sessions spec's Progress section.
+- **Shareable:** `shared/` says "the user"; `PLAYBOOK_URL` (top of
+  `playbook-sync.sh`) is the only owner line there; MIT licence (the user's
+  choice: one licence for code and text); `personal-CLAUDE.md` moved to `owner/`.
+
 ## 27 Oct 2026: The session script checks the session's own folder, from the hook's `cwd`
 - **What:** `session.sh` reads `cwd` from the hook's JSON input. If it's a
   worktree of the same repo, the checks run there, with that worktree's copy
@@ -187,7 +221,7 @@ Replaced by 25 Oct 2026: the user meant GitHub Issues, not any problem Claude sp
   pushing to every project (it needs a password-like token that can change
   every repo, and more can go wrong).
 
-## 23 Oct 2026: The rules tell Claude to coach the user without being asked
+## 23 Oct 2026: The rules tell Claude to coach the user without being asked (counter replaced by cost notes, 27 Oct)
 - **Why:** the user asked for nudges on session length, mixed topics and credit
   use. A message counter in `session.sh` makes the length nudge reliable,
   rather than leaving it to Claude's judgement.
