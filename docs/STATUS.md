@@ -8,8 +8,8 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 |---|---|
 | Last session | Cloud, 27 Oct 2026 (usage review and specs) |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | None. Three specs drafted for the user's review (efficient-sessions updated with the 27 Oct morning sessions and "fix now or file an issue"): `specs/playbook-releases.md`, `specs/efficient-sessions.md`, `specs/shareable-playbook.md`. Wording made general ("the user") in every file no project syncs; `owner/profile.md` created. `shared/` untouched |
-| Next step | The user reviews the three specs and answers their "Decisions for the user". Then build them in order (below), each in a fresh session |
+| Mid-flight work | None. Three specs drafted for the user's review (efficient-sessions updated with the 27 Oct morning sessions , "fix now or file an issue" and part 8, the right model for each job): `specs/playbook-releases.md`, `specs/efficient-sessions.md`, `specs/shareable-playbook.md`. Wording made general ("the user") in every file no project syncs; `owner/profile.md` created. `shared/` untouched |
+| Next step | Build in order (below), each in a fresh session, using the recommended answer to each "Decisions for the user" unless the user said otherwise |
 | Check first | Earlier today (Mac): the session lock was removed (catch-up `2026-10-27-no-lock`); watch that projects apply it |
 
 ## Where we are
@@ -21,7 +21,7 @@ still name the owner until the shareable spec ships. Documents follow "each
 fact in one place". Claude coaches the user on sessions and credits.
 
 ## Next steps
-1. Agree the specs (the user).
+1. The specs are agreed (27 Oct): recommended options unless the starter prompt says otherwise.
 2. Build `specs/playbook-releases.md`: a `stable` branch, a canary project,
    kept tests on Linux and macOS, release notes, ideas as issues.
 3. Build `specs/efficient-sessions.md` and the rest of

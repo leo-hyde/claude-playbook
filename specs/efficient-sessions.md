@@ -97,10 +97,16 @@ correctness for tokens: a check that catches a mistake is cheaper than rework.
 - **Replies as short as the reader needs.** A small change gets two or three
   lines; the full summary shape is for a finished step. A reply is paid for
   again on every later message.
-- **Every starter prompt names a model.** Planning, design, debugging,
-  unclear problems: the strongest model. Mechanical work against a clear
-  spec (rewording, renames, catch-ups, applying an agreed change): a cheaper
-  one. Subagents that search or collect: the cheapest. Effort: the default,
+- **The right model for each job.** Claude can't change its own model; the
+  user picks it, so every starter prompt names one:
+  - planning, design, debugging, unclear problems: the strongest;
+  - mechanical work against a clear spec (rewording, renames, catch-ups):
+    a cheaper one.
+
+  Within a session, give delegated work its own model (the `model`
+  parameter): searching, collecting or boiling down data → the cheapest;
+  a self-contained mechanical job → mid. Delegate only self-contained work:
+  a subagent starts cold and re-reads what it needs. Effort: the default,
   higher only for subtle bugs.
 - **Research and subagents get a budget**: how many searches or sources, and
   how long the summary back.
@@ -240,6 +246,44 @@ Why this keeps quality up: the fix-now case is limited to what can be
 checked at once; everything else gets its own focused session, a fresh
 reviewer, and the user's yes where it matters.
 
+### 8. The right model for each job
+Most of the week's usage ran on the strongest model, including mechanical
+work (doc rewrites, catch-ups, branch syncing). How models can be mixed,
+from the Claude Code docs (checked 27 Oct 2026):
+- **The main session's model is the user's choice**: `/model`, the picker
+  when starting a cloud session, or `"model"` in a project's
+  `.claude/settings.json`. Claude can't switch it mid-session.
+- **`opusplan`** is a setting that uses Opus in plan mode and Sonnet once
+  building starts. It suits the playbook's "plan first, then build".
+- **Subagents can each have their own model.**
+  - Order of precedence: a per-call `model` parameter, then the `model:` line
+    in a subagent file (`.claude/agents/<name>.md`), then
+    `CLAUDE_CODE_SUBAGENT_MODEL`, then the main session's model.
+  - So, in reply to one prompt, Claude can send searches to Haiku and keep
+    the judgement on Opus.
+- **Effort defaults to medium** on the 5.5 models; `/effort` changes it.
+
+What to build:
+1. **The rules bullet above.**
+2. **Two project subagents**, in the playbook's `templates/.claude/agents/`,
+   added to `setup.txt` so every project gets them:
+   - `scout` (`model: haiku`; tools `Read, Grep, Glob, Bash`): finds files,
+     searches, and boils down logs or data into a short summary.
+   - `checker` (`model: sonnet`; tools `Read, Grep, Glob, Bash`, no edits):
+     checks a finished step against its spec and reports gaps, a cheap
+     second opinion before the walkthrough.
+
+   **Test in a cloud session first** that project subagents load there; the
+   docs don't say. If they don't, the rules bullet (per-call `model`) still
+   works, and setup.txt skips them.
+3. **A trial of `opusplan`** as the default model in the canary project
+   (`"model": "opusplan"` in its `.claude/settings.json`) for a week.
+   - The monthly review compares quality (rework, corrections) and cost.
+   - If it holds up, offer it to other projects. The user can still pick a
+     model per session.
+4. **Model facts in the assumptions table** (part 4): the aliases, the
+   subagent precedence, and the effort defaults, with the date checked.
+
 ## Out of scope
 - Changing what any rule asks for, other than the wording above.
 - Per-project changes: projects get these through the sync and setup.txt.
@@ -271,6 +315,10 @@ reviewer, and the user's yes where it matters.
      you don't want.
    - The monthly review checks whether they're being worked or are piling
      up as noise.
+5. **Models (part 8):**
+   - Add the `scout` and `checker` subagents to every project. Recommended,
+     if they load in cloud sessions.
+   - Trial `opusplan` on the canary for a week. Recommended.
 
 ## Progress
 - 27 Oct 2026: spec drafted; usage data and the hook's transcript fields
