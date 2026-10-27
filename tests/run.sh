@@ -425,6 +425,30 @@ rm -f "$T/rel.git/hooks/pre-receive"
 release --yes
 check "uncommitted changes: refuses" has "$out" "uncommitted changes"
 
+section "Style library (tools/styles.py)"
+out=$(python3 "$ROOT/tools/styles.py" check 2>&1)
+check "every style passes contrast and its files are up to date" [ $? -eq 0 ]
+s="$T/styles-copy"
+mkdir -p "$s/tools" && cp "$ROOT/tools/styles.py" "$s/tools/" && cp -R "$ROOT/styles" "$s/styles"
+python3 - "$s/styles/candidates.json" <<'PY'
+import json, sys
+p = sys.argv[1]; d = json.load(open(p))
+d[0]["light"]["muted"] = d[0]["light"]["bg"]
+json.dump(d, open(p, "w"))
+PY
+out=$(python3 "$s/tools/styles.py" check 2>&1)
+check "a colour too pale to read fails the check" has "$out" "secondary text on the page"
+out=$(python3 "$s/tools/styles.py" build 2>&1)
+check "and isn't built" has "$out" "Not built"
+cp "$ROOT/styles/candidates.json" "$s/styles/candidates.json"
+lib=$(ls -d "$s"/styles/*/ | head -1)
+echo "/* edited by hand */" >>"$lib/tokens.css"
+out=$(python3 "$s/tools/styles.py" check 2>&1)
+check "a hand-edited tokens.css is reported as out of date" has "$out" "out of date"
+python3 "$s/tools/styles.py" build >/dev/null 2>&1
+out=$(python3 "$s/tools/styles.py" check 2>&1)
+check "build puts it right" [ $? -eq 0 ]
+
 section "Error messages"
 out=$(cat "$T/noise" 2>/dev/null)
 check "no shell or git errors in any sync's output" [ -z "$out" ]

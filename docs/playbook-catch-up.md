@@ -21,3 +21,5 @@ catch-up.
 - 2026-10-27-tokens: done 27 Oct 2026. The playbook's ARCHITECTURE.md and
   `reference/` describe cost notes and the push-to-main check; no `COACH`
   mentions left outside history.
+- 2026-10-28-design-method: checked 28 Oct 2026. Nothing to change: the
+  playbook has no DESIGN.md of its own (its design files are templates).

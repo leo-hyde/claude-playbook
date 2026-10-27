@@ -74,3 +74,13 @@ Claude reads the entry here when applying it, so the title must say what it is.
 - Check: `grep -rn COACH CLAUDE.md docs --exclude=playbook-catch-up.md`
   finds nothing, and
   `.claude/settings.json` has the `push-check` hook.
+
+## 2026-10-28-design-method: DESIGN.md points to the playbook's design method
+- At the top of the project's `DESIGN.md`, under its first paragraph, add:
+  "Before designing a screen, read the playbook's `reference/design-method.md`."
+  If the project has no DESIGN.md (no screens), there's nothing to do.
+- Add a line `**Style:** own (from before the style library)` under it,
+  unless the app already uses a library style or a client's.
+- Don't restyle the app or rework its screens. Offer it to the user as a
+  separate job ("the playbook now has a style library and a design review").
+- Check: `grep -n design-method DESIGN.md` finds the line.

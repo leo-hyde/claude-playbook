@@ -140,6 +140,8 @@ macOS with Apple's bash 3.2.
 | `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |
 | `templates/*` | copied once, by hand | Starting points for a new project. They don't update afterwards, except the hooks (through `setup.txt`). Any other template change that existing projects need gets a catch-up entry |
 | `reference/*` | not copied | Know-how Claude reads only when it needs it |
+| `styles/*` | not copied | The style library. A new app copies one style's tokens into its `style.css` and its `DESIGN.md` from it, once. `candidates.json` is the one source: `tools/styles.py` builds the style folders and the gallery from it, and checks contrast (the tests run it) |
+| `tools/page-check.js` | not copied (run from the playbook) | The measured part of a design review: page width, tap targets, input text size and axe-core, at phone and desktop, light and dark, with screenshots. Needs Node.js and Playwright (cloud sessions) |
 | `RELEASES.md` | not copied (the sync reads it) | One note per release, newest first. Session start prints the newest note's first line when a project updates |
 | `scripts/release.sh` | not copied | Makes a release: tests, note, the user's yes, then `stable` moved to `main` and tagged |
 | `tests/run.sh` | not copied | The kept tests, run by the GitHub Action on Linux and macOS |
@@ -152,6 +154,25 @@ useful for every project as an `idea` issue on this repo, in general terms
 (it's public), instead of editing the playbook from a project session. A
 playbook session then works through the ideas in a batch. That's an
 instruction Claude follows, not something automatic.
+
+## Design: how an app gets its UX and its look
+None of this is loaded at session start; Claude reads each file when the
+work calls for it.
+- **Kick-off** (`SKILL.md`): the app's one main job, and a style picked from
+  `styles/gallery.html` (or a client's brand, `reference/client-style.md`).
+  The style's tokens go into the app's `style.css` and its description into
+  the app's `DESIGN.md`, once. From then on the app's own files are the
+  truth; the playbook's styles don't sync.
+- **Planning a feature**: its spec's "What's on screen" section sorts every
+  part into main screen, one tap away, Settings or later.
+- **Designing a screen**: `reference/design-method.md`, read once per
+  session (how to design); `reference/ux-checklist.md` (what to check).
+  The two don't repeat each other.
+- **After the step**: the `checker` subagent's design pass
+  (`reference/design-review.md`) runs `tools/page-check.js` for what can be
+  measured, then looks at a few screenshots for judgement.
+- Every project's `DESIGN.md` points to the design method (catch-up
+  `2026-10-28-design-method`).
 
 ## Cost notes
 The rules' "Using tokens well" section says how Claude keeps sessions
@@ -200,6 +221,12 @@ detail in `docs/decisions.md`.
   out-of-date pushes keep sessions' work apart. See `docs/decisions.md`.
 
 ## Limits and weak spots
+- **The page check needs Node.js and Playwright**, which cloud sessions have
+  and the Mac usually doesn't; there it says it was skipped. Its
+  accessibility part loads axe-core from cdnjs, so it needs the internet.
+  Automatic checks find only some accessibility problems, and none of the
+  "is this easy to use" ones: the review's judgement, and the user's, still
+  matter.
 - **The playbook repo is public** (since 23 Oct 2026), so any session can
   sync from it without logging in. The flip side: anything saved here is
   public. The rules tell Claude to check each change for private details and

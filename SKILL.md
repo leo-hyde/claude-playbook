@@ -18,12 +18,18 @@ how to work together, explain things and coach the user on using AI well.
 
 Ask (in one message, not a questionnaire drip):
 - What problem does it solve, and for whom (just the user, friends, the public)?
+  What's the **one main job** someone opens it for? That job owns the main
+  screen; everything else is one tap away or in Settings
+  (`reference/design-method.md`).
 - Phone, computer or both? (Usually both: design phone-first.)
 - What data does it need, and from where? (Research free sources yourself;
   check usage limits, keys and whether browsers may fetch them: "CORS".)
 - 2–3 apps or sites the user likes the look and feel of, and one the user finds
-  annoying, with a word on why. **Show, don't describe**: The user reacts faster to
-  pictures than to written options.
+  annoying, with a word on why. Then **which style?** Link to the style gallery
+  (`styles/gallery.html`; list in `styles/README.md`), suggest the closest
+  style, and let the user pick. A client's app uses their brand instead
+  (`reference/client-style.md`). **Show, don't describe**: The user reacts
+  faster to pictures than to written options.
 - What's essential for version 1, and what can wait?
 
 Then research what's needed (APIs, existing data, libraries) and say plainly
@@ -35,9 +41,12 @@ Copy and fill in the templates in `templates/`:
 - **SPEC.md**: what we're building. Key concepts, version 1 as numbered steps
   (each one visible when done), a "Later" list (each item with a line on why it
   waits), open questions.
-- **DESIGN.md**: how it looks. Start from the template's principles and tokens;
-  fill in the user's references. For anything visual, offer 2–3 quick mockups
-  (shown inline) and let the user pick or mix.
+- **DESIGN.md**: how it looks. Start from the chosen style's
+  `styles/<name>/DESIGN.md` (its tokens go in `style.css`:
+  `styles/README.md` says how), fill in the user's references. Before
+  designing a screen, read `reference/design-method.md`. For anything
+  visual, offer 2–3 quick mockups in that style (shown inline) and let the
+  user pick or mix.
 - **CLAUDE.md**: project-only rules, short. The general rules arrive by
   themselves as `.claude/rules/playbook.md` (set-up step 5), which cloud sessions
   see too; don't copy them in.
@@ -81,7 +90,9 @@ Sport Conditions' `tools/preview.js`) saves writing test code each time.
 
 ## 5. Before calling a stage done
 
-Go through `reference/ux-checklist.md`, and check `reference/gotchas.md`.
+Go through `reference/ux-checklist.md`, and check `reference/gotchas.md`. A
+step that adds or reworks a screen also gets the design review
+(`reference/design-review.md`, usually by the `checker` subagent).
 Then push, wait for the live site to update, and check it there too.
 
 ## Files here
@@ -97,7 +108,13 @@ Then push, wait for the live site to update, and check it there too.
 | `templates/style.css` | Design tokens (light/dark), buttons, cards, dialogs, phone layout |
 | `templates/worker.js` | Cloudflare Worker skeleton: CORS, caching, a secret key, KV sync |
 | `templates/site-check.yml` | GitHub Action pattern: check + rebuild data on every change |
+| `reference/design-method.md` | How Claude designs a screen: purpose, structure, patterns, words, look, accessibility, checking |
 | `reference/ux-checklist.md` | The design and UX review checklist |
+| `reference/design-review.md` | The design pass after a step that changes screens: measure, look, report |
+| `reference/client-style.md` | Matching a client's brand instead of a library style |
+| `styles/` | The style library: `README.md` (how to choose and apply), `gallery.html` (every style on one sample screen), one folder per style, `candidates.json` (the source) |
+| `tools/styles.py` | Builds the style files and gallery from `candidates.json`, and checks contrast |
+| `tools/page-check.js` | Measures a page at phone and desktop, light and dark: width, tap targets, accessibility (axe-core), screenshots |
 | `reference/github-and-hosting.md` | GitHub, Pages, Actions, Cloudflare Worker, KV: exact steps |
 | `reference/gotchas.md` | Things that went wrong before, and their fixes |
 | `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: STATUS.md, branches, the session script, hooks |

@@ -19,10 +19,12 @@ app.
 | `shared/` | **Copied into every project automatically.** The shared rules for Claude (`ai-dev-rules.md`), plus two small programs (scripts): one keeps sessions in step and checks nothing is lost, the other keeps each project's copy up to date |
 | `SKILL.md` | The playbook itself: first questions, planning documents, setting up, building, checking |
 | `templates/` | Starting points copied once into a new project: the plan (SPEC), the look (DESIGN), Claude's instructions (CLAUDE.md), the status page, the decisions log, a feature plan, a style sheet, a Cloudflare Worker (a small program that runs online) and a GitHub Action (a job GitHub runs for you) |
-| `reference/` | Know-how Claude reads when it needs it: a design checklist, GitHub and hosting steps, past mistakes and their fixes, working from phone and Mac, and making sure AI-built work is understood and safe |
+| `reference/` | Know-how Claude reads when it needs it: how to design a screen, a design checklist and review, matching a client's brand, GitHub and hosting steps, past mistakes and their fixes, working from phone and Mac, and making sure AI-built work is understood and safe |
+| `styles/` | **The style library**: a few looks a new app can choose from, and a gallery (`gallery.html`) showing each one on the same sample screen |
 | `owner/` | Everything specific to the playbook's owner: `profile.md` (accounts, devices, how they like to work; copied into every project as `.claude/rules/owner.md`) and `personal-CLAUDE.md` (notes for Claude that only apply on the owner's Mac, a copy of `~/.claude/CLAUDE.md`). Someone copying the playbook replaces this folder |
 | `specs/` | Plans for changes to the playbook itself, agreed before they're built |
 | `tools/serve.py` | A small program that shows a project in the browser on the Mac, always with the latest files |
+| `tools/styles.py`, `tools/page-check.js` | Small programs for design: one builds the style library and checks its colours are readable; the other measures a page on phone and desktop (width, button sizes, accessibility) and takes screenshots |
 | `docs/` | How this playbook works, the decisions behind it, and where it's up to |
 
 ## Change it once, every project follows

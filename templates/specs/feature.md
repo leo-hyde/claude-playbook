@@ -9,6 +9,14 @@ CLAUDE.md, docs/STATUS.md and this file. Copy to `specs/<feature-name>.md`.
 ## What to build
 1. <Steps, each ending with something visible.>
 
+## What's on screen
+(For anything the user sees. See the playbook's `reference/design-method.md`.)
+- **The screen's one job:** <the question it answers, or the task it does>
+- **Main screen** (used every time): <the answer, the one main action>
+- **One tap away** (used now and then): <detail, "Show all", secondary actions>
+- **Settings** (set once, rarely changed): <preferences, with sensible defaults>
+- **Later / not building** (nice to have): <moved to SPEC.md's "Later" list>
+
 ## Parts involved
 - <Files that change, new files, outside services, data.>
 

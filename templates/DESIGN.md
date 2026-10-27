@@ -2,6 +2,10 @@
 
 How the app looks and feels. Claude follows this for every new screen or
 feature. Change it here first, then in the code.
+Before designing a screen, read the playbook's `reference/design-method.md`.
+
+**Style:** <name> from the playbook's `styles/` (or "client: <who>", see
+`reference/client-style.md`). The tokens below are that style's.
 
 ## Inspiration
 - **<App the user likes>:** <what to take from it>

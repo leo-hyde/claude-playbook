@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Style Gallery</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- The playbook's style gallery: the same sample screen in every candidate
+     style. Opens by double-clicking. The style data below is written by
+     tools/styles.py build, from styles/candidates.json: edit there, not here. -->
+<style>
+/* Layout: a header with the controls, then a grid of style cards; each card
+   holds one phone-sized sample screen drawn with that style's tokens. */
+:root {
+  --g-bg: #f3f4f6;
+  --g-surface: #ffffff;
+  --g-text: #16181d;
+  --g-muted: #5a6170;
+  --g-border: #dfe2e8;
+  --g-accent: #1f5fd6;
+  --g-accent-text: #ffffff;
+  --g-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --g-bg: #101216; --g-surface: #1a1d23; --g-text: #e9ebef; --g-muted: #a0a7b4;
+    --g-border: #2c3039; --g-accent: #7aa2ff; --g-accent-text: #0b1020; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --g-bg: #101216; --g-surface: #1a1d23; --g-text: #e9ebef; --g-muted: #a0a7b4;
+  --g-border: #2c3039; --g-accent: #7aa2ff; --g-accent-text: #0b1020; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; background: var(--g-bg); color: var(--g-text); font: 16px/1.45 var(--g-font);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 20px; }
+.top { display: grid; gap: 10px; }
+.top h1 { margin: 0; font-size: 26px; letter-spacing: -0.01em; text-wrap: balance; }
+.top p { margin: 0; color: var(--g-muted); max-width: 65ch; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--g-border); border-radius: 999px; padding: 3px; background: var(--g-surface); }
+.seg button {
+  font: inherit; font-size: 14px; border: 0; background: none; color: var(--g-text);
+  padding: 8px 14px; min-height: 36px; border-radius: 999px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--g-accent); color: var(--g-accent-text); }
+.seg button:focus-visible, .pick:focus-visible { outline: 2px solid var(--g-accent); outline-offset: 2px; }
+.grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); align-items: start; }
+.card { background: var(--g-surface); border: 1px solid var(--g-border); border-radius: 16px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.card-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.card-head h2 { margin: 0; font-size: 20px; }
+.badge { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--g-accent); }
+.feel { margin: 0; font-size: 15px; }
+.meta { margin: 0; font-size: 13px; color: var(--g-muted); }
+.count { color: var(--g-muted); font-size: 14px; }
+
+/* ---------- The sample screen: every value comes from the style's tokens ---------- */
+.pv {
+  background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.4;
+  border-radius: 18px; border: 1px solid var(--g-border); overflow: hidden; display: grid;
+  max-width: 390px; width: 100%; justify-self: center; font-variant-numeric: tabular-nums;
+}
+.pv * { font-family: inherit; }
+.pv h3, .pv .pv-big, .pv .pv-title { font-family: var(--font-heading); font-weight: var(--heading-weight); }
+.pv-body { display: grid; gap: 12px; padding: 14px; }
+.pv-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pv-title { font-size: 19px; line-height: 1.2; }
+.pv-status { color: var(--muted); font-size: 13px; }
+.pv-icon { width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 18px; }
+.pv-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; display: grid; gap: 6px; }
+.pv-eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.pv-big { font-size: 30px; line-height: 1.1; }
+.pv-sub { color: var(--muted); }
+.pv-btn { justify-self: start; margin-top: 6px; min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--radius-sm); background: var(--accent); color: var(--accent-text); font-size: 15px; font-weight: 600; }
+.pv-btn.quiet { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+.pv-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border); }
+.pv-row:first-of-type { border-top: 0; }
+.pv-chip { font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.pv-chip.good { background: var(--good); color: var(--on-good); }
+.pv-chip.ok { background: var(--ok); color: var(--on-ok); }
+.pv-chip.no { background: var(--no); color: var(--on-no); }
+.pv-link { color: var(--accent); font-weight: 600; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
+.pv-sheet { background: var(--surface); border-top: 1px solid var(--border); border-radius: var(--radius) var(--radius) 0 0; box-shadow: var(--shadow); padding: 10px 14px 14px; display: grid; gap: 10px; }
+.pv-grab { width: 40px; height: 5px; border-radius: 999px; background: var(--border); justify-self: center; }
+.pv-sheet h3 { margin: 0; font-size: 17px; }
+.pv-field { display: grid; gap: 4px; font-size: 14px; }
+.pv-input { min-height: 44px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); color: var(--text); padding: 0 12px; font-size: 16px; display: flex; align-items: center; }
+.pv-toggle { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; }
+.pv-switch { width: 46px; height: 28px; border-radius: 999px; background: var(--accent); position: relative; flex: none; }
+.pv-switch::after { content: ""; position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 999px; background: var(--accent-text); }
+.pv-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.pv-actions .pv-btn { margin: 0; }
+.pv-error { color: var(--danger); font-size: 14px; margin: 0; }
+.pv-toast { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: var(--text); color: var(--bg); border-radius: var(--radius-sm); padding: 8px 8px 8px 14px; font-size: 14px; }
+.pv-toast button { min-height: 36px; border: 0; background: none; color: var(--bg); font-weight: 700; text-decoration: underline; font-size: 14px; }
+.pv-tabs { display: flex; justify-content: space-around; border-top: 1px solid var(--border); background: var(--surface); padding: 6px 0 8px; font-size: 12px; }
+.pv-tabs span { display: grid; justify-items: center; gap: 2px; color: var(--muted); min-width: 64px; }
+.pv-tabs span.on { color: var(--accent); font-weight: 700; }
+.pv-tabs b { font-size: 17px; font-weight: 400; }
+@media (prefers-reduced-motion: no-preference) { .seg button { transition: background 120ms ease; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Style gallery</h1>
+    <p>The same sample screen (made-up data) in each style. A new app takes one of the styles marked "In your library". To change which styles are in it, ask Claude in a playbook session.</p>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Light or dark">
+        <button type="button" id="mode-device" data-mode="device" aria-pressed="true">Device</button>
+        <button type="button" id="mode-light" data-mode="light" aria-pressed="false">Light</button>
+        <button type="button" id="mode-dark" data-mode="dark" aria-pressed="false">Dark</button>
+      </div>
+      <div class="seg" role="group" aria-label="Which styles">
+        <button type="button" id="show-all" data-show="all" aria-pressed="true">All styles</button>
+        <button type="button" id="show-library" data-show="library" aria-pressed="false">In your library</button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+  </header>
+  <main class="grid" id="grid"></main>
+</div>
+
+<template id="sample">
+  <div class="pv">
+    <div class="pv-body">
+      <div class="pv-head">
+        <div><div class="pv-title">Walk planner</div><div class="pv-status">Updated 14:05</div></div>
+        <button class="pv-icon" type="button" aria-label="Settings">⚙</button>
+      </div>
+      <section class="pv-card">
+        <div class="pv-eyebrow">Best time today</div>
+        <div class="pv-big">4–6pm</div>
+        <div class="pv-sub">Dry, light wind, 14°C</div>
+        <button class="pv-btn" type="button">Plan a walk</button>
+      </section>
+      <section class="pv-card">
+        <div class="pv-row"><span>Morning, 7–9am</span><span class="pv-chip ok">~ Showers</span></div>
+        <div class="pv-row"><span>Lunch, 12–2pm</span><span class="pv-chip no">✕ Rain</span></div>
+        <div class="pv-row"><span>Evening, 4–6pm</span><span class="pv-chip good">✓ Dry</span></div>
+        <span class="pv-link">Show all 6 times</span>
+      </section>
+      <p class="pv-error">Couldn't get the forecast. Check your connection, or try again in a minute.</p>
+      <div class="pv-toast">Walk removed <button type="button">Undo</button></div>
+    </div>
+    <div class="pv-sheet">
+      <div class="pv-grab"></div>
+      <h3>Settings</h3>
+      <div class="pv-field">Home town<div class="pv-input">Bristol</div></div>
+      <div class="pv-toggle">Remind me 30 minutes before<span class="pv-switch" aria-hidden="true"></span></div>
+      <div class="pv-actions"><button class="pv-btn quiet" type="button">Cancel</button><button class="pv-btn" type="button">Save</button></div>
+    </div>
+    <nav class="pv-tabs" aria-label="Sample tabs"><span class="on"><b>☀</b>Today</span><span><b>▦</b>Week</span><span><b>⌖</b>Places</span></nav>
+  </div>
+</template>
+
+<script>
+const STYLES = /*STYLES-DATA*/[]/*END-STYLES-DATA*/;
+const COLOURS = ["bg", "surface", "surface-2", "text", "muted", "border", "accent", "accent-text",
+  "good", "ok", "no", "on-good", "on-ok", "on-no", "danger", "shadow"];
+let mode = "device", show = "all";
+const grid = document.getElementById("grid");
+const dark = window.matchMedia("(prefers-color-scheme: dark)");
+
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+
+function isDark() { return mode === "dark" || (mode === "device" && dark.matches); }
+
+function text(tag, cls, value) { const el = document.createElement(tag); if (cls) el.className = cls; el.textContent = value; return el; }
+
+function paint() {
+  const d = isDark();
+  document.querySelectorAll(".pv").forEach(function (pv) {
+    const s = STYLES[pv.dataset.i], t = d ? s.dark : s.light;
+    COLOURS.forEach(function (k) { pv.style.setProperty("--" + k, t[k]); });
+    pv.style.setProperty("--radius", s.radius);
+    pv.style.setProperty("--radius-sm", s.radius_sm);
+    pv.style.setProperty("--font", s.font);
+    pv.style.setProperty("--font-heading", s.font_heading);
+    pv.style.setProperty("--heading-weight", s.heading_weight);
+  });
+}
+
+function render() {
+  grid.textContent = "";
+  const list = STYLES.map(function (s, i) { return [s, i]; })
+    .filter(function (p) { return show === "all" || p[0].in_library; });
+  list.forEach(function (p) {
+    const s = p[0], card = document.createElement("article");
+    card.className = "card";
+    const head = document.createElement("div");
+    head.className = "card-head";
+    head.appendChild(text("h2", "", s.title));
+    if (s.in_library) head.appendChild(text("span", "badge", "In your library"));
+    card.appendChild(head);
+    card.appendChild(text("p", "feel", s.feel));
+    card.appendChild(text("p", "meta", "Good for: " + s.good_for));
+    const pv = document.getElementById("sample").content.firstElementChild.cloneNode(true);
+    pv.dataset.i = p[1];
+    card.appendChild(pv);
+    card.appendChild(text("p", "meta", s.credit));
+    grid.appendChild(card);
+  });
+  document.getElementById("count").textContent = list.length + (list.length === 1 ? " style" : " styles");
+  paint();
+}
+
+function press(group, value) {
+  document.querySelectorAll("[data-" + group + "]").forEach(function (b) {
+    b.setAttribute("aria-pressed", String(b.dataset[group] === value));
+  });
+}
+
+document.querySelectorAll("[data-mode]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    mode = b.dataset.mode; store("gallery-mode", mode); press("mode", mode);
+    if (mode === "device") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", mode);
+    paint();
+  });
+});
+document.querySelectorAll("[data-show]").forEach(function (b) {
+  b.addEventListener("click", function () { show = b.dataset.show; store("gallery-show", show); press("show", show); render(); });
+});
+if (dark.addEventListener) dark.addEventListener("change", paint);
+
+// Fonts: one stylesheet link per style that names a web font (with a system fallback in the style itself).
+STYLES.forEach(function (s) {
+  if (!s.font_link) return;
+  const l = document.createElement("link");
+  l.rel = "stylesheet"; l.href = s.font_link; document.head.appendChild(l);
+});
+
+const savedMode = store("gallery-mode"), savedShow = store("gallery-show");
+if (savedMode && savedMode !== "device") document.getElementById("mode-" + savedMode).click();
+if (savedShow === "library") show = "library", press("show", show);
+render();
+</script>
+</body>
+</html>
