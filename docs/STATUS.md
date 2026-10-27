@@ -8,8 +8,8 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 |---|---|
 | Last session | Mac, 27 Oct 2026 (building the second release) |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | The second release is built and on `main`, so only Sport Conditions (the canary) has it. The canary's first session on it went through (27 Oct): catch-ups applied, `opusplan` trial set, push check and `scout` worked. Its three small findings are fixed. Not released: waiting for the user's yes |
-| Next step | Release it (`RELEASES.md` entry `release-2026-10-27-2` is written; rename it if released another day), after the user's yes |
+| Mid-flight work | None. **`release-2026-10-27-2` released 27 Oct** (the user's yes); every project picks it up at its next session start. The job radar project has it, with its catch-ups applied |
+| Next step | Issue #7: session start in a desktop worktree session runs in the main checkout. Found in the job radar project: its pull and sync also left merge commits there that GitHub never got, so the main checkout fell behind and hooks ran an old script (reset by hand, 27 Oct). Idea: the first message's hook runs start in the worktree if it hasn't run there; start in a main checkout that isn't the session's folder pulls fast-forward only and commits nothing |
 | Check first | Sport Conditions' next sessions: `COST:` notes and the `opusplan` trial (ends about 3 Nov). Issue #7: in a desktop worktree session, session start ran in the main checkout |
 
 ## Where we are
