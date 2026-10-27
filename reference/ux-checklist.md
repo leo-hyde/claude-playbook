@@ -68,8 +68,9 @@ re-check them by eye.
 - [ ] **Nothing wider than the screen.** One row that doesn't wrap makes the
       phone zoom out the whole page, so it looks like a shrunken desktop site.
       *(measured: `scrollWidth` at 375px)*
-- [ ] Tap targets at least 44px (small chips at least 32px): bigger and
-      closer targets are quicker to hit (Fitts's law). *(measured)*
+- [ ] Tap targets at least 44px on phones (small chips at least 32px) and
+      24px on desktop: bigger, closer targets are quicker to hit (Fitts's
+      law). *(measured)*
 - [ ] Inputs at least 16px font (smaller makes iPhones zoom in). *(measured)*
 - [ ] Never block zooming or pasting.
 - [ ] Long names wrap rather than being cut off where they matter; layouts

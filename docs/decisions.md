@@ -11,6 +11,42 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 28 Oct 2026: Good UX by default, and a style library, in the playbook
+Built from `specs/design-and-styles.md`, with every recommendation in its
+"Decisions for the user" (the user: "just do it", 27 Oct).
+- **It lives in the playbook, in files read only when needed** (`styles/`,
+  `reference/design-method.md`, `design-review.md`, `client-style.md`).
+  Nothing is added to the rules file or any description loaded at session
+  start. **Rejected:** a separate repo (another thing to attach, sync and
+  release, for no saving).
+- **A UX method in seven layers** (purpose, structure, patterns, words, look,
+  accessibility, checking). The method says how to design; the checklist
+  says what to check; no rule is in both. **Why:** apps were getting
+  cluttered and technical, and the old checklist only caught that after
+  building. The "What's on screen" section in each feature spec sorts
+  features into main screen, one tap, Settings or later before building.
+- **Six styles in the library, 13 in the gallery.** Claude picked the six
+  (`clear`, `paper`, `ledger`, `field`, `nord`, `night`) for variety and
+  calm, as the user was asleep; the user can swap any of them by setting
+  `in_library` in `styles/candidates.json`. **Rejected:** flashy styles, and
+  the warm-cream-and-serif look (the commonest "AI-made" look).
+- **One source for styles** (`styles/candidates.json`) with a tool that builds
+  the files and checks contrast, run by the tests. The template's colours
+  are built from the `clear` style. **Why:** the first check found nine
+  colour pairs under 4.5:1 that looked fine by eye.
+- **A `--link` colour token**, separate from `--accent`. **Why:** bright
+  button colours (amber, emerald) are unreadable as link text on white.
+- **Third-party design skills are read, not installed** (Anthropic's
+  frontend-design, Vercel's guidelines, Impeccable): their ideas are in the
+  method, in our words, with credit. **Why:** nothing unreviewed runs in the
+  user's sessions.
+- **The page check fetches axe-core with curl from cdnjs, jsdelivr or npm**,
+  whichever the network allows. **Why:** cloud environments block different
+  hosts; this one blocked both CDNs.
+- **The gallery is a private page**, not GitHub Pages. **Why:** publishing
+  it needed no settings change, and the user can view it on the phone now.
+  GitHub Pages for the playbook stays an option.
+
 ## 27 Oct 2026: Second release: tokens used well, a shareable playbook, ideas as issues
 Built from `specs/efficient-sessions.md`, the rest of
 `specs/shareable-playbook.md` and part 4 of `specs/playbook-releases.md`,

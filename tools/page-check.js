@@ -2,7 +2,7 @@
 // The measurable part of a design review, so screenshots are only needed for judgement.
 //   node tools/page-check.js <page address or file> [output folder]
 // At phone (375px) and desktop (1280px) width, in light and dark, it checks:
-// nothing wider than the screen, tap targets at least 44px, inputs at least 16px
+// nothing wider than the screen, tap targets at least 44px (24px on desktop), inputs at least 16px
 // text (smaller makes iPhones zoom in), and runs axe-core (a free accessibility
 // checker) in light and dark. It saves a screenshot of each, and the full results
 // as report.json, in the output folder (default: ./page-check). It prints a short
@@ -47,12 +47,26 @@ async function main() {
     for (const scheme of SCHEMES) {
       const page = await browser.newPage({ viewport: { width, height }, colorScheme: scheme });
       const run = { size: name, width, scheme };
+      let response = null;
       try {
-        await page.goto(url, { waitUntil: "networkidle", timeout: 20000 });
+        response = await page.goto(url, { waitUntil: "networkidle", timeout: 20000 });
       } catch (e) {
-        run.load = "slow or failed: " + e.message.split("\n")[0];
+        // networkidle can time out on a page that keeps polling; it may still have loaded.
+        run.load = "slow: " + e.message.split("\n")[0];
       }
-      Object.assign(run, await page.evaluate(measure, name === "phone"));
+      let measured = null;
+      try {
+        if (response && !response.ok()) throw new Error("the address answered " + response.status());
+        measured = await page.evaluate(measure, name === "phone");
+      } catch (e) {
+        run.failed = e.message.split("\n")[0];
+      }
+      if (!measured) {
+        report.runs.push(run);
+        await page.close();
+        continue;
+      }
+      Object.assign(run, measured);
       const shot = path.join(out, name + "-" + scheme + ".png");
       await page.screenshot({ path: shot, fullPage: true });
       run.screenshot = shot;
@@ -65,11 +79,18 @@ async function main() {
   fs.writeFileSync(path.join(out, "report.json"), JSON.stringify(report, null, 2));
 
   console.log("Page check: " + url);
+  if (report.runs.every((r) => r.failed)) {
+    console.log("COULD NOT LOAD " + url + ": " + report.runs[0].failed);
+    console.log("Nothing was measured. Say so in the review (a local copy may work where the address doesn't).");
+    process.exitCode = 1;
+    return;
+  }
   for (const r of report.runs) {
+    if (r.failed) { console.log("- " + r.size + " " + r.scheme + ": COULD NOT LOAD (" + r.failed + ")"); problems++; continue; }
     const lines = [];
     if (r.load) lines.push("page load " + r.load);
     if (r.overflow) lines.push("WIDER THAN THE SCREEN: " + r.scrollWidth + "px on a " + r.width + "px screen (widest: " + r.widest.join(", ") + ")");
-    if (r.smallTargets.length) lines.push(r.smallTargets.length + " tap targets under 44px: " + r.smallTargets.slice(0, 4).join("; "));
+    if (r.smallTargets.length) lines.push(r.smallTargets.length + " tap targets under " + (r.size === "phone" ? 44 : 24) + "px: " + r.smallTargets.slice(0, 4).join("; "));
     if (r.smallInputs.length) lines.push(r.smallInputs.length + " inputs under 16px text: " + r.smallInputs.slice(0, 3).join("; "));
     if (r.axe && r.axe.skipped) lines.push("accessibility check skipped: " + r.axe.skipped);
     if (r.axe && r.axe.violations) {
@@ -84,6 +105,7 @@ async function main() {
 
 // Runs inside the page.
 function measure(isPhone) {
+  const minTarget = isPhone ? 44 : 24;  // phones: Apple's 44pt; desktop: WCAG 2.2's 24px
   const doc = document.documentElement;
   const label = (el) => {
     const t = (el.innerText || el.value || el.getAttribute("aria-label") || "").trim().replace(/\s+/g, " ").slice(0, 30);
@@ -107,7 +129,7 @@ function measure(isPhone) {
     if (el.tagName === "A" && el.closest("p, li") && el.closest("p, li").innerText.trim() !== el.innerText.trim()) continue;
     if ((el.type === "checkbox" || el.type === "radio") && el.closest("label")) continue;
     const r = el.getBoundingClientRect();
-    if (r.width < 44 || r.height < 44) smallTargets.push(label(el) + " " + Math.round(r.width) + "x" + Math.round(r.height));
+    if (r.width < minTarget || r.height < minTarget) smallTargets.push(label(el) + " " + Math.round(r.width) + "x" + Math.round(r.height));
   }
   const smallInputs = [];
   if (isPhone) {

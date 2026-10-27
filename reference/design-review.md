@@ -6,8 +6,9 @@ reworks a screen**. A small visual tweak gets Claude's own look against
 It never edits.
 
 ## 1. Measure first, with the script
-Run the page check on a local preview with made-up data (not the live site,
-if the app uses a free service with a daily limit):
+Run the page check once, on a local preview with made-up data if there is
+one (a free service's daily limit is shared with the user's own devices);
+otherwise on the live site:
 
     node <playbook>/tools/page-check.js <file or address> <scratchpad>/page-check
 
@@ -17,8 +18,10 @@ script checks phone and desktop width in light and dark: nothing wider than
 the screen, tap targets, input text size, and axe-core (a free
 accessibility checker: contrast, labels, headings, names for buttons). It
 saves a screenshot of each to the folder and prints a short summary. If it
-prints `SKIPPED` (no Node.js or Playwright, usual on the Mac), say the
-measured checks weren't run.
+prints `SKIPPED` (no Node.js or Playwright, usual on the Mac) or `COULD NOT
+LOAD` (the address is blocked or down), say the measured checks weren't run
+and why. With no screenshots either, report "not reviewed" and stop: don't
+judge a page you haven't seen.
 
 Don't re-check by eye what the script measured.
 
@@ -28,7 +31,8 @@ Look at **at most 6 screenshots**: the changed screens at phone width
 about as much as a page of text. Judge only what a script can't:
 - **Purpose and structure**: is the screen's one job obvious in two
   seconds? Is anything on the main screen that belongs one tap away or in
-  Settings? (The step's spec says what it should be: "What's on screen".)
+  Settings? (The step's spec says what it should be: "What's on screen".
+  No spec: judge against the app's main job in SPEC.md or its first screen.)
 - **Words on screen**: plain, specific, no jargon; buttons say what happens.
 - **Hierarchy and calm**: one main action; bright colour only where it
   carries meaning; consistent with DESIGN.md and its style.

@@ -1,6 +1,8 @@
 # Spec: good UX design by default, and a library of styles
 
-Status: **draft for the user's review** (27 Oct 2026). Nothing built yet.
+Status: **built** (28 Oct 2026, one overnight session at the user's request),
+on `main` for the canary. Waiting for a real Sport Conditions session on a
+screen, then a release (the user's yes). See Progress.
 
 ## Goal
 Every app the user builds is easy to use and looks good, without the user
@@ -200,6 +202,32 @@ Rules from the playbook (`shared/ai-dev-rules.md`, "Using tokens well", and
 ## Mid-step notes (Progress)
 Each build session adds its notes here, not in `docs/STATUS.md`, which is
 overwritten once when the whole feature lands on `main`.
+
+**28 Oct 2026: all parts built in one session** (the user asked for it in
+one go, overnight, instead of three sessions). Research helpers on the
+cheapest model stalled, so the main session fetched the sources itself, to
+files, and read only extracts (headings, colours, the rules sections).
+- Parts 1–2: 13 candidate styles in `styles/candidates.json`, 6 in the
+  library (Claude's pick: `clear`, `paper`, `ledger`, `field`, `nord`,
+  `night`; the user can swap). Sources: 18 awesome-design-md files and 18
+  daisyUI 5.7.47 themes. The contrast check found 9 failing pairs on its
+  first run (bright button colours used as text, white text on green); all
+  fixed by small, recorded adjustments and a new `--link` token. The gallery
+  is published as a private page (decision 3 changed from GitHub Pages:
+  no settings change needed).
+- Part 3: `reference/design-method.md` (110 lines), the checklist rewritten
+  around it (no rule in both; every old rule kept or reworded), "What's on
+  screen" in `templates/specs/feature.md`.
+- Parts 4–7: kick-off in `SKILL.md`, `reference/design-review.md` and
+  `tools/page-check.js` (axe-core 4.13.0, fetched from cdnjs, jsdelivr or
+  npm, whichever works), one line in the checker, `reference/client-style.md`,
+  catch-up `2026-10-28-design-method`.
+- Checks: `bash tests/run.sh` (6 new cases), the page check on the gallery
+  (no problems at phone and desktop, light and dark, axe-core clean), and a
+  trial of the design review on the live Sport Conditions site by a
+  mid-model helper following the instructions cold.
+- Not done here: part 8 (the canary session and the release), which need a
+  real Sport Conditions session and the user's yes.
 
 ## Parts involved
 - New: `reference/design-method.md`, `reference/design-review.md`,
