@@ -1,28 +1,28 @@
 ---
 name: new-app
-description: Leo's playbook for starting and building a new app or website with Claude - kick-off questions, SPEC/DESIGN/CLAUDE.md templates, GitHub + GitHub Pages + Cloudflare Worker setup, the UX/design checklist, and hard-won gotchas. Use when Leo starts a new app or project, asks how to set one up, wants a design/UX review of a web app, or types /new-app.
+description: A playbook for starting and building a new app or website with Claude - kick-off questions, SPEC/DESIGN/CLAUDE.md templates, GitHub + GitHub Pages + Cloudflare Worker setup, the UX/design checklist, and hard-won gotchas. Use when the user starts a new app or project, asks how to set one up, wants a design/UX review of a web app, or types /new-app.
 ---
 
 # New app playbook
 
-How Leo and Claude build apps together, distilled from building Sport
+How the user and Claude build apps together, distilled from building Sport
 Conditions (github.com/leo-hyde/sport-conditions), a weather-for-sports web app.
 It worked well: plan in short documents, build in small visible steps, teach
 along the way, push every step to GitHub, check everything in a real browser.
 
-Leo is learning to code. Follow `shared/ai-dev-rules.md` (Leo's rules for
+The user is learning to code. Follow `shared/ai-dev-rules.md` (the user's rules for
 every project; projects get a synced copy as `.claude/rules/playbook.md`) for
-how to work together, explain things and coach Leo on using AI well.
+how to work together, explain things and coach the user on using AI well.
 
 ## 1. Kick-off: understand before building
 
 Ask (in one message, not a questionnaire drip):
-- What problem does it solve, and for whom (just Leo, friends, the public)?
+- What problem does it solve, and for whom (just the user, friends, the public)?
 - Phone, computer or both? (Usually both: design phone-first.)
 - What data does it need, and from where? (Research free sources yourself;
   check usage limits, keys and whether browsers may fetch them: "CORS".)
-- 2–3 apps or sites Leo likes the look and feel of, and one Leo finds
-  annoying, with a word on why. **Show, don't describe**: Leo reacts faster to
+- 2–3 apps or sites the user likes the look and feel of, and one the user finds
+  annoying, with a word on why. **Show, don't describe**: The user reacts faster to
   pictures than to written options.
 - What's essential for version 1, and what can wait?
 
@@ -36,8 +36,8 @@ Copy and fill in the templates in `templates/`:
   (each one visible when done), a "Later" list (each item with a line on why it
   waits), open questions.
 - **DESIGN.md**: how it looks. Start from the template's principles and tokens;
-  fill in Leo's references. For anything visual, offer 2–3 quick mockups
-  (shown inline) and let Leo pick or mix.
+  fill in the user's references. For anything visual, offer 2–3 quick mockups
+  (shown inline) and let the user pick or mix.
 - **CLAUDE.md**: project-only rules, short. The general rules arrive by
   themselves as `.claude/rules/playbook.md` (set-up step 5), which cloud sessions
   see too; don't copy them in.
@@ -46,7 +46,7 @@ Copy and fill in the templates in `templates/`:
   outside services, safety, weak spots. See `reference/understanding-and-quality.md`
   for why, and how it fits with the other documents.
 
-Ask Leo to review them. Build nothing big until they're agreed.
+Ask the user to review them. Build nothing big until they're agreed.
 
 ## 3. Set up the project
 
@@ -55,17 +55,17 @@ See `reference/github-and-hosting.md` for exact commands. In order:
 2. Preview: the project folder is under Documents, which macOS blocks the
    preview server from reading, so copy files to the scratchpad and serve with
    `tools/serve.py` (no caching, handles many files at once).
-3. GitHub: ask Leo whether the repository should be public or private
+3. GitHub: ask the user whether the repository should be public or private
    (public is needed for free GitHub Pages; check nothing private or
    third-party is in it), create it, push.
-4. Hosting: GitHub Pages (free) → `https://leo-hyde.github.io/<repo>/`.
+4. Hosting: GitHub Pages (free) → `https://<github-user>.github.io/<repo>/ (accounts: `owner/profile.md`)`.
 5. **Phone + computer handover and shared rules** (every project):
    `docs/STATUS.md`, the session script and hooks, one branch, and the playbook
    sync. Follow "Setting it up in a project" in `reference/phone-and-computer.md`.
 6. Only if needed: a Cloudflare Worker for secrets, sources that block browsers,
    or syncing between devices (`reference/github-and-hosting.md`,
-   `templates/worker.js`). Leo has a Cloudflare account; Claude can't create
-   accounts or deploy to Cloudflare, so give Leo click-by-click steps.
+   `templates/worker.js`). The user has a Cloudflare account; Claude can't create
+   accounts or deploy to Cloudflare, so give the user click-by-click steps.
 
 ## 4. Build in small steps
 
@@ -87,7 +87,7 @@ Then push, wait for the live site to update, and check it there too.
 ## Files here
 | File | What it's for |
 |---|---|
-| `shared/ai-dev-rules.md` | Leo's rules for every project; synced into each as `.claude/rules/playbook.md` |
+| `shared/ai-dev-rules.md` | The shared rules for every project; synced into each as `.claude/rules/playbook.md` |
 | `shared/catch-up.md` | Rule changes that existing projects must apply once to files they already have; session start lists the ones still due |
 | `shared/session.sh`, `shared/playbook-sync.sh` | Session start and end checks + coaching counter; the sync. Also synced into each project's `scripts/` |
 | `personal-CLAUDE.md` | Copy of `~/.claude/CLAUDE.md` (Mac-only notes; points to the shared rules) |

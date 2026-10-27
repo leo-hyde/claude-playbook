@@ -1,6 +1,6 @@
 # <App name>: Product Spec
 
-Status: **draft for Leo's review** (updated <date>). See [DESIGN.md](DESIGN.md)
+Status: **draft for the user's review** (updated <date>). See [DESIGN.md](DESIGN.md)
 for how it looks.
 
 <!-- This is the plan, and the only place it lives. Update it in the same
@@ -45,4 +45,4 @@ Each gets its own short spec before building.
 - **B. …**
 
 ## Open questions
-1. <Anything unclear or contradictory in what Leo asked for>
+1. <Anything unclear or contradictory in what the user asked for>

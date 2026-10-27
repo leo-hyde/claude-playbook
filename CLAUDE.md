@@ -1,7 +1,7 @@
 # Instructions for Claude (the playbook itself)
 
-This repo is Leo's playbook for building apps with AI. It's also a Claude Code
-skill (`new-app`) on Leo's Mac, at `~/.claude/skills/new-app`. How it works:
+This repo is the user's playbook for building apps with AI. It's also a Claude Code
+skill (`new-app`) on the user's Mac, at `~/.claude/skills/new-app`. How it works:
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Where we are:
 [docs/STATUS.md](docs/STATUS.md). Why: [docs/decisions.md](docs/decisions.md).
 

@@ -53,7 +53,7 @@ async function example(request, url, env, ctx) {
   if (!/^[A-Za-z0-9]{1,10}$/.test(id)) return reply("Bad id", 400);
   return cached(request, ctx, 300, () =>
     fetch(`https://api.example.com/things/${id}`, {
-      headers: { "Authorization": `Bearer ${env.MY_API_KEY}`, "User-Agent": "leo-app" },
+      headers: { "Authorization": `Bearer ${env.MY_API_KEY}`, "User-Agent": "my-app" },
     }));
 }
 

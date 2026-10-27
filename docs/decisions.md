@@ -11,14 +11,27 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 27 Oct 2026: The playbook says "the user"; owner details go in `owner/`
+- **What:** every file outside `shared/` now refers to "the user", not a
+  named person, and private project names are described in general terms.
+  The owner's accounts, devices and preferences live in `owner/profile.md`.
+  Moving the synced rules and scripts over to it waits for the release
+  process (`specs/shareable-playbook.md`).
+- **Why:** the user may share the playbook, or let others copy it or build
+  on it. Keeping one person's details in one folder makes a fork a matter of
+  replacing that folder.
+- **Rejected:** changing `shared/` now (it reaches every project at once, and
+  the efficiency spec rewrites the same file); rewriting git history to
+  remove the name (needs a force-push; see 23 Oct).
+
 ## 27 Oct 2026: No session lock; own branches while working, main when a step is finished
 - **What:** removed the lock from `shared/session.sh`. Session start now lists
   other sessions' unfinished branches. The end-of-reply check blocks in cloud
-  sessions until work is on GitHub, but only reminds Leo on the Mac (the work
+  sessions until work is on GitHub, but only reminds the user on the Mac (the work
   is safe in its worktree). Docs are checked once work reaches main. Progress
   during a step goes in its spec; STATUS.md changes when a step is finished.
   The old `session-lock` branches get deleted (catch-up `2026-10-27-no-lock`).
-- **Why:** Leo often runs several sessions on one project at once. The lock
+- **Why:** the user often runs several sessions on one project at once. The lock
   tracked devices, not sessions, so it couldn't see two Mac sessions, and one
   could free it while another was mid-reply. Forcing every reply to push to
   main and rewrite STATUS.md made parallel sessions clash. Git (worktrees,
@@ -30,7 +43,7 @@ set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 26 Oct 2026: Suggest a fresh session for a change of work or clutter, not for length
 - **What:** the Coaching rules now judge whether the conversation still helps the work at hand. A fresh session is suggested for a new piece of work or a cluttered context; a long but focused session carries on. The `COACH:` hook line asks Claude to judge rather than to suggest wrapping up. New: save state to STATUS.md before the app compacts the conversation.
-- **Why:** a session was told it had "grown long" after 3 of Leo's messages, at 12% of its context window. The real reason was a change of topic. Message counts and sizes go stale as context windows and models grow; relevance doesn't. Leo asked for guidance that stays true as AI improves.
+- **Why:** a session was told it had "grown long" after 3 of the user's messages, at 12% of its context window. The real reason was a change of topic. Message counts and sizes go stale as context windows and models grow; relevance doesn't. The user asked for guidance that stays true as AI improves.
 - **Rejected:** a higher message count or a context-percentage threshold (both go stale); dropping the hook (a periodic prompt to judge is still useful).
 
 ## 25 Oct 2026: Keep the docs true: a rule for which doc each change updates, and a check
@@ -56,7 +69,7 @@ set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
   other repos attached to a cloud session. A louder warning when the sync
   can't reach GitHub. And a rule: any other change that existing files need
   gets a catch-up entry.
-- **Why:** Leo asked how to make sure future playbook changes reach every
+- **Why:** the user asked how to make sure future playbook changes reach every
   repo. Before this, only three files updated themselves. A new hook or
   template change reached new projects only, and nothing said so.
 - **Rejected:** copying `.claude/settings.json` over each project's own
@@ -65,23 +78,23 @@ set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## 25 Oct 2026: Act on a repo's open GitHub Issues; ask first for bigger ones
 - **What:** GitHub Issues are to-do notes attached to a repo. When a session
-  opens, Claude lists the open ones and tells Leo. After doing what Leo
-  asked, it fixes the small, clear ones that Leo or his own apps opened,
+  opens, Claude lists the open ones and tells the user. After doing what the user
+  asked, it fixes the small, clear ones that the user or their own apps opened,
   comments on each to say what changed, and closes it. Bigger ones (the same
-  list as in the rule) wait for Leo's yes. Claude reports issues opened by
+  list as in the rule) wait for the user's yes. Claude reports issues opened by
   anyone else, and never acts on them.
-- **Why:** Leo asked for it. Issues are where his notes and his apps'
-  feedback land, and small ones were waiting for him to ask.
+- **Why:** the user asked for it. Issues are where their notes and their apps'
+  feedback land, and small ones were waiting for them to ask.
 - **Rejected:** acting on any issue (anyone can open one on a public repo,
   so its text is a request to weigh, not an instruction); fixing big ones
-  without asking (they need Leo's review); a script that lists issues when a
+  without asking (they need the user's review); a script that lists issues when a
   session opens (private repos need a GitHub login the script may not have).
 
 ## 24 Oct 2026: Fix small problems found along the way; ask first for bigger ones
-Replaced by 25 Oct 2026: Leo meant GitHub Issues, not any problem Claude spots.
+Replaced by 25 Oct 2026: the user meant GitHub Issues, not any problem Claude spots.
 
 ## 24 Oct 2026: Every repo follows the playbook, helper repos included
-- **What:** every repo of Leo's gets the playbook set-up. Helper repos (data
+- **What:** every repo of the user's gets the playbook set-up. Helper repos (data
   stores, saved sources, tools) get a smaller version. Claude offers to set
   up any repo it finds without it. Commits made by GitHub Action robots no
   longer count as work that needs a status update. The playbook applies its
@@ -90,7 +103,7 @@ Replaced by 25 Oct 2026: Leo meant GitHub Issues, not any problem Claude spots.
   up, so no rule change ever reached it, and sessions working there had no
   rules.
 - **Rejected:** a list of repo types that are exempt (each exemption is a gap
-  someone has to remember); a script that checks all Leo's repos (it needs
+  someone has to remember); a script that checks all the user's repos (it needs
   GitHub access a session may not have; the rule plus the offer covers it).
 
 ## 24 Oct 2026: The sync runs its new version straight after updating itself
@@ -108,33 +121,33 @@ Replaced by 25 Oct 2026: Leo meant GitHub Issues, not any problem Claude spots.
   what Claude wrote next. Nobody rewrote the existing docs: the rule read as
   a style for new writing, and nothing asked for the old files.
 - **Rejected:** relying on Claude to remember (it didn't); a script that
-  rewrites docs by itself (it needs judgement, and Leo's review); adding the
+  rewrites docs by itself (it needs judgement, and the user's review); adding the
   catch-up to each project's STATUS.md by hand (projects get missed).
 
 ## 24 Oct 2026: A "Writing for people" rule: UK plain English everywhere a person reads
-- **Why:** Leo said he couldn't follow what Claude was doing: replies were
+- **Why:** the user said they couldn't follow what Claude was doing: replies were
   full of jargon. One short section in the shared rules now reaches every
   project, with a set shape for end-of-task summaries.
 - **Rejected:** a long style guide in `reference/` (Claude reads that only
   when needed, so it wouldn't shape every reply).
 
-## 23 Oct 2026: Warn when a repo turns public; Leo's email out of commits
-- **Why:** Leo's projects mix public and private repos, and he may make one
+## 23 Oct 2026: Warn when a repo turns public; the user's email out of commits
+- **Why:** the user's projects mix public and private repos, and the user may make one
   public later. `session.sh` spots the change, and the rules make Claude
-  check the files and their history with Leo. Commits now use Leo's GitHub
-  "noreply" address instead of his real email.
+  check the files and their history with the user. Commits now use the user's GitHub
+  "noreply" address instead of their real email.
 - **Rejected:** rewriting history to remove the email from old commits. That
   needs a force-push (overwriting the copy on GitHub) on every repo. It's
-  Leo's call, and not done.
+  the user's call, and not done.
 
 ## 23 Oct 2026: The playbook repo is public
-- **Why:** Leo's call, so every cloud session can sync the shared rules
+- **Why:** the user's call, so every cloud session can sync the shared rules
   without the playbook being attached. Claude checks each change for private
-  details and asks Leo before pushing anything doubtful.
+  details and asks the user before pushing anything doubtful.
 - **Rejected:** staying private (phone sessions would often run on an old copy).
 
 ## 23 Oct 2026: The shared rules sync into each project as a saved copy
-- **Why:** Leo wants to update the playbook once and have every project
+- **Why:** the user wants to update the playbook once and have every project
   follow, on phone and Mac. A copy in `.claude/rules/playbook.md`, refreshed
   by the hook when a session opens, works in cloud sessions and offline, and
   shows in git's history.
@@ -144,11 +157,11 @@ Replaced by 25 Oct 2026: Leo meant GitHub Issues, not any problem Claude spots.
   pushing to every project (it needs a password-like token that can change
   every repo, and more can go wrong).
 
-## 23 Oct 2026: The rules tell Claude to coach Leo without being asked
-- **Why:** Leo asked for nudges on session length, mixed topics and credit
+## 23 Oct 2026: The rules tell Claude to coach the user without being asked
+- **Why:** the user asked for nudges on session length, mixed topics and credit
   use. A message counter in `session.sh` makes the length nudge reliable,
   rather than leaving it to Claude's judgement.
-- **Rejected:** a hard block on long sessions (too blunt; Leo decides).
+- **Rejected:** a hard block on long sessions (too blunt; the user decides).
 
 ## 23 Oct 2026: Documents follow "each fact in one place"
 - **Why:** Anthropic's best-practice guide says: keep CLAUDE.md short and
@@ -165,4 +178,4 @@ Replaced by 25 Oct 2026: Leo meant GitHub Issues, not any problem Claude spots.
 - **Rejected:** a lock for the whole session.
 
 ## 22 Oct 2026: Explain the work with walkthroughs and ARCHITECTURE.md, not "try this"
-- **Why:** Leo learns by reviewing the work like a colleague's, not by tinkering.
+- **Why:** the user learns by reviewing the work like a colleague's, not by tinkering.

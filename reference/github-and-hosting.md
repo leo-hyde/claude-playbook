@@ -1,7 +1,8 @@
 # GitHub, hosting and a Cloudflare Worker: exact steps
 
-What worked for Sport Conditions. `gh` is at `/opt/homebrew/bin/gh` and Leo is
-logged in as `leo-hyde` (check with `/opt/homebrew/bin/gh auth status`).
+What worked for Sport Conditions. `<github-user>` below is the owner's GitHub
+account, and the Mac's `gh` path and push command are in `owner/profile.md`
+(check the login with `gh auth status`).
 
 ## Git basics
 ```bash
@@ -10,41 +11,41 @@ printf '.claude/\n.DS_Store\n' > .gitignore
 git add -A && git commit -m "First version"
 ```
 Set the author once per project if git asks:
-`git config user.name "Leo Hyde"` and `git config user.email "22234407+leo-hyde@users.noreply.github.com"`
+`git config user.name "<your name>"` and `git config user.email "<the noreply address in owner/profile.md>"`
 (GitHub → Settings → Emails → "Keep my email addresses private" shows it, ending
 `@users.noreply.github.com`). Never a real email address: public repos show it to anyone.
 
 ## Create the GitHub repository and push
-Ask Leo first: public or private? (Public is needed for free GitHub Pages.
+Ask the user first: public or private? (Public is needed for free GitHub Pages.
 Check nothing private, secret or someone else's data is in it.)
 
 **From a cloud (phone) session, Claude can't create the repository**: the
 GitHub connection there is refused (403) for creating repos (Oct 2026). Build
-the project locally in the session, then ask Leo to create an *empty*
+the project locally in the session, then ask the user to create an *empty*
 repository on github.com (no README, licence or .gitignore, so the first push
 doesn't conflict), and attach it with `add_repo` before pushing.
 ```bash
-/opt/homebrew/bin/gh repo create leo-hyde/<name> --private --source . --push
+/opt/homebrew/bin/gh repo create <github-user>/<name> --private --source . --push
 # or: create it on github.com, then
-git remote add origin https://github.com/leo-hyde/<name>.git
+git remote add origin https://github.com/<github-user>/<name>.git
 git -c credential.helper= -c credential.helper='!/opt/homebrew/bin/gh auth git-credential' push -u origin main
 ```
 The `-c credential.helper…` part lets git use the GitHub CLI's login without
-changing Leo's global git settings.
+changing the user's global git settings.
 
 ## Free hosting: GitHub Pages
 ```bash
-/opt/homebrew/bin/gh api -X POST repos/leo-hyde/<name>/pages -f "source[branch]=main" -f "source[path]=/"
+/opt/homebrew/bin/gh api -X POST repos/<github-user>/<name>/pages -f "source[branch]=main" -f "source[path]=/"
 ```
-The site appears at `https://leo-hyde.github.io/<name>/` a minute or two after
-each push. Check a build: `gh api repos/leo-hyde/<name>/pages/builds/latest --jq .status`.
+The site appears at `https://<github-user>.github.io/<name>/` a minute or two after
+each push. Check a build: `gh api repos/<github-user>/<name>/pages/builds/latest --jq .status`.
 A custom domain (about £5–12 a year) can point at it for a memorable address.
 
 ## GitHub Actions (automatic checks)
 `templates/site-check.yml` is the pattern: when a data file changes (even if
 edited on github.com from a phone), check it, rebuild what depends on it,
-commit the result, and republish Pages. If the check fails, GitHub emails Leo.
-Pushing workflow files needs the `workflow` token scope (Leo's login has it).
+commit the result, and republish Pages. If the check fails, GitHub emails the user.
+Pushing workflow files needs the `workflow` token scope (the user's login has it).
 
 ## Cloudflare Worker (free)
 Use one when the app needs to:
@@ -52,7 +53,7 @@ Use one when the app needs to:
 - use a **secret API key** (stored as a Worker secret, never in the app's code),
 - **sync data between devices** (Cloudflare KV storage).
 
-Claude can't create accounts or deploy, so give Leo these steps:
+Claude can't create accounts or deploy, so give the user these steps:
 1. dash.cloudflare.com → **Workers & Pages → Create → Create Worker** → name → **Deploy**.
 2. **Edit code** → replace everything with the Worker file → **Deploy**.
 3. Secrets: Worker → **Settings → Variables and Secrets → Add** (type Secret).
@@ -65,18 +66,18 @@ Rules for Worker code (see `templates/worker.js`):
 - Cache answers (`caches.default`) to save calls.
 - For browser POSTs, send `Content-Type: text/plain` to avoid an extra
   "preflight" request.
-- Test with `curl` after Leo deploys; "Hello World!" means the code wasn't replaced.
+- Test with `curl` after the user deploys; "Hello World!" means the code wasn't replaced.
 
 ## Giving Claude more reach (Mac vs cloud)
-- **Mac (local) sessions** use Leo's own logins, so Claude can do more by
+- **Mac (local) sessions** use the user's own logins, so Claude can do more by
   itself: `gh` (create repos, switch on Pages, push workflow files, add
   Actions secrets with `gh secret set`), and Cloudflare via its command-line
-  tool: Leo runs `npx wrangler login` once (it opens a browser), then Claude
+  tool: the user runs `npx wrangler login` once (it opens a browser), then Claude
   can deploy Workers with `npx wrangler deploy`. (Wrangler steps from
-  Cloudflare's docs; not yet tested in one of Leo's projects.) Claude still asks
+  Cloudflare's docs; not yet tested in one of the user's projects.) Claude still asks
   before anything public, paid or hard to undo.
 - **Cloud sessions** only have the GitHub connection (no repo creation) and
-  can't reach most websites. For Cloudflare there, Leo creates a narrowly
+  can't reach most websites. For Cloudflare there, the user creates a narrowly
   scoped API token in the Cloudflare dashboard and adds it to the cloud
   environment's settings (environment menu → Edit → secrets / environment
   variables), never pasted into the chat. Blocked websites: add them under

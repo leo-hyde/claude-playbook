@@ -17,7 +17,7 @@ What professionals use, and the lightweight version we keep in each project.
 | Design system | How does it look and behave? | `DESIGN.md` |
 | Threat model / security review | What could go wrong, and who could misuse it? | "Safety and security" in ARCHITECTURE.md; a `/security-review` before big releases |
 | Automated tests, and a test plan | Does it still work after a change? | Tests for the core rules; a preview script with made-up data |
-| Changelog / release notes | What changed, when? | Commit messages; a `CHANGELOG.md` only where Leo needs one (Sport Conditions: for feedback) |
+| Changelog / release notes | What changed, when? | Commit messages; a `CHANGELOG.md` only where the user needs one (Sport Conditions: for feedback) |
 | Runbook | How is it deployed and kept running? | "Outside services" in ARCHITECTURE.md; `reference/github-and-hosting.md` |
 | Code review (pull requests) | Did a second person check it before it went live? | Claude's walkthrough; a fresh session reviewing with `/code-review` |
 
@@ -115,5 +115,5 @@ context. Each message also re-processes all of it, so long sessions cost more.
 - **Don't read big data files or whole logs**; search them.
 - For long tasks, `/compact <what to keep>`; on the phone, a new session.
 
-Claude nudges Leo about these unprompted ("Coaching" in
+Claude nudges the user about these unprompted ("Coaching" in
 `shared/ai-dev-rules.md`), helped by a message counter in `session.sh`.

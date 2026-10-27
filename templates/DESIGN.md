@@ -4,8 +4,8 @@ How the app looks and feels. Claude follows this for every new screen or
 feature. Change it here first, then in the code.
 
 ## Inspiration
-- **<App Leo likes>:** <what to take from it>
-- **<App Leo finds annoying>:** <what to avoid>
+- **<App the user likes>:** <what to take from it>
+- **<App the user finds annoying>:** <what to avoid>
 
 ## Principles
 1. **Glance first.** The main question is answered in under 2 seconds, with a

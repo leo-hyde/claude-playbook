@@ -1,10 +1,10 @@
 # Working from phone and computer on the same project
 
-Leo switches between his phone (Claude Code cloud sessions at claude.ai/code)
-and his Mac, and often runs several sessions on one project at once (Mac
+The user switches between their phone (Claude Code cloud sessions at claude.ai/code)
+and their Mac, and often runs several sessions on one project at once (Mac
 sessions each in their own worktree, a separate copy of the files). **Neither session can see the other's conversation. The GitHub
 repository is the only shared memory.** This page is how we keep the two in
-step. It was worked out on JobSeekHelper (Oct 2026), after a phone session and
+step. It was worked out on a private project (Oct 2026), after a phone session and
 a desktop session ran at the same time and the phone's work never reached
 GitHub.
 
@@ -15,7 +15,7 @@ GitHub.
      which device, did it end cleanly, anything half-done, the next step.
      Progress during a step goes in the step's spec instead, so parallel
      sessions don't clash over this file.
-   - Where we are, next steps and open questions for Leo. **Current state
+   - Where we are, next steps and open questions for the user. **Current state
      only**: decisions go in `docs/decisions.md`, history is `git log`.
      (Until Oct 2026 it also held a session log; it grew to 100+ lines that
      every session re-read, so it was dropped.)
@@ -32,15 +32,15 @@ GitHub.
      work** (`OTHER WORK`: branches with commits not on main, touched in the
      last 14 days, including other Mac worktrees' unpushed ones), syncs the
      playbook, lists open issues, prints the Handover block.
-   - `session.sh busy` (Leo sends a message): counts Leo's messages and every
+   - `session.sh busy` (the user sends a message): counts the user's messages and every
      15 prints a `COACH:` line, so Claude suggests a fresh session when it helps.
    - `session.sh check` (a reply finishes): in a **cloud** session, refuses
      to finish with uncommitted work or commits on no branch on GitHub (they'd
-     be lost when the session closes). On the **Mac** it shows Leo a reminder
+     be lost when the session closes). On the **Mac** it shows the user a reminder
      instead: the work is safe in its folder. Wherever the work has reached
      **main**, it refuses to finish until STATUS.md (and SPEC.md, if `specs/`
      changed) is updated.
-   - `session.sh end`: the same checks, printed, before Leo switches device.
+   - `session.sh end`: the same checks, printed, before the user switches device.
 4. **Hooks** (`templates/.claude/settings.json`) make Claude Code run
    `start` when a session opens, `busy` on every message and `check` at the
    end of every reply, so nobody has to remember. The rules Claude follows
@@ -73,7 +73,7 @@ which fetches the playbook's latest `main` and commits any changes as
 5. Commit and push to main.
 
 **Helper repos** (a data store, saved sources, a tool, often written mostly
-by a GitHub Action) get the same set-up, just smaller: every repo of Leo's
+by a GitHub Action) get the same set-up, just smaller: every repo of the user's
 follows the playbook, so a session there knows the rules. Skip SPEC, DESIGN
 and ARCHITECTURE unless it needs them. CLAUDE.md says in a few lines what the
 repo is, which project it serves, and what must never happen (for example
@@ -106,10 +106,10 @@ changing it, so it pulls and syncs the playbook.
   "fetch first". That's the bot, not the other device: `git fetch` + merge,
   then push.
 - **Connectors** (Gmail, Google Drive, Calendar) work in cloud sessions if
-  Leo has connected them, read-only use first. Never paste API keys into the
+  the user has connected them, read-only use first. Never paste API keys into the
   chat; they go in GitHub → Settings → Secrets.
 - **Don't sit waiting on a slow job.** If an Action takes minutes, start a
-  background watcher, carry on with other work, and tell Leo what's running.
+  background watcher, carry on with other work, and tell the user what's running.
 - **`pkill -f <pattern>` can kill your own shell** if the pattern appears in
   the command itself. Stop servers by port or job instead.
 - **The Mac runs its own (possibly old) copy of `session.sh` before pulling**,

@@ -2,8 +2,8 @@
 
 The playbook is a set of text documents (written in Markdown, a simple text
 format) and a few small programs (shell scripts). It has one moving part: the
-**sync**, which copies a change made here into every project Leo works on,
-on his phone or his Mac. This page explains how the sync works, and where it
+**sync**, which copies a change made here into every project the user works on,
+on their phone or their Mac. This page explains how the sync works, and where it
 can fail.
 
 ## The big picture
@@ -34,7 +34,7 @@ something useful for every project, it adds it back to the playbook.
 - **Hook**: an instruction to Claude Code to run a script automatically at a
   set moment, such as when a session opens. Hooks live in each project's
   `.claude/settings.json`.
-- **Cloud session**: a Claude Code session started from Leo's phone. It runs
+- **Cloud session**: a Claude Code session started from the user's phone. It runs
   on Anthropic's computers, not the Mac.
 - **Branch**: a separate line of work in a repo. Each session works on its
   own and merges into `main` when a step is finished. **Worktree**: a
@@ -47,7 +47,7 @@ something useful for every project, it adds it back to the playbook.
    That script fetches the project's latest `main` and lists other sessions' unfinished branches.
 2. **The sync finds the playbook.** `session.sh` runs
    `scripts/playbook-sync.sh`. It looks for the playbook in three places, in
-   order: the clone on Leo's Mac (`~/.claude/skills/new-app`); a clone next
+   order: the clone on the user's Mac (`~/.claude/skills/new-app`); a clone next
    to the project (a cloud session with the playbook attached); or a fresh
    download of just the latest version into `.session/playbook` (which git
    ignores). Whichever it uses, it always reads the playbook's `main` on
@@ -70,7 +70,7 @@ something useful for every project, it adds it back to the playbook.
    are listed in the playbook's `shared/catch-up.md`. The sync prints any
    entry the project hasn't recorded as done in its
    `docs/playbook-catch-up.md`, under "CATCH-UP DUE". The rules tell Claude
-   to tell Leo, apply it, and record it. Before catch-ups existed, a new rule
+   to tell the user, apply it, and record it. Before catch-ups existed, a new rule
    only changed what Claude wrote next, never what was already there.
 7. **Set-up check.** The playbook's `shared/setup.txt` lists what every
    project needs besides the copied files: lines in `.gitignore` (the list
@@ -97,23 +97,24 @@ something useful for every project, it adds it back to the playbook.
 
 | Playbook file | Copy in each project | What it does |
 |---|---|---|
-| `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | Leo's rules for every project, including coaching |
+| `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | The shared rules for every project, including coaching |
 | `shared/session.sh` | `scripts/session.sh` | Session start (pull, other work, issues, handover), the end-of-reply checks, and the message counter for coaching |
 | `shared/playbook-sync.sh` | `scripts/playbook-sync.sh` | The sync itself (copied too, so it can update itself) |
 | `shared/catch-up.md` | not copied (the sync reads it) | Rule changes each project must apply once to files it already has. Each project records the ones it has done in `docs/playbook-catch-up.md` |
 | `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |
 | `templates/*` | copied once, by hand | Starting points for a new project. They don't update afterwards, except the hooks (through `setup.txt`). Any other template change that existing projects need gets a catch-up entry |
 | `reference/*` | not copied | Know-how Claude reads only when it needs it |
+| `owner/profile.md` | not copied yet | The owner's accounts, devices and preferences, kept apart so others can copy the playbook. Planned: synced as `.claude/rules/owner.md` (`specs/shareable-playbook.md`) |
 
 Changes also flow the other way. The rules tell Claude that a lesson useful
 for every project goes into this repo, not just the project. That's an
 instruction Claude follows, not something automatic.
 
 ## Coaching
-Coaching means Claude nudging Leo to use sessions well, for example
+Coaching means Claude nudging the user to use sessions well, for example
 suggesting a fresh session when one gets long. Here's how it's triggered.
 
-A hook runs `session.sh busy` every time Leo sends a message. It counts the
+A hook runs `session.sh busy` every time the user sends a message. It counts the
 messages in each session, in a file that isn't saved to GitHub
 (`.session/messages-<session id>`). Every 15 messages it prints a line
 starting `COACH:`, with the size of the conversation so far. Claude Code
@@ -126,7 +127,7 @@ When a session opens, `session.sh` asks GitHub whether the repo is public.
 It compares the answer with `.claude/repo-visibility`, a saved file holding
 the last answer that was reviewed. If a repo has become public, it prints
 `THIS REPO IS NOW PUBLIC`. The rules ("Public repos") then make Claude tell
-Leo, and check the files and their history for private details, before doing
+the user, and check the files and their history for private details, before doing
 anything else. The warning repeats at every session start until
 `scripts/session.sh visibility-ok` records that the review is done. If
 GitHub can't be reached, it says nothing, so it's a safety net, not a
@@ -151,7 +152,7 @@ detail in `docs/decisions.md`.
 - **The playbook repo is public** (since 23 Oct 2026), so any session can
   sync from it without logging in. The flip side: anything saved here is
   public. The rules tell Claude to check each change for private details and
-  ask Leo first. That's an instruction, not an automatic scan.
+  ask the user first. That's an instruction, not an automatic scan.
 - **Hooks don't always run.** In a cloud session that started before a
   project had hooks, nothing syncs until someone runs `scripts/session.sh
   start` by hand.
@@ -164,20 +165,20 @@ detail in `docs/decisions.md`.
 - **The set-up check only adds.** Removing or renaming a hook, or a
   `.gitignore` line, needs a catch-up entry. A hook it adds starts working
   from the next session. It needs `python3` to check the hooks (there on
-  Leo's Mac with Apple's developer tools, and in cloud sessions); without
+  the user's Mac with Apple's developer tools, and in cloud sessions); without
   it, it says so.
 - **If GitHub can't be reached,** the sync prints `PLAYBOOK NOT SYNCED` with
-  the date of the copy in use, and the rules tell Claude to tell Leo.
+  the date of the copy in use, and the rules tell Claude to tell the user.
 - **A project nobody opens doesn't update.** Each project catches up at its
   next session, not before. That's fine, because the rules only matter while
   Claude works there.
 - **A repo that was never set up gets nothing.** The sync only reaches repos
-  that have `scripts/playbook-sync.sh`. The rules say every repo of Leo's is
+  that have `scripts/playbook-sync.sh`. The rules say every repo of the user's is
   set up, and tell Claude to offer when it finds one that isn't.
 - **Session start can't see a cloud session's work it hasn't pushed**, nor a
   Mac session's uncommitted changes. It shows only branches with commits.
   Two sessions can still edit the same file; git then flags a conflict when
-  the second one merges, and Claude stops and tells Leo.
+  the second one merges, and Claude stops and tells the user.
 - **A broken `shared/session.sh` would spread to every project.** So test any
   change in a throwaway repo before pushing (see CLAUDE.md).
 - **Claude Code may read `.claude/rules/` before the hook runs**, so a session
