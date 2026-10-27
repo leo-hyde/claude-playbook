@@ -8,9 +8,9 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 |---|---|
 | Last session | Cloud, 27 Oct 2026 (building the releases spec) |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | Releases built (`specs/playbook-releases.md`, Progress): the sync reads `stable` (falls back to `main`), canary channel file, `tests/run.sh`, the test Action on Linux and macOS, `RELEASES.md`, `scripts/release.sh`, "How a playbook session works" in CLAUDE.md. Waiting for the user's yes on two steps (below) |
-| Next step | With the user's yes: commit `.claude/playbook-channel` (`main`) in Sport Conditions; then the first release (`scripts/release.sh`), which creates `stable` |
-| Check first | `stable` doesn't exist yet, so every project still reads `main`. Don't release before the canary's channel file is pushed, or the canary would be frozen on `stable` too |
+| Mid-flight work | Releases built (`specs/playbook-releases.md`, Progress): the sync reads `stable` (falls back to `main`), canary channel file, `tests/run.sh`, the test Action on Linux and macOS, `RELEASES.md`, `scripts/release.sh`, "How a playbook session works" in CLAUDE.md. Sport Conditions is the canary (its `.claude/playbook-channel` reading `main` is pushed, 27 Oct). Waiting for the user's yes on the first release |
+| Next step | With the user's yes: the first release (`scripts/release.sh --check`, then `--yes`), which creates `stable` |
+| Check first | `stable` doesn't exist yet, so every project still reads `main`. Sport Conditions has the `2026-10-27-no-lock` catch-up due (not applied yet) |
 
 ## Where we are
 The shared folder (the rules, the session script and the sync) is copied into
@@ -23,7 +23,7 @@ name the owner until the shareable spec ships. Claude coaches the user on
 sessions and credits.
 
 ## Next steps
-1. Canary channel file, then the first release (both need the user's yes).
+1. The first release (needs the user's yes).
 2. Build `specs/efficient-sessions.md` and the rest of
    `specs/shareable-playbook.md` together, as the second release (both
    rewrite `shared/ai-dev-rules.md`; this also covers trimming it under 150

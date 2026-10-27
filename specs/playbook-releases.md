@@ -153,6 +153,8 @@ monthly review re-checks them. A mismatch becomes an idea issue.
   - Not built: part 4 (ideas as issues) rewrites a section of
     `shared/ai-dev-rules.md`, so it moves to session 2. Part 6 (the
     assumptions table) wasn't in this session's brief.
-  - Still to do, each with the user's yes: commit `.claude/playbook-channel`
-    (`main`) in Sport Conditions; then the first release, which creates
+  - 27 Oct: Sport Conditions' `.claude/playbook-channel` (`main`) pushed,
+    with the user's yes. Its old sync script updated itself and re-ran the
+    new one, in real use.
+  - Still to do, with the user's yes: the first release, which creates
     `stable`. Until then every project reads `main`, as before.
