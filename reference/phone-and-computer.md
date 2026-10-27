@@ -1,7 +1,8 @@
 # Working from phone and computer on the same project
 
 Leo switches between his phone (Claude Code cloud sessions at claude.ai/code)
-and his Mac. **Neither session can see the other's conversation. The GitHub
+and his Mac, and often runs several sessions on one project at once (Mac
+sessions each in their own worktree, a separate copy of the files). **Neither session can see the other's conversation. The GitHub
 repository is the only shared memory.** This page is how we keep the two in
 step. It was worked out on JobSeekHelper (Oct 2026), after a phone session and
 a desktop session ran at the same time and the phone's work never reached
@@ -10,34 +11,36 @@ GitHub.
 ## The four parts
 
 1. **`docs/STATUS.md`**, the live record (template: `templates/STATUS.md`).
-   - A **Handover block** at the top that every session *overwrites*: which
-     device, did it end cleanly, anything half-done, the next step.
+   - A **Handover block** at the top, *overwritten* when a step finishes:
+     which device, did it end cleanly, anything half-done, the next step.
+     Progress during a step goes in the step's spec instead, so parallel
+     sessions don't clash over this file.
    - Where we are, next steps and open questions for Leo. **Current state
      only**: decisions go in `docs/decisions.md`, history is `git log`.
      (Until Oct 2026 it also held a session log; it grew to 100+ lines that
      every session re-read, so it was dropped.)
    - Read it at the start of every session; update it after every finished
      step, not just at the end.
-2. **One branch: `main`.** Cloud sessions start on their own branch
-   (`claude/...` or `ccr-...`). Land work on main with
-   `git push origin HEAD:main`, and say so. If the harness also insists on its
-   own branch being pushed, push both.
-3. **A session lock** (`shared/session.sh`). It means **"Claude is
-   working on a reply right now"**, not "a session is open": an idle or closed
-   session holds no lock. It's a small file on its own `session-lock` branch,
-   so it doesn't clutter main's history or republish the site. It works
-   because GitHub refuses a push that doesn't build on the latest version of
-   a branch, so two devices can't both claim it.
-   - `session.sh start` (session opens): pulls main, **warns if the other
-     device is mid-reply**, prints the Handover block. Claims nothing.
-   - `session.sh busy` (Leo sends a message): pulls main, warns or claims the lock.
-   - `session.sh check` (a reply finishes): refuses to let it finish with
-     uncommitted work, commits not on GitHub, or work done since STATUS.md
-     was last updated; otherwise **releases the lock**.
-   - `session.sh end`: releases it by hand if a reply was cut off.
-   - A busy lock older than 2 hours is treated as left behind by a crash.
-   - `busy` also counts Leo's messages and every 15 prints a `COACH:` line,
-     so Claude suggests a fresh session when one gets long.
+2. **Own branch while working, `main` when finished.** Every session works on
+   its own branch (cloud: `claude/...` or `ccr-...`; Mac: its worktree's
+   branch) and pushes it as it goes. A finished step is merged into main
+   (`git push origin HEAD:main`), and Claude says so. Git does the safety
+   work: GitHub refuses a push that would overwrite newer work, so Claude
+   merges and tries again.
+3. **The session script** (`shared/session.sh`).
+   - `session.sh start` (session opens): pulls main, lists **other unfinished
+     work** (`OTHER WORK`: branches with commits not on main, touched in the
+     last 14 days, including other Mac worktrees' unpushed ones), syncs the
+     playbook, lists open issues, prints the Handover block.
+   - `session.sh busy` (Leo sends a message): counts Leo's messages and every
+     15 prints a `COACH:` line, so Claude suggests a fresh session when it helps.
+   - `session.sh check` (a reply finishes): in a **cloud** session, refuses
+     to finish with uncommitted work or commits on no branch on GitHub (they'd
+     be lost when the session closes). On the **Mac** it shows Leo a reminder
+     instead: the work is safe in its folder. Wherever the work has reached
+     **main**, it refuses to finish until STATUS.md (and SPEC.md, if `specs/`
+     changed) is updated.
+   - `session.sh end`: the same checks, printed, before Leo switches device.
 4. **Hooks** (`templates/.claude/settings.json`) make Claude Code run
    `start` when a session opens, `busy` on every message and `check` at the
    end of every reply, so nobody has to remember. The rules Claude follows
@@ -80,7 +83,7 @@ so a daily data run doesn't make every session update STATUS.md.
 
 **Sessions with several repos.** Hooks only run in the repo the session was
 opened in. Run `bash scripts/session.sh start` in each other repo before
-changing it, so it pulls, takes the lock and syncs the playbook.
+changing it, so it pulls and syncs the playbook.
 
 ## Things we learned the hard way
 
@@ -113,9 +116,13 @@ changing it, so it pulls, takes the lock and syncs the playbook.
   so a session started with an outdated script can put back things the new
   one removed (an old lock file reappeared on main). Ignore `.session/` in
   `.gitignore` so old scripts can't commit it.
-- **A lock held for the whole session was too blunt** (Sport Conditions,
-  22 Oct): a Mac session left open blocked the phone all morning. Holding it
-  only during a reply fixed that, and each message also pulls the latest main.
-- **A phone session started while the desktop was active** caught the
-  overlap via the lock warning. Respect it: read-only work is fine, changes wait
-  for Leo's go-ahead.
+- **A lock between devices didn't survive parallel sessions** (Oct 2026).
+  First a lock for the whole session blocked the phone all morning; then a
+  lock held only during a reply worked for one phone and one Mac session. But
+  it tracked devices, not sessions, so two Mac sessions never saw each other
+  and one could free the lock while the other was mid-reply. And forcing
+  every reply to push to main and rewrite STATUS.md made parallel sessions
+  clash. Worktrees, own branches and git's refused pushes do the real job;
+  the script now just shows other sessions' branches and checks nothing is
+  lost. The original problem (a phone session's work never reached GitHub)
+  is caught by the end-of-reply check, not a lock.

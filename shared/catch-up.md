@@ -44,3 +44,18 @@ what to leave alone, how to check. Keep each entry short; it's printed in full.
 - Leave the meaning alone: record what was decided, don't decide anything.
   Anything unclear goes to Leo as a question.
 - Check: a fresh session reading only the docs would plan the same next step.
+
+## 2026-10-27-no-lock: No session lock; STATUS.md changes when a step finishes
+- The lock is gone from `scripts/session.sh` (the sync updates it). Delete
+  the old lock branch on GitHub, but only if its last commit is over a day
+  old (so no session still runs the old script):
+  `git log -1 --format=%cr origin/session-lock`, then
+  `git push origin --delete session-lock`. Leo agreed (27 Oct).
+- In `docs/STATUS.md`: rename the heading to "Handover (overwrite this block
+  when a step finishes)", and change any "update after every reply/session"
+  wording to match `templates/STATUS.md`.
+- In the project's CLAUDE.md and docs: replace any mention of the lock,
+  `ANOTHER DEVICE IS WORKING` or "always push to main" with the new rule
+  (own branch while working, main when a step is finished). Leave
+  everything else.
+- Check: `bash scripts/session.sh status` runs and shows no lock.

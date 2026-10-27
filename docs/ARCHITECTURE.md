@@ -36,14 +36,15 @@ something useful for every project, it adds it back to the playbook.
   `.claude/settings.json`.
 - **Cloud session**: a Claude Code session started from Leo's phone. It runs
   on Anthropic's computers, not the Mac.
-- **Session lock**: a small marker on GitHub that says "Claude is replying on
-  this device right now", so the phone and Mac don't both change a project at
-  once. How it works: `reference/phone-and-computer.md`.
+- **Branch**: a separate line of work in a repo. Each session works on its
+  own and merges into `main` when a step is finished. **Worktree**: a
+  separate copy of a repo's files on the Mac, one per session. How sessions
+  stay in step: `reference/phone-and-computer.md`.
 
 ## What happens when a session opens in a project
 1. **Claude Code runs the start hook** (`SessionStart` in
    `.claude/settings.json`). It runs `scripts/session.sh start`.
-   That script fetches the project's latest `main` and checks the session lock.
+   That script fetches the project's latest `main` and lists other sessions' unfinished branches.
 2. **The sync finds the playbook.** `session.sh` runs
    `scripts/playbook-sync.sh`. It looks for the playbook in three places, in
    order: the clone on Leo's Mac (`~/.claude/skills/new-app`); a clone next
@@ -97,7 +98,7 @@ something useful for every project, it adds it back to the playbook.
 | Playbook file | Copy in each project | What it does |
 |---|---|---|
 | `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | Leo's rules for every project, including coaching |
-| `shared/session.sh` | `scripts/session.sh` | The session lock, the end-of-reply checks, and the message counter for coaching |
+| `shared/session.sh` | `scripts/session.sh` | Session start (pull, other work, issues, handover), the end-of-reply checks, and the message counter for coaching |
 | `shared/playbook-sync.sh` | `scripts/playbook-sync.sh` | The sync itself (copied too, so it can update itself) |
 | `shared/catch-up.md` | not copied (the sync reads it) | Rule changes each project must apply once to files it already has. Each project records the ones it has done in `docs/playbook-catch-up.md` |
 | `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |
@@ -142,6 +143,9 @@ detail in `docs/decisions.md`.
   exists on the Mac, and an import can't be a web address.
 - **A copy saved in each project** works everywhere, even offline. Git's
   history also shows exactly which rules each session had.
+- **No lock between sessions** (removed 27 Oct 2026). Claude Code has no
+  built-in lock across devices; worktrees, own branches and GitHub refusing
+  out-of-date pushes keep sessions' work apart. See `docs/decisions.md`.
 
 ## Limits and weak spots
 - **The playbook repo is public** (since 23 Oct 2026), so any session can
@@ -170,6 +174,10 @@ detail in `docs/decisions.md`.
 - **A repo that was never set up gets nothing.** The sync only reaches repos
   that have `scripts/playbook-sync.sh`. The rules say every repo of Leo's is
   set up, and tell Claude to offer when it finds one that isn't.
+- **Session start can't see a cloud session's work it hasn't pushed**, nor a
+  Mac session's uncommitted changes. It shows only branches with commits.
+  Two sessions can still edit the same file; git then flags a conflict when
+  the second one merges, and Claude stops and tells Leo.
 - **A broken `shared/session.sh` would spread to every project.** So test any
   change in a throwaway repo before pushing (see CLAUDE.md).
 - **Claude Code may read `.claude/rules/` before the hook runs**, so a session

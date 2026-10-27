@@ -11,6 +11,23 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 27 Oct 2026: No session lock; own branches while working, main when a step is finished
+- **What:** removed the lock from `shared/session.sh`. Session start now lists
+  other sessions' unfinished branches. The end-of-reply check blocks in cloud
+  sessions until work is on GitHub, but only reminds Leo on the Mac (the work
+  is safe in its worktree). Docs are checked once work reaches main. Progress
+  during a step goes in its spec; STATUS.md changes when a step is finished.
+  The old `session-lock` branches get deleted (catch-up `2026-10-27-no-lock`).
+- **Why:** Leo often runs several sessions on one project at once. The lock
+  tracked devices, not sessions, so it couldn't see two Mac sessions, and one
+  could free it while another was mid-reply. Forcing every reply to push to
+  main and rewrite STATUS.md made parallel sessions clash. Git (worktrees,
+  own branches, refused out-of-date pushes) already does the safety work, and
+  Claude Code has no built-in cross-device lock.
+- **Rejected:** a lock per session (still needs everyone to respect it, and
+  costs two GitHub round trips on every message); one STATUS.md file per
+  session (too many files to read).
+
 ## 26 Oct 2026: Suggest a fresh session for a change of work or clutter, not for length
 - **What:** the Coaching rules now judge whether the conversation still helps the work at hand. A fresh session is suggested for a new piece of work or a cluttered context; a long but focused session carries on. The `COACH:` hook line asks Claude to judge rather than to suggest wrapping up. New: save state to STATUS.md before the app compacts the conversation.
 - **Why:** a session was told it had "grown long" after 3 of Leo's messages, at 12% of its context window. The real reason was a change of topic. Message counts and sizes go stale as context windows and models grow; relevance doesn't. Leo asked for guidance that stays true as AI improves.
@@ -143,6 +160,7 @@ Replaced by 25 Oct 2026: Leo meant GitHub Issues, not any problem Claude spots.
   the job; Sport Conditions keeps its own for feedback).
 
 ## 22 Oct 2026: The session lock is held only while Claude is replying
+- **Replaced by 27 Oct** (no lock at all).
 - **Why:** a Mac session left open blocked the phone all morning.
 - **Rejected:** a lock for the whole session.
 

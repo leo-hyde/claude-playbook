@@ -60,7 +60,7 @@ See `reference/github-and-hosting.md` for exact commands. In order:
    third-party is in it), create it, push.
 4. Hosting: GitHub Pages (free) → `https://leo-hyde.github.io/<repo>/`.
 5. **Phone + computer handover and shared rules** (every project):
-   `docs/STATUS.md`, a session lock and hooks, one branch, and the playbook
+   `docs/STATUS.md`, the session script and hooks, one branch, and the playbook
    sync. Follow "Setting it up in a project" in `reference/phone-and-computer.md`.
 6. Only if needed: a Cloudflare Worker for secrets, sources that block browsers,
    or syncing between devices (`reference/github-and-hosting.md`,
@@ -89,7 +89,7 @@ Then push, wait for the live site to update, and check it there too.
 |---|---|
 | `shared/ai-dev-rules.md` | Leo's rules for every project; synced into each as `.claude/rules/playbook.md` |
 | `shared/catch-up.md` | Rule changes that existing projects must apply once to files they already have; session start lists the ones still due |
-| `shared/session.sh`, `shared/playbook-sync.sh` | Session lock + coaching counter; the sync. Also synced into each project's `scripts/` |
+| `shared/session.sh`, `shared/playbook-sync.sh` | Session start and end checks + coaching counter; the sync. Also synced into each project's `scripts/` |
 | `personal-CLAUDE.md` | Copy of `~/.claude/CLAUDE.md` (Mac-only notes; points to the shared rules) |
 | `templates/SPEC.md`, `DESIGN.md`, `CLAUDE.md`, `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |
 | `templates/style.css` | Design tokens (light/dark), buttons, cards, dialogs, phone layout |
@@ -98,7 +98,7 @@ Then push, wait for the live site to update, and check it there too.
 | `reference/ux-checklist.md` | The design and UX review checklist |
 | `reference/github-and-hosting.md` | GitHub, Pages, Actions, Cloudflare Worker, KV: exact steps |
 | `reference/gotchas.md` | Things that went wrong before, and their fixes |
-| `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: STATUS.md, session lock, hooks |
+| `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: STATUS.md, branches, the session script, hooks |
 | `reference/understanding-and-quality.md` | How we make sure AI-built apps are understood, good and safe; using AI efficiently |
 | `templates/ARCHITECTURE.md` | Starting point for a project's architecture overview |
 | `templates/STATUS.md`, `templates/.claude/settings.json` | The handover kit to copy into a project (with `shared/`) |
