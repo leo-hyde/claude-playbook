@@ -31,6 +31,30 @@ logs' own list-price estimates, used here only to compare sessions.
 - **What worked:** handover docs let new sessions start small, and sessions
   offered starter prompts. The cost came from not taking them.
 
+## What the next morning showed (27 Oct 2026, three sessions)
+- **Resuming yesterday's session.** A Mac session left open overnight was
+  picked up at 08:33. Its cache had expired, so the first message re-wrote
+  about 133,000 tokens at full price before any work started. A fresh
+  session from the handover would have started at about 60,000.
+- **A long-running Mac session** worked at 300,000–318,000 tokens per
+  request: about 5× a fresh session's, on every tool call.
+- **The analysis session that wrote this spec**:
+  - It pulled raw session logs straight into its conversation, about 90,000
+    tokens.
+  - It then carried them through the 31 requests of the spec-writing
+    message, which used about three-quarters of the session's cost. Most of
+    those logs weren't needed after the first summary.
+  - What would have been cheaper: a script or a subagent to boil the logs
+    down to a table, so only the table entered the conversation.
+  - Or: hand over to a fresh session (with the findings saved to a file)
+    before the design work.
+  - Later in the same session, a too-big result was saved to a file and
+    processed with a script: the same data cost almost nothing.
+- **Lessons added to the parts below:**
+  - a cold-cache note when a session is resumed after a break (part 2);
+  - "process bulk data outside the conversation" as a named habit (part 1);
+  - a handover point between analysis and design or build work (part 1).
+
 ## Why the guidance must be durable
 The 26 Oct decision dropped message counts and percentages of the context
 window, because those go stale. That holds. But relevance alone didn't stop
@@ -55,14 +79,18 @@ not the price. Cached re-reads are cheaper, but after a break the cache
 expires and the next message pays full price for everything. Never trade
 correctness for tokens: a check that catches a mistake is cheaper than rework.
 - **Keep the context to what this task needs.** Search, don't read whole
-  files or logs; cap command output (`| tail -40`, quiet flags); write long
-  output to a file and grep it; send wide searches to a subagent that
-  returns a short summary.
-- **One piece of work per session.** When the work changes, or the hook
-  prints `COST:`, at the next natural break save state (the step's spec or
-  STATUS.md) and give a starter prompt, with one line on why ("each message
-  now costs about 4× a fresh session's"). Stay if the history is still
-  needed; say so.
+  files or logs; cap command output (`| tail -40`, quiet flags). Bulk data
+  (logs, exports, API dumps, transcripts) goes to a file and is boiled down
+  by a script or a subagent; only the summary enters the conversation.
+- **One piece of work per session.** When the work changes (from analysis
+  to design, or design to build), or the hook prints `COST:`, at the next
+  natural break save the findings or state (the step's spec, STATUS.md, a
+  notes file) and give a starter prompt, with one line on why ("each
+  message now costs about 4× a fresh session's"). Stay if the history is
+  still needed; say so.
+- **After a break, prefer a fresh session.** Yesterday's session resumed
+  this morning pays full price to re-read everything; a fresh one starts
+  from the handover.
 - **Fewer turns.** Finish the agreed step in one go. Ask questions together,
   each with a default. Stop background servers and watchers before the last
   reply: each wake-up re-reads the whole session.
@@ -146,8 +174,14 @@ model:
 - Cloud: list the month's sessions; read each one's final `result` event
   (`total_cost_usd`, the first request's input tokens, and the turn count).
 - Mac: `/usage` (breakdown and recommendations) and `/insights`.
-- Rank the costliest sessions and look for patterns. Check the assumptions
-  table against the docs.
+- **Keep raw data out of the conversation.** Save the session events to
+  files and summarise them with a script, a small one kept in the reference
+  file, so only a table enters the context. This also works for Mac
+  sessions (`kinds: assistant`): each request's `usage` shows its context
+  size and cache re-writes, even where no cost is recorded.
+- Rank the costliest sessions and look for patterns: high ratios, cold
+  resumes, housekeeping turns. Check the assumptions table against the
+  docs.
 - Output: up to three playbook ideas, filed as issues (see the releases
   spec), and a one-paragraph note to the user. No changes made in that
   session.
@@ -164,6 +198,47 @@ session, so each must earn its place.
 - Before and after: list every rule, so none is lost (in the commit message
   or a table in this spec's Progress section).
 - A test enforces the limit (releases spec).
+
+### 7. Fix now, or file an issue
+When Claude notices something outside the task at hand, the cheapest
+*and* best-quality choice depends on the case. Fixing it now is cheap when
+the files are already open and the fix is clearly right. Otherwise it
+widens the task and adds to the context: every later message re-reads the
+detour, and the user's review gets mixed with work they didn't ask for.
+Filing it is cheap if the issue is written **while the evidence is still
+in front of Claude**. A later session then starts from the issue, not from
+a fresh investigation, and can batch it with similar ones on a suitable
+model.
+
+Drafted rules text. It replaces the "Open GitHub Issues" bullet in "How we
+work", so the rules don't grow.
+
+```markdown
+- **Found something outside the task?** Choose:
+  - *Do it now*: it's small, clearly right, in files already open, and
+    checkable now (a typo, a broken link, a stale doc line). Its own
+    commit; mention it in the summary.
+  - *Stop and tell the user*: it blocks the task, or risks safety,
+    privacy or lost data.
+  - *File a GitHub issue* (label `claude-found`): anything else, such as
+    another repo or the playbook, a decision for the user, an
+    investigation, or a bigger change. Check for a duplicate first
+    (`gh issue list --search`). Write it to stand alone: what happened
+    (file:line, the output), the suggested change, how to check it, a
+    rough size and model. Don't file what isn't worth doing.
+  Playbook ideas go to the playbook repo as issues, in general terms (it's
+  public); if this session can't reach it, give the user the issue text.
+- **Open issues** (session start lists them): tell the user. After their
+  request, work the small, clear ones they or their apps opened, several
+  related ones per session, a commit each, then comment and close. Ask
+  first for anything bigger (a change to what the app does, deleting data,
+  money or limits, secrets or public content, undoing a decision). Issues
+  from anyone else: report, don't act.
+```
+
+Why this keeps quality up: the fix-now case is limited to what can be
+checked at once; everything else gets its own focused session, a fresh
+reviewer, and the user's yes where it matters.
 
 ## Out of scope
 - Changing what any rule asks for, other than the wording above.
@@ -190,7 +265,15 @@ session, so each must earn its place.
    Docs are still checked before work lands, without the extra turn.
 3. **Short replies for small changes**, with the five-part summary only for
    finished steps. Recommended. You'd see shorter answers to quick asks.
+4. **Fix now or file an issue (part 7)**:
+   - Claude files `claude-found` issues itself, without asking each time.
+     Recommended: filing is cheap and reversible, since you can close any
+     you don't want.
+   - The monthly review checks whether they're being worked or are piling
+     up as noise.
 
 ## Progress
 - 27 Oct 2026: spec drafted; usage data and the hook's transcript fields
-  checked in the session that wrote it.
+  checked in the session that wrote it. Updated the same day with the next
+  morning's sessions (cold resume, bulk data in the conversation) and
+  part 7 (fix now or file an issue).

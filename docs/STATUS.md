@@ -8,7 +8,7 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 |---|---|
 | Last session | Cloud, 27 Oct 2026 (usage review and specs) |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | None. Three specs drafted for the user's review: `specs/playbook-releases.md`, `specs/efficient-sessions.md`, `specs/shareable-playbook.md`. Wording made general ("the user") in every file no project syncs; `owner/profile.md` created. `shared/` untouched |
+| Mid-flight work | None. Three specs drafted for the user's review (efficient-sessions updated with the 27 Oct morning sessions and "fix now or file an issue"): `specs/playbook-releases.md`, `specs/efficient-sessions.md`, `specs/shareable-playbook.md`. Wording made general ("the user") in every file no project syncs; `owner/profile.md` created. `shared/` untouched |
 | Next step | The user reviews the three specs and answers their "Decisions for the user". Then build them in order (below), each in a fresh session |
 | Check first | Earlier today (Mac): the session lock was removed (catch-up `2026-10-27-no-lock`); watch that projects apply it |
 

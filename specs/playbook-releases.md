@@ -68,12 +68,19 @@ more.
 ### 4. One way in for ideas
 - Replace "Keeping the playbook current" in the rules: a project session
   that learns something general **files it as an issue on the playbook
-  repo**. It uses the label `idea`, says what happened (in general terms,
-  since the repo is public) and the rule it suggests. If the session can't
-  reach the playbook repo, it gives the user a two-line note to paste into
-  one.
+  repo**, using the same "fix now or file an issue" rule as everything
+  else (efficient-sessions spec, part 7).
+  - Label `idea`.
+  - Say what happened, in general terms, since the repo is public.
+  - Give the rule it suggests and the evidence behind it.
+  - **In a cloud session:** attach the playbook repo to file it. If that
+    isn't possible, give the user the issue text to paste.
 - **It doesn't edit the playbook**, unless the user asks for it in that
-  session.
+  session. A project session has the wrong context for it: it knows one
+  project, not how the change lands in the others.
+- **The exception is a playbook script breaking a session.** Stop, tell the
+  user, and offer a fix in a playbook session straight away, not a queued
+  idea.
 - The monthly usage review (efficient-sessions spec) files its findings the
   same way.
 
