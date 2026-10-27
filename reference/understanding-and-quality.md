@@ -17,6 +17,7 @@ What professionals use, and the lightweight version we keep in each project.
 | Design system | How does it look and behave? | `DESIGN.md` |
 | Threat model / security review | What could go wrong, and who could misuse it? | "Safety and security" in ARCHITECTURE.md; a `/security-review` before big releases |
 | Automated tests, and a test plan | Does it still work after a change? | Tests for the core rules; a preview script with made-up data |
+| Background ("the why") | Why does this project exist, for whom, what came before? | `docs/CONTEXT.md`, only where a project needs one |
 | Changelog / release notes | What changed, when? | Commit messages; a `CHANGELOG.md` only where the user needs one (Sport Conditions: for feedback) |
 | Runbook | How is it deployed and kept running? | "Outside services" in ARCHITECTURE.md; `reference/github-and-hosting.md` |
 | Code review (pull requests) | Did a second person check it before it went live? | Claude's walkthrough; a fresh session reviewing with `/code-review` |
@@ -93,27 +94,5 @@ AI is fast and usually right, but it can invent things confidently
 
 ## 6. Using AI efficiently
 
-Source: Anthropic's [best practices for Claude Code](https://code.claude.com/docs/en/best-practices)
-(checked 23 Oct 2026). Its central point: "LLM performance degrades as
-context fills", and every message, file read and command output stays in the
-context. Each message also re-processes all of it, so long sessions cost more.
-- **One feature or task per session**; many sessions per repo is fine. Name
-  each after its feature. STATUS.md and git carry the memory.
-- **Don't mix unrelated tasks** (the guide's "kitchen sink session"); start
-  a new session or `/clear` between them.
-- **After two failed corrections, restart** with a better prompt: "a clean
-  session with a better prompt almost always outperforms a long session with
-  accumulated corrections."
-- **Spec first, then build in a fresh session.**
-- **Give Claude a check it can run** (tests, a check script), so it doesn't
-  loop guessing and you aren't the only check.
-- **Scope requests narrowly**, and batch small related changes.
-- **Keep CLAUDE.md lean** (the docs suggest under 200 lines; ours aim for
-  ~100): for each line ask "would removing this cause Claude to make
-  mistakes?" Leave out what Claude can read from the code and anything that
-  changes often.
-- **Don't read big data files or whole logs**; search them.
-- For long tasks, `/compact <what to keep>`; on the phone, a new session.
-
-Claude nudges the user about these unprompted ("Coaching" in
-`shared/ai-dev-rules.md`), helped by a message counter in `session.sh`.
+Moved to [efficient-sessions.md](efficient-sessions.md) (27 Oct 2026): how
+cost works, the habits and why, the dated assumptions, the monthly review.

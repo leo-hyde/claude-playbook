@@ -17,6 +17,10 @@ user" and reads the details from here.
 - Works from a phone (Claude Code cloud sessions) and a Mac, often with
   several sessions at once.
 
+## Never public
+Besides secrets and other people's details, keep these out of public repos:
+the user's CV, job search and employers, health, and money.
+
 ## Accounts
 - GitHub: `leo-hyde`. Commit email: the GitHub "noreply" address
   `22234407+leo-hyde@users.noreply.github.com` (`git config user.email`

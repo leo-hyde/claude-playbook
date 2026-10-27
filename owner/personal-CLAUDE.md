@@ -1,12 +1,12 @@
 # How the user and Claude work together (the user's Mac)
 
 Personal instructions, loaded in every Claude Code session on this Mac.
-A copy lives in github.com/leo-hyde/claude-playbook (`personal-CLAUDE.md`):
+A copy lives in github.com/leo-hyde/claude-playbook (`owner/personal-CLAUDE.md`):
 after changing either, copy it over the other.
 
 ## The shared rules
 The user's rules for every project (how we work, explaining and checking the work,
-the phone/Mac handover, coaching on sessions and credits) live in the
+the phone/Mac handover, using tokens well) live in the
 playbook's `shared/ai-dev-rules.md`, cloned at `~/.claude/skills/new-app`.
 - Projects set up with the playbook load them automatically as
   `.claude/rules/playbook.md`, refreshed at each session start.

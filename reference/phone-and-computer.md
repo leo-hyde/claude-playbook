@@ -32,18 +32,24 @@ GitHub.
      work** (`OTHER WORK`: branches with commits not on main, touched in the
      last 14 days, including other Mac worktrees' unpushed ones), syncs the
      playbook, lists open issues, prints the Handover block.
-   - `session.sh busy` (the user sends a message): counts the user's messages and every
-     15 prints a `COACH:` line, so Claude suggests a fresh session when it helps.
+   - `session.sh busy` (the user sends a message): measures the context from
+     the session's transcript and prints a `COST:` line when each message
+     re-reads about 3× (then 6×) a fresh session's, or when the cache has
+     likely expired after a break. See `reference/efficient-sessions.md`.
    - `session.sh check` (a reply finishes): in a **cloud** session, refuses
      to finish with uncommitted work or commits on no branch on GitHub (they'd
      be lost when the session closes). On the **Mac** it shows the user a reminder
-     instead: the work is safe in its folder. Wherever the work has reached
-     **main**, it refuses to finish until STATUS.md (and SPEC.md, if `specs/`
-     changed) is updated.
-   - `session.sh end`: the same checks, printed, before the user switches device.
+     instead: the work is safe in its folder. It checks nothing else, so it
+     never costs an extra turn for docs.
+   - `session.sh push-check` (before every command Claude runs): a `git push`
+     to **main** is refused until STATUS.md (and SPEC.md, if `specs/`
+     changed) is part of what's pushed. Claude is mid-turn then, so it adds
+     the docs and pushes again.
+   - `session.sh end`: the checks, printed, before the user switches device.
 4. **Hooks** (`templates/.claude/settings.json`) make Claude Code run
-   `start` when a session opens, `busy` on every message and `check` at the
-   end of every reply, so nobody has to remember. The rules Claude follows
+   `start` when a session opens, `busy` on every message, `push-check` before
+   every shell command and `check` at the end of every reply, so nobody has
+   to remember. The rules Claude follows
    around them are in `shared/ai-dev-rules.md` ("Git and the phone/Mac handover").
 
 ## Setting it up in a project

@@ -4,8 +4,9 @@ Claude reads this file at the start of every session in this project,
 including cloud sessions started from the user's phone. **Keep it short (under ~100
 lines) and stable**: only what's specific to this project and that Claude
 would get wrong without it. The user's general rules (how we work, explaining,
-checking, the phone/Mac handover, coaching) are in `.claude/rules/playbook.md`,
-synced from github.com/leo-hyde/claude-playbook: don't repeat them here.
+checking, the phone/Mac handover, using tokens well) are in `.claude/rules/playbook.md`,
+and who the user is in `.claude/rules/owner.md`, both synced from the playbook:
+don't repeat them here.
 
 What we're building: [SPEC.md](SPEC.md). How it looks: [DESIGN.md](DESIGN.md).
 How it's built: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Where we are:

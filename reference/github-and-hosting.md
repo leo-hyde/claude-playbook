@@ -86,6 +86,29 @@ Rules for Worker code (see `templates/worker.js`):
   them: the way to fetch web pages on a schedule without the Mac. Their
   secrets live in the repo's Settings → Secrets and variables → Actions.
 
+## When a repo turns public
+Session start prints `THIS REPO IS NOW PUBLIC` when GitHub says a repo is
+public but `.claude/repo-visibility` still says it was private.
+1. Tell the user before anything else.
+2. Review the files **and the git history**: deleted files stay in it.
+   `git log -p --all | grep -iE '<pattern>'` for each kind of thing that
+   shouldn't be public (secrets, keys, email addresses, real names, the
+   private topics in `owner/profile.md`, internal web addresses).
+3. List the findings with file and line, and propose fixes.
+4. Run `scripts/session.sh visibility-ok` only once the user has seen the list.
+5. Rewriting history is a force-push: never without the user's explicit go-ahead.
+
+If unsure whether a repo is public, check its page on GitHub signed out.
+
+## Issues and labels
+- The rules use two labels: `claude-found` (Claude noticed it outside the
+  task) and `idea` (a suggestion for the playbook). If one is missing:
+  `gh issue create` fails, so first
+  `gh label create claude-found --description "Found by Claude outside the task"`
+  (or `idea`).
+- No GitHub CLI (cloud sessions): use the GitHub tools to list, create,
+  comment on and close issues.
+
 ## Working from a phone
 - **Remote Control** (Claude desktop app): drive this Mac's session from the
   Claude app on the phone; the Mac must be on and awake.

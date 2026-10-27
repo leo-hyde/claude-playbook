@@ -89,8 +89,10 @@ Then push, wait for the live site to update, and check it there too.
 |---|---|
 | `shared/ai-dev-rules.md` | The shared rules for every project; synced into each as `.claude/rules/playbook.md` |
 | `shared/catch-up.md` | Rule changes that existing projects must apply once to files they already have; session start lists the ones still due |
-| `shared/session.sh`, `shared/playbook-sync.sh` | Session start and end checks + coaching counter; the sync. Also synced into each project's `scripts/` |
-| `personal-CLAUDE.md` | Copy of `~/.claude/CLAUDE.md` (Mac-only notes; points to the shared rules) |
+| `shared/session.sh`, `shared/playbook-sync.sh` | Session start and end checks, cost notes and the push-to-main docs check; the sync. Also synced into each project's `scripts/` |
+| `owner/profile.md`, `owner/personal-CLAUDE.md` | The owner's details (synced into each project as `.claude/rules/owner.md`); a copy of `~/.claude/CLAUDE.md` |
+| `templates/.claude/agents/` | The `scout` and `checker` subagents, synced into each project |
+| `reference/efficient-sessions.md` | How cost works, the habits, the dated assumptions, the monthly review |
 | `templates/SPEC.md`, `DESIGN.md`, `CLAUDE.md`, `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |
 | `templates/style.css` | Design tokens (light/dark), buttons, cards, dialogs, phone layout |
 | `templates/worker.js` | Cloudflare Worker skeleton: CORS, caching, a secret key, KV sync |

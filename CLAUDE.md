@@ -6,26 +6,28 @@ skill (`new-app`) on the user's Mac, at `~/.claude/skills/new-app`. How it works
 [docs/STATUS.md](docs/STATUS.md). Why: [docs/decisions.md](docs/decisions.md).
 
 @shared/ai-dev-rules.md
+@owner/profile.md
 
 ## Working on the playbook
 - **`shared/` reaches every project at its next release** (the canary
   project gets it as soon as it's on `main`). A mistake there spreads
   everywhere, so: keep `ai-dev-rules.md` short (every line is read in every
-  session of every project; aim under ~150 lines); run `bash tests/run.sh`
+  session of every project; the tests fail it over 150 lines); run `bash tests/run.sh`
   before pushing, and add a case to it when you change a script (don't
   write throwaway tests inline); scripts must work on macOS (bash 3.2, BSD
   tools) and Linux. The GitHub Action runs the tests on both.
 - Projects' copies must not be edited there; this repo is the source.
 - Templates (`templates/`) are copied once into new projects and don't update,
   except the hooks in `templates/.claude/settings.json`, which every session
-  checks through `shared/setup.txt`. So any other template change that
+  checks through `shared/setup.txt`, and the subagents in
+  `templates/.claude/agents/`, which the sync copies like `shared/`. So any other template change that
   existing projects need also gets a catch-up entry.
   `reference/` is read on demand, so detail belongs there, not in `shared/`.
 - **The rules apply here too.** This repo has no session hooks: update
   docs/STATUS.md by hand after each step, commit and push to `main`
   (`git push origin HEAD:main`). A new catch-up in `shared/catch-up.md` is
   applied here as well, and recorded in `docs/playbook-catch-up.md`.
-- `personal-CLAUDE.md` mirrors `~/.claude/CLAUDE.md` on the Mac.
+- `owner/personal-CLAUDE.md` mirrors `~/.claude/CLAUDE.md` on the Mac.
 
 ## How a playbook session works
 - **One playbook session at a time.** This repo has no hooks, so at the
