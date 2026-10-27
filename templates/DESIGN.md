@@ -21,20 +21,22 @@ Before designing a screen, read the playbook's `reference/design-method.md`.
    Anything you tap is at least 44 pixels across. Nothing wider than the screen.
 5. **Follow the phone.** Light or dark theme comes from the device.
 
-## Design tokens (in `:root` in style.css; see the skill's templates/style.css)
+## Design tokens (in `:root` in style.css; from the style's `tokens.css`)
 | Token | Light | Dark | Used for |
 |---|---|---|---|
 | `--bg` | #eef1f5 | #0e1116 | page background |
 | `--surface` | #ffffff | #171b22 | cards, dialogs |
 | `--surface-2` | #f4f6f9 | #202631 | inputs, inner panels |
 | `--text` | #111827 | #e8ecf2 | main text |
-| `--muted` | #6b7280 | #98a2b3 | secondary text |
+| `--muted` | #5f6875 | #98a2b3 | secondary text |
 | `--border` | #e3e7ee | #2a313c | dividers |
-| `--accent` | #2563eb | #5b8cff | buttons, active tab, links |
+| `--accent` | #2563eb | #5b8cff | main buttons |
+| `--link` | #2563eb | #5b8cff | links, active tab, text buttons |
 | `--good` / `--ok` | #22c55e / #fbbf24 | #2fd36b / #f5c04a | status colours (if needed) |
 | `--no` | #eceff3 | #222833 | "no"/empty: calm grey |
+| `--danger` | #c81e1e | #f87171 | errors |
 
-- **Font:** the device's system font; `tabular-nums` for numbers.
+- **Font:** the style's (`--font`; the device's system font in Clear); `tabular-nums` for numbers.
 - **Type sizes:** 12 / 14 / 16 / 20 / 26px. **Spacing:** multiples of 4px.
 - **Corners:** 14px cards and dialogs, 6px small chips. Soft shadows, light mode only.
 

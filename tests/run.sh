@@ -429,7 +429,8 @@ section "Style library (tools/styles.py)"
 out=$(python3 "$ROOT/tools/styles.py" check 2>&1)
 check "every style passes contrast and its files are up to date" [ $? -eq 0 ]
 s="$T/styles-copy"
-mkdir -p "$s/tools" && cp "$ROOT/tools/styles.py" "$s/tools/" && cp -R "$ROOT/styles" "$s/styles"
+mkdir -p "$s/tools" "$s/templates" && cp "$ROOT/tools/styles.py" "$s/tools/" && cp -R "$ROOT/styles" "$s/styles"
+cp "$ROOT/templates/style.css" "$s/templates/"
 python3 - "$s/styles/candidates.json" <<'PY'
 import json, sys
 p = sys.argv[1]; d = json.load(open(p))
@@ -448,6 +449,9 @@ check "a hand-edited tokens.css is reported as out of date" has "$out" "out of d
 python3 "$s/tools/styles.py" build >/dev/null 2>&1
 out=$(python3 "$s/tools/styles.py" check 2>&1)
 check "build puts it right" [ $? -eq 0 ]
+sed 's/--accent: #2563eb;/--accent: #ff0000;/' "$ROOT/templates/style.css" >"$s/templates/style.css"
+out=$(python3 "$s/tools/styles.py" check 2>&1)
+check "the template's colours drifting from the default style are reported" has "$out" "templates/style.css"
 
 section "Error messages"
 out=$(cat "$T/noise" 2>/dev/null)

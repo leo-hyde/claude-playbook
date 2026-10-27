@@ -2,8 +2,9 @@
 """The style library's one source: styles/candidates.json.
 
   python3 tools/styles.py check   # contrast of every style, and the files below are up to date
-  python3 tools/styles.py build   # writes styles/<name>/tokens.css for the library's styles
-                                  # and the style data inside styles/gallery.html
+  python3 tools/styles.py build   # writes styles/<name>/tokens.css for the library's styles,
+                                  # the style data inside styles/gallery.html, and the token
+                                  # blocks of templates/style.css (from the "clear" style)
 
 Edit styles/candidates.json (to add a style, or move one in or out of the
 library with "in_library"), then run build, then check. The tests run check.
@@ -18,9 +19,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STYLES = os.path.join(ROOT, "styles")
 DATA = os.path.join(STYLES, "candidates.json")
 GALLERY = os.path.join(STYLES, "gallery.html")
+TEMPLATE = os.path.join(ROOT, "templates", "style.css")
+DEFAULT = "clear"  # the style whose tokens templates/style.css starts with
 START, END = "/*STYLES-DATA*/", "/*END-STYLES-DATA*/"
 
-COLOURS = ["bg", "surface", "surface-2", "text", "muted", "border", "accent", "accent-text",
+COLOURS = ["bg", "surface", "surface-2", "text", "muted", "border", "accent", "accent-text", "link",
            "good", "ok", "no", "on-good", "on-ok", "on-no", "danger"]
 # (what, text colour, background colour, minimum contrast). WCAG 2.2 asks for
 # 4.5:1 for normal text; every pair here can be text on that background.
@@ -29,9 +32,11 @@ PAIRS = [("main text on the page", "text", "bg", 4.5),
          ("main text on inputs", "text", "surface-2", 4.5),
          ("secondary text on the page", "muted", "bg", 4.5),
          ("secondary text on cards", "muted", "surface", 4.5),
-         ("links on cards", "accent", "surface", 4.5),
+         ("links on cards", "link", "surface", 4.5),
+         ("links on the page", "link", "bg", 4.5),
          ("button text", "accent-text", "accent", 4.5),
          ("error text on cards", "danger", "surface", 4.5),
+         ("error text on the page", "danger", "bg", 4.5),
          ("text on 'good'", "on-good", "good", 4.5),
          ("text on 'OK'", "on-ok", "ok", 4.5),
          ("text on 'no'", "on-no", "no", 4.5)]
@@ -86,6 +91,18 @@ def tokens_css(s):
     return "\n".join(out)
 
 
+def template_tokens(css):
+    """The token blocks at the top of a style.css: from ':root {' to the first rule after them."""
+    a = css.index(":root {")
+    return a, css.index("\n* {", a)
+
+
+def default_tokens(styles):
+    s = [x for x in styles if x["name"] == DEFAULT][0]
+    t = tokens_css(s)
+    return t[t.index(":root {"):].rstrip("\n") + "\n"
+
+
 def gallery_data(styles):
     return json.dumps(styles, ensure_ascii=False, separators=(",", ":"))
 
@@ -132,6 +149,10 @@ def stale(styles):
     for d in sorted(os.listdir(STYLES)):
         if os.path.isdir(os.path.join(STYLES, d)) and d not in [s["name"] for s in library]:
             found.append("styles/%s/ isn't in the library (in_library in candidates.json)" % d)
+    css = open(TEMPLATE, encoding="utf-8").read()
+    a, b = template_tokens(css)
+    if css[a:b] != default_tokens(styles):
+        found.append("templates/style.css's token blocks differ from the %s style: run python3 tools/styles.py build" % DEFAULT)
     g = open(GALLERY, encoding="utf-8").read()
     m = re.search(re.escape(START) + r"(.*?)" + re.escape(END), g, re.S)
     if not m or m.group(1) != gallery_data(styles):
@@ -145,6 +166,10 @@ def build(styles):
             os.makedirs(os.path.join(STYLES, s["name"]), exist_ok=True)
             with open(os.path.join(STYLES, s["name"], "tokens.css"), "w", encoding="utf-8") as f:
                 f.write(tokens_css(s))
+    css = open(TEMPLATE, encoding="utf-8").read()
+    a, b = template_tokens(css)
+    with open(TEMPLATE, "w", encoding="utf-8") as f:
+        f.write(css[:a] + default_tokens(styles) + css[b:])
     g = open(GALLERY, encoding="utf-8").read()
     if START not in g or END not in g:
         sys.exit("styles/gallery.html has no %s ... %s markers" % (START, END))

@@ -13,7 +13,14 @@
 const fs = require("fs");
 const path = require("path");
 
-const AXE_URL = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/AXE_VERSION/axe.min.js";
+// axe-core 4.13.0 (MPL-2.0 licence). Fetched with curl (which uses the session's
+// proxy settings) from the first source that works, then kept in the temp folder.
+const AXE_VERSION = "4.13.0";
+const AXE_SOURCES = [
+  "curl -sSfL https://cdnjs.cloudflare.com/ajax/libs/axe-core/" + AXE_VERSION + "/axe.min.js",
+  "curl -sSfL https://cdn.jsdelivr.net/npm/axe-core@" + AXE_VERSION + "/axe.min.js",
+  "curl -sSfL https://registry.npmjs.org/axe-core/-/axe-core-" + AXE_VERSION + ".tgz | tar -xzO package/axe.min.js",
+];
 const SIZES = [["phone", 375, 812], ["desktop", 1280, 900]];
 const SCHEMES = ["light", "dark"];
 
@@ -113,11 +120,25 @@ function measure(isPhone) {
   return { scrollWidth: doc.scrollWidth, overflow: doc.scrollWidth > window.innerWidth, widest, smallTargets, smallInputs };
 }
 
+function axeSource() {
+  const cached = path.join(require("os").tmpdir(), "axe-core-" + AXE_VERSION + ".min.js");
+  if (fs.existsSync(cached) && fs.statSync(cached).size > 100000) return fs.readFileSync(cached, "utf8");
+  for (const cmd of AXE_SOURCES) {
+    try {
+      const js = require("child_process").execSync(cmd, { stdio: ["ignore", "pipe", "ignore"], maxBuffer: 1 << 24 }).toString();
+      if (js.length > 100000 && js.includes("axe")) { fs.writeFileSync(cached, js); return js; }
+    } catch (e) { /* try the next source */ }
+  }
+  return null;
+}
+
 async function axe(page) {
+  const js = axeSource();
+  if (!js) return { skipped: "couldn't download axe-core (no internet, or cdnjs, jsdelivr and npm are all blocked)" };
   try {
-    await page.addScriptTag({ url: AXE_URL });
+    await page.addScriptTag({ content: js });
   } catch (e) {
-    return { skipped: "couldn't load axe-core from cdnjs (offline, or the page blocks outside scripts)" };
+    return { skipped: "the page wouldn't run axe-core (" + e.message.split("\n")[0] + ")" };
   }
   const result = await page.evaluate(async () => {
     const r = await window.axe.run(document, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] } });

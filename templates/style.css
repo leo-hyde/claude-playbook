@@ -10,17 +10,18 @@
   --surface: #ffffff;
   --surface-2: #f4f6f9;
   --text: #111827;
-  --muted: #6b7280;
+  --muted: #5f6875;
   --border: #e3e7ee;
   --accent: #2563eb;
   --accent-text: #ffffff;
+  --link: #2563eb;
   --good: #22c55e;
   --ok: #fbbf24;
-  --no: #eceff3;  /* calm grey: "no" shouldn't shout */
+  --no: #eceff3;
   --on-good: #052e14;
   --on-ok: #3b2a00;
   --on-no: #5b6472;
-  --danger: #dc2626;
+  --danger: #c81e1e;
   --shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 20px rgba(15, 23, 42, 0.06);
   --radius: 14px;
   --radius-sm: 6px;
@@ -40,9 +41,12 @@
     --border: #2a313c;
     --accent: #5b8cff;
     --accent-text: #0b1020;
+    --link: #5b8cff;
     --good: #2fd36b;
     --ok: #f5c04a;
     --no: #222833;
+    --on-good: #052e14;
+    --on-ok: #3b2a00;
     --on-no: #a3acb9;
     --danger: #f87171;
     --shadow: none;
@@ -72,6 +76,7 @@ h1 { font-size: 26px; letter-spacing: -0.02em; }
 h2 { font-size: 20px; }
 h3 { font-size: 16px; }
 p { margin: 0; }
+a { color: var(--link); }
 .muted { color: var(--muted); }
 .hint { color: var(--muted); font-size: 14px; }
 .error { color: var(--danger); font-size: 14px; }
@@ -129,7 +134,7 @@ p { margin: 0; }
 .btn { padding: 0 18px; }
 .btn.small { min-height: 34px; padding: 0 12px; font-size: 14px; }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
-.btn.ghost { border-color: transparent; background: transparent; color: var(--accent); }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--link); }
 .btn.danger { color: var(--danger); }
 .icon-btn { width: 44px; font-size: 20px; }
 
@@ -225,7 +230,7 @@ dialog::backdrop { background: rgba(5, 8, 15, 0.5); }
     background: var(--surface);
   }
   .tabs button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 52px; border-radius: 12px; font-size: 12px; }
-  .tabs button.active { background: var(--surface-2); box-shadow: none; color: var(--accent); }
+  .tabs button.active { background: var(--surface-2); box-shadow: none; color: var(--link); }
   .tab-icon { display: block; font-size: 20px; line-height: 1; }
 
   /* Dialogs slide up from the bottom, with a grab handle */
