@@ -127,6 +127,7 @@ check "no channel file: reads stable" rules_from_stable "$p"
 check "copies the owner file to .claude/rules/owner.md" cmp -s "$p/.claude/rules/owner.md" "$ROOT/owner/profile.md"
 check "copies the scout and checker subagents" cmp -s "$p/.claude/agents/checker.md" "$ROOT/templates/.claude/agents/checker.md"
 check "the subagents are committed" git -C "$p" ls-files --error-unmatch .claude/agents/scout.md
+check "says new subagents load from the next session" has "$out" "subagents (.claude/agents/) changed"
 check "prints the newest release note" has "$out" "Playbook: updated to release-2026-01-01: The first line of the note."
 check "commits the update" clean "$p"
 sync "$p" "$T/pb"
@@ -182,6 +183,14 @@ check "old script, after the first release: updates itself, then reads stable" r
 check "old script replaced by the new one" cmp -s "$p/scripts/playbook-sync.sh" "$ROOT/shared/playbook-sync.sh"
 sync "$p" "$T/pb"
 check "next session: stays on stable" rules_from_stable "$p"
+
+p=$(make_project self-update)
+printf '# an older copy\n' >>"$p/scripts/playbook-sync.sh" && git -C "$p" commit -q -am "older sync script"
+sync "$p" "$T/pb"
+check "updates itself: replaced by the playbook's" cmp -s "$p/scripts/playbook-sync.sh" "$ROOT/shared/playbook-sync.sh"
+check "updates itself: one report of what changed" [ "$(printf '%s\n' "$out" | grep -c 'from claude-playbook (committed')" -eq 1 ]
+check "updates itself: no 'up to date' line after it" hasnt "$out" "shared rules are up to date"
+check "updates itself: the report names the sync script and the rules" has "$out" "scripts/playbook-sync.sh"
 
 # ---------- Sync: set-up and catch-ups ----------
 section "Sync: set-up (setup.txt) and catch-ups"

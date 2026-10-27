@@ -71,5 +71,6 @@ Claude reads the entry here when applying it, so the title must say what it is.
   message counter, "Coaching" or the end-of-reply docs check with the new
   behaviour. Remove any lines that repeat the owner's details now in
   `.claude/rules/owner.md` (accounts, the commit address). Leave the rest.
-- Check: `grep -rn 'COACH' CLAUDE.md docs` finds nothing, and
+- Check: `grep -rn COACH CLAUDE.md docs --exclude=playbook-catch-up.md`
+  finds nothing, and
   `.claude/settings.json` has the `push-check` hook.
