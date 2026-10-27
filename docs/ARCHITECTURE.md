@@ -16,13 +16,13 @@ flowchart LR
     Sync -->|"copies + commits<br/>'Playbook: update…'"| Rules[".claude/rules/playbook.md<br/>scripts/*.sh"]
     Rules -->|"loaded by Claude Code<br/>every session"| Claude["Claude"]
   end
-  PB -->|"git fetch of main"| Sync
+  PB -->|"git fetch of stable<br/>(main for the canary)"| Sync
   Claude -.->|"general lesson learned:<br/>edit shared/, push"| PB
 ```
 
 In words: the playbook on GitHub holds the rules and two scripts. When a
-session opens in a project, the project fetches the latest playbook, copies
-in anything that changed, and Claude reads the rules. When Claude learns
+session opens in a project, the project fetches the latest release of the
+playbook, copies in anything that changed, and Claude reads the rules. When Claude learns
 something useful for every project, it adds it back to the playbook.
 
 ## Words used on this page
@@ -50,8 +50,9 @@ something useful for every project, it adds it back to the playbook.
    order: the clone on the user's Mac (`~/.claude/skills/new-app`); a clone next
    to the project (a cloud session with the playbook attached); or a fresh
    download of just the latest version into `.session/playbook` (which git
-   ignores). Whichever it uses, it always reads the playbook's `main` on
-   GitHub, never unsaved edits in a clone.
+   ignores). Whichever it uses, it always reads a branch of the playbook on
+   GitHub, never unsaved edits in a clone: `stable`, or `main` for the
+   canary (see "Releases" below).
 3. **It copies in what changed.** For each shared file, it compares the
    playbook's version with the project's copy. If they differ, it replaces
    the copy and commits just those files as "Playbook: update shared files
@@ -93,6 +94,31 @@ something useful for every project, it adds it back to the playbook.
    but the overall plan didn't. Projects without a SPEC.md are skipped. The
    rule behind it is "Keeping the docs true" in `shared/ai-dev-rules.md`.
 
+## Releases: how a change reaches the projects
+Work lands on the playbook's `main`. Projects don't read `main`: they read
+`stable`, a second branch that only moves forward when the user agrees to a
+**release**. `scripts/release.sh` makes one: it runs the tests, checks that
+`RELEASES.md` has a note for it, asks the user, then moves `stable` to `main`
+and tags it `release-YYYY-MM-DD`. When a project updates, session start
+prints the note's first line.
+
+One project, the **canary** (Sport Conditions), reads `main` instead, so it
+tries every change in real use before the others get it. It says so in a
+one-word file, `.claude/playbook-channel` (`main` or `stable`; no file means
+`stable`). Projects ignore `.claude/*` in git, so that file is added with
+`git add -f`.
+
+If `stable` doesn't exist (before the first release), the sync reads `main`.
+A project with a sync script from before releases reads `main`, copies in
+the new script, and runs it straight away, which then reads `stable`. To undo
+a bad release: revert the commit on `main` and release again. `stable` is
+never rewound.
+
+The tests (`tests/run.sh`) build throwaway playbooks and projects in a
+temporary folder and run the real scripts against them. A GitHub Action
+(`.github/workflows/test.yml`) runs them on every push, on Linux and on
+macOS with Apple's bash 3.2.
+
 ## The files
 
 | Playbook file | Copy in each project | What it does |
@@ -104,6 +130,10 @@ something useful for every project, it adds it back to the playbook.
 | `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |
 | `templates/*` | copied once, by hand | Starting points for a new project. They don't update afterwards, except the hooks (through `setup.txt`). Any other template change that existing projects need gets a catch-up entry |
 | `reference/*` | not copied | Know-how Claude reads only when it needs it |
+| `RELEASES.md` | not copied (the sync reads it) | One note per release, newest first. Session start prints the newest note's first line when a project updates |
+| `scripts/release.sh` | not copied | Makes a release: tests, note, the user's yes, then `stable` moved to `main` and tagged |
+| `tests/run.sh` | not copied | The kept tests, run by the GitHub Action on Linux and macOS |
+| (none) | `.claude/playbook-channel` | Only in the canary: reads `main`, so it syncs from `main` |
 | `owner/profile.md` | not copied yet | The owner's accounts, devices and preferences, kept apart so others can copy the playbook. Planned: synced as `.claude/rules/owner.md` (`specs/shareable-playbook.md`) |
 
 Changes also flow the other way. The rules tell Claude that a lesson useful
@@ -179,8 +209,11 @@ detail in `docs/decisions.md`.
   Mac session's uncommitted changes. It shows only branches with commits.
   Two sessions can still edit the same file; git then flags a conflict when
   the second one merges, and Claude stops and tells the user.
-- **A broken `shared/session.sh` would spread to every project.** So test any
-  change in a throwaway repo before pushing (see CLAUDE.md).
+- **A broken `shared/session.sh` would spread to every project at the next
+  release.** The tests and the canary are there to catch it first. They only
+  catch what they test, and the canary only what its sessions use.
+- **If fetching `stable` fails but `main` worked,** the sync uses the last
+  `stable` it fetched (an older release, which is safe).
 - **Claude Code may read `.claude/rules/` before the hook runs**, so a session
   can start on the previous rules. The sync's message asks Claude to read
   them again.

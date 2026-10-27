@@ -11,6 +11,26 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 27 Oct 2026: Changes reach projects through releases, tried first in a canary
+- **What:** projects sync from the playbook's `stable` branch, which only
+  moves when `scripts/release.sh` releases `main` (tests pass, a
+  `RELEASES.md` note exists, the user says yes). Sport Conditions is the
+  canary: its `.claude/playbook-channel` reads `main`, so it gets every change
+  first. Releases at most about weekly, after at least one problem-free
+  canary session; a broken script is released straight away. Until `stable`
+  exists, the sync falls back to `main`, so old and new scripts both work.
+  Kept tests (`tests/run.sh`) run on Linux and macOS on every push.
+- **Why:** every push used to reach every project at once, untested, one
+  change at a time. Details: `specs/playbook-releases.md`.
+- **The channel file is added with `git add -f`**, because projects ignore
+  `.claude/*`. Rejected: a `!.claude/playbook-channel` line in `setup.txt`,
+  which would add a set-up commit to every project for one project's file.
+- **The rules-size test is a ratchet for now:** it fails if
+  `shared/ai-dev-rules.md` grows past its size on 27 Oct (197 lines). It
+  becomes a hard 150-line limit once the rules are trimmed (session 2).
+- **Rejected:** version numbers (dates are enough for one owner); an Action
+  that pushes into projects (it needs a token that can change every repo).
+
 ## 27 Oct 2026: The playbook says "the user"; owner details go in `owner/`
 - **What:** every file outside `shared/` now refers to "the user", not a
   named person, and private project names are described in general terms.

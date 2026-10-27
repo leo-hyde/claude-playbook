@@ -21,4 +21,5 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           /bin/bash --version | head -1
+          case "$(/bin/bash -c 'echo $BASH_VERSION')" in 3.*) ;; *) echo "expected bash 3.2"; exit 1 ;; esac
           /bin/bash tests/run.sh
