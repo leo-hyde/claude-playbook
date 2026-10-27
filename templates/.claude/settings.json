@@ -6,6 +6,9 @@
     "UserPromptSubmit": [
       { "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/session.sh\" busy" } ] }
     ],
+    "PreToolUse": [
+      { "matcher": "Bash", "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/session.sh\" push-check" } ] }
+    ],
     "Stop": [
       { "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/session.sh\" check" } ] }
     ]

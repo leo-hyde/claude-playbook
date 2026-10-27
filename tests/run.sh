@@ -13,7 +13,6 @@ T=$(mktemp -d "${TMPDIR:-/tmp}/playbook-tests.XXXXXX") || exit 1
 trap 'rm -rf "$T"' EXIT
 
 RULES_MAX_LINES=150      # shared/ai-dev-rules.md is read in every session of every project
-RULES_CEILING=197        # its size on 27 Oct 2026: it mustn't grow. Remove once it's under the limit
 START_MAX_CHARS=1500     # session-start output, read at the start of every session
 
 # A clean, predictable environment: no real git config, home folder, network or GitHub.
@@ -49,10 +48,12 @@ make_playbook() {
   local name=$1 kind=${2:-stable} w=$T/$1-work
   git init -q --bare "$T/$name.git"
   git init -q "$w"
-  mkdir -p "$w/shared" "$w/templates/.claude"
+  mkdir -p "$w/shared" "$w/owner" "$w/templates/.claude/agents"
   cp "$ROOT"/shared/ai-dev-rules.md "$ROOT"/shared/session.sh "$ROOT"/shared/playbook-sync.sh \
      "$ROOT"/shared/setup.txt "$w/shared/"
+  cp "$ROOT/owner/profile.md" "$w/owner/"
   cp "$ROOT/templates/.claude/settings.json" "$w/templates/.claude/"
+  cp "$ROOT"/templates/.claude/agents/*.md "$w/templates/.claude/agents/"
   printf '# Catch-ups\n\n## 2026-01-01-first: The first catch-up\n- Do the first thing.\n' >"$w/shared/catch-up.md"
   printf '# Releases\n\n## release-2026-01-01\nThe first line of the note.\n- More detail.\n' >"$w/RELEASES.md"
   ( cd "$w" && git add -A && git commit -q -m "release 1" &&
@@ -109,19 +110,23 @@ for f in "$ROOT"/shared/*.sh "$ROOT"/scripts/*.sh "$ROOT"/tests/run.sh; do
   out=$(bash -n "$f" 2>&1); check "bash -n ${f#$ROOT/}" [ -z "$out" ]
 done
 lines=$(wc -l <"$ROOT/shared/ai-dev-rules.md" | tr -d ' ')
-if [ "$lines" -le "$RULES_MAX_LINES" ]; then
-  ok "rules file is $lines lines (limit $RULES_MAX_LINES)"
-elif [ "$lines" -le "$RULES_CEILING" ]; then
-  ok "rules file is $lines lines: over the $RULES_MAX_LINES limit, not over today's $RULES_CEILING (it mustn't grow)"
-else
-  bad "rules file is $lines lines: over the $RULES_MAX_LINES limit and grown past $RULES_CEILING. Shorten it or move detail to reference/"
-fi
+out="Shorten it, or move detail to reference/."
+check "rules file is $lines lines (limit $RULES_MAX_LINES)" [ "$lines" -le "$RULES_MAX_LINES" ]
+# Owner details live in owner/; shared/ names the owner's account only in the playbook's address.
+account=$(sed -n 's/^- GitHub: `\([^`]*\)`.*/\1/p' "$ROOT/owner/profile.md")
+out=$(grep -rn "$account" "$ROOT/shared" | grep -v 'PLAYBOOK_URL=')
+check "shared/ doesn't name the owner's account '$account' (except the playbook's address)" [ -n "$account" -a -z "$out" ]
+out=$(grep -rnwi "leo" "$ROOT/shared" | grep -v 'PLAYBOOK_URL=')
+check "shared/ doesn't name the owner" [ -z "$out" ]
 
 # ---------- Sync: channels ----------
 section "Sync: which playbook branch"
 p=$(make_project stable-default)
 sync "$p" "$T/pb"
 check "no channel file: reads stable" rules_from_stable "$p"
+check "copies the owner file to .claude/rules/owner.md" cmp -s "$p/.claude/rules/owner.md" "$ROOT/owner/profile.md"
+check "copies the scout and checker subagents" cmp -s "$p/.claude/agents/checker.md" "$ROOT/templates/.claude/agents/checker.md"
+check "the subagents are committed" git -C "$p" ls-files --error-unmatch .claude/agents/scout.md
 check "prints the newest release note" has "$out" "Playbook: updated to release-2026-01-01: The first line of the note."
 check "commits the update" clean "$p"
 sync "$p" "$T/pb"
@@ -197,7 +202,22 @@ p=$(make_project catchup)
 ( cd "$p" && printf '# Catch-ups done\n' >docs/playbook-catch-up.md && git commit -q -am "none done" )
 sync "$p" "$T/pb"
 check "catch-up not recorded: CATCH-UP DUE" has "$out" "CATCH-UP DUE"
-check "prints its id" has "$out" "2026-01-01-first"
+check "prints one line for it: id and title" has "$out" "  2026-01-01-first: The first catch-up"
+check "doesn't print the entry itself" hasnt "$out" "Do the first thing."
+check "says where to read the entry" has "$out" "show origin/stable:shared/catch-up.md"
+
+# ---------- Sync: a fork of the playbook ----------
+section "Sync: a fork (its own owner/ and PLAYBOOK_URL)"
+make_playbook fork stable
+( cd "$T/fork-work" && printf '# About the user\nFORK OWNER\n' >owner/profile.md &&
+  sed "s#^PLAYBOOK_URL=.*#PLAYBOOK_URL=\${PLAYBOOK_URL:-file://$T/fork.git}#" shared/playbook-sync.sh >sync.new &&
+  mv sync.new shared/playbook-sync.sh && git commit -q -am "fork: owner and address" &&
+  git push -q origin main && git push -q -f origin main:stable )
+p=$(make_project fork-user)
+cp "$T/fork-work/shared/playbook-sync.sh" "$p/scripts/playbook-sync.sh" && git -C "$p" commit -q -am "fork's sync"
+out=$(cd "$p" && bash scripts/playbook-sync.sh 2>&1)
+check "syncs from the fork's own address" grep -q "FORK OWNER" "$p/.claude/rules/owner.md"
+check "keeps the fork's sync script" cmp -s "$p/scripts/playbook-sync.sh" "$T/fork-work/shared/playbook-sync.sh"
 
 # ---------- Session start ----------
 section "Session start"
@@ -243,35 +263,104 @@ run_check CLAUDE_CODE_REMOTE=true
 check "work pushed to its own branch: no docs check yet" [ "$code" -eq 0 ]
 git -C "$p" checkout -q main && git -C "$p" merge -q work && git -C "$p" push -q origin main
 run_check CLAUDE_CODE_REMOTE=true
-check "work on main, STATUS.md not updated: blocks" has "$out" "Update STATUS.md"
-echo "Done." >>"$p/docs/STATUS.md" && git -C "$p" commit -q -am "status" && git -C "$p" push -q origin main
-run_check CLAUDE_CODE_REMOTE=true
-check "STATUS.md updated: lets the reply end" [ "$code" -eq 0 ]
-( cd "$p" && mkdir -p specs && echo "# Plan" >SPEC.md && git add SPEC.md && git commit -q -m "plan" &&
-  echo "# Feature" >specs/feature.md && echo "More." >>docs/STATUS.md && git add -A && git commit -q -m "spec" &&
-  git push -q origin main )
-run_check CLAUDE_CODE_REMOTE=true
-check "specs/ changed, SPEC.md not: blocks" has "$out" "specs/ changed on main since SPEC.md"
-( cd "$p" && echo "- Feature" >>SPEC.md && echo "Planned." >>docs/STATUS.md && git commit -q -am "SPEC" && echo x >>.claude/rules/playbook.md &&
-  git commit -q -am "Playbook: update shared files from claude-playbook" && git push -q origin main )
-run_check CLAUDE_CODE_REMOTE=true
-check "a playbook sync commit doesn't need a STATUS update" [ "$code" -eq 0 ]
+check "work on main, STATUS.md not updated: doesn't block (checked at push instead)" [ "$code" -eq 0 ]
+check "work on main, STATUS.md not updated: says nothing" [ -z "$out" ]
 
-# ---------- Coaching counter ----------
-section "Coaching counter (busy)"
-p=$(make_project coach)
-head -c 20480 /dev/zero | tr '\0' x >"$T/transcript.jsonl"
-input="{\"session_id\": \"s1\", \"transcript_path\": \"$T/transcript.jsonl\", \"prompt\": \"hi\"}"
-quiet=yes; i=1
-while [ $i -lt 15 ]; do
-  o=$(cd "$p" && printf '%s' "$input" | bash scripts/session.sh busy 2>&1); [ -z "$o" ] || quiet=no
-  i=$((i + 1))
-done
-check "messages 1 to 14: silent" [ "$quiet" = yes ]
-out=$(cd "$p" && printf '%s' "$input" | bash scripts/session.sh busy 2>&1)
-check "message 15: COACH line with the transcript size" has "$out" "COACH: this session has had 15 of Leo's messages (transcript 20 KB)"
+# ---------- Push-to-main check ----------
+section "Push-to-main docs check (push-check)"
+p=$(make_project push)
+push_check() {  # command line: what Claude is about to run
+  local input
+  input=$(python3 -c 'import json,sys; print(json.dumps({"tool_name": "Bash", "tool_input": {"command": sys.argv[1]}}))' "$1")
+  out=$(cd "$p" && printf '%s' "$input" | bash scripts/session.sh push-check 2>&1); code=$?
+}
+echo x >"$p/app.txt" && git -C "$p" add app.txt && git -C "$p" commit -q -m "a feature"
+push_check "git status"
+check "not a push: allowed, silent" [ "$code" -eq 0 -a -z "$out" ]
+push_check "git push origin HEAD:main"
+check "push to main without STATUS.md: refused" [ "$code" -eq 2 ]
+check "says what to update" has "$out" "docs/STATUS.md: update the Handover block"
+push_check "git -c credential.helper= -c credential.helper='!/opt/homebrew/bin/gh auth git-credential' push origin HEAD:main"
+check "the Mac's push command: refused too" [ "$code" -eq 2 ]
+push_check "git add -A && git commit -m 'push it' && git push"
+check "plain 'git push' on main: refused" [ "$code" -eq 2 ]
+push_check "echo git push origin main"
+check "'git push' only as text: allowed" [ "$code" -eq 0 ]
+git -C "$p" checkout -q -b work
+push_check "git push -u origin work"
+check "push to the session's own branch: allowed" [ "$code" -eq 0 ]
+push_check "git push origin work:main"
+check "push of another branch to main: refused" [ "$code" -eq 2 ]
+echo "Feature done." >>"$p/docs/STATUS.md" && git -C "$p" commit -q -am "status"
+push_check "git push origin HEAD:main"
+check "STATUS.md part of the push: allowed" [ "$code" -eq 0 ]
+git -C "$p" push -q origin HEAD:main && git -C "$p" checkout -q main && git -C "$p" merge -q --ff-only work
+( cd "$p" && echo y >>.claude/rules/playbook.md && git commit -q -am "Playbook: update shared files from claude-playbook" )
+push_check "git push origin main"
+check "only playbook sync commits: allowed" [ "$code" -eq 0 ]
+git -C "$p" push -q origin main
+( cd "$p" && mkdir -p specs && echo "# Plan" >SPEC.md && echo "Planned." >>docs/STATUS.md && git add -A &&
+  git commit -q -m "plan" && git push -q origin main &&
+  echo "# Feature" >specs/feature.md && echo "Spec." >>docs/STATUS.md && git add -A && git commit -q -m "spec" )
+push_check "git push origin HEAD:main"
+check "specs/ changed, SPEC.md not: refused" has "$out" "SPEC.md: specs/ changed"
+( cd "$p" && echo "- Feature" >>SPEC.md && git commit -q -am "SPEC" )
+push_check "git push origin HEAD:main"
+check "SPEC.md updated too: allowed" [ "$code" -eq 0 ]
+p_settings=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["hooks"]["PreToolUse"][0]["hooks"][0]["command"])' "$ROOT/templates/.claude/settings.json")
+check "the template's PreToolUse hook runs push-check" has "$p_settings" "session.sh\" push-check"
+
+# ---------- Cost notes ----------
+section "Cost notes (busy)"
+p=$(make_project cost)
+# transcript <file> <first context> <latest context> <minutes since the latest> [subagent context]
+transcript() {
+  python3 - "$@" <<'PY'
+import json, sys, time
+f, first, last, mins = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
+side = int(sys.argv[5]) if len(sys.argv) > 5 else 0
+def entry(n, ago, sidechain=False):
+    ts = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime(time.time() - ago * 60))
+    return json.dumps({"type": "assistant", "isSidechain": sidechain, "timestamp": ts,
+        "message": {"usage": {"input_tokens": 2, "cache_read_input_tokens": n - 1002, "cache_creation_input_tokens": 1000}}})
+with open(f, "w") as out:
+    out.write(json.dumps({"type": "user", "message": {"content": "hi"}}) + "\n")
+    out.write(entry(first, mins + 30) + "\n")
+    if side:
+        out.write(entry(side, mins, True) + "\n")
+    out.write(entry(last, mins) + "\n")
+PY
+}
+busy() {  # session id, transcript
+  out=$(cd "$p" && printf '{"session_id": "%s", "transcript_path": "%s"}' "$1" "$2" | bash scripts/session.sh busy 2>&1)
+}
+transcript "$T/t1.jsonl" 60000 120000 1
+busy s1 "$T/t1.jsonl"
+check "2x a fresh session: silent" [ -z "$out" ]
+transcript "$T/t1.jsonl" 60000 240000 1
+busy s1 "$T/t1.jsonl"
+check "4x: a COST note with the size and ratio" has "$out" "COST: each message now re-reads about 240k tokens, about 4× a fresh session's."
+transcript "$T/t1.jsonl" 60000 250000 1
+busy s1 "$T/t1.jsonl"
+check "still 4x on the next message: silent (said once)" [ -z "$out" ]
+transcript "$T/t1.jsonl" 60000 420000 1
+busy s1 "$T/t1.jsonl"
+check "7x: a second note" has "$out" "about 7× a fresh session's"
+busy s1 "$T/t1.jsonl"
+check "7x again: silent" [ -z "$out" ]
+transcript "$T/t2.jsonl" 60000 90000 1 900000
+busy s2 "$T/t2.jsonl"
+check "a big subagent request doesn't count" [ -z "$out" ]
+transcript "$T/t3.jsonl" 60000 150000 120
+busy s3 "$T/t3.jsonl"
+check "2.5x after a 2-hour break: cache note" has "$out" "COST: the cache has likely expired; this message re-processes about 150k tokens"
+transcript "$T/t4.jsonl" 60000 90000 120
+busy s4 "$T/t4.jsonl"
+check "1.5x after a break: silent" [ -z "$out" ]
 out=$(cd "$p" && printf '{}' | bash scripts/session.sh busy 2>&1)
-check "no session id: silent" [ -z "$out" ]
+check "no transcript: silent" [ -z "$out" ]
+out=$(cd "$p" && printf '{"session_id": "s5", "transcript_path": "%s"}' "$T/missing.jsonl" | bash scripts/session.sh busy 2>&1)
+check "transcript missing: silent" [ -z "$out" ]
 
 # ---------- Release script ----------
 section "Release (scripts/release.sh)"

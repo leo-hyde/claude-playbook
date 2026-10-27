@@ -31,7 +31,7 @@ git fetch -q --tags origin 2>/dev/null
 
 since=""
 if git rev-parse -q --verify origin/stable >/dev/null; then
-  git merge-base --is-ancestor origin/stable HEAD || die "stable has commits that main doesn't. Stop and tell Leo."
+  git merge-base --is-ancestor origin/stable HEAD || die "stable has commits that main doesn't. Stop and tell the user."
   [ -n "$(git rev-list origin/stable..HEAD)" ] || die "nothing to release: stable is already at main."
   since=origin/stable..
 fi
@@ -76,6 +76,6 @@ echo "Released $tag. Every project picks it up at its next session start."
 # The tag only marks the release; projects don't need it. Cloud sessions may not be allowed to push tags.
 if ! { git tag "$tag" HEAD && git push -q origin "refs/tags/$tag"; } 2>/dev/null; then
   git tag -d "$tag" >/dev/null 2>&1
-  echo "TAG NOT PUSHED: GitHub refused the tag. Tell Leo; on the Mac, run in the playbook:"
+  echo "TAG NOT PUSHED: GitHub refused the tag. Tell the user; on the Mac, run in the playbook:"
   echo "  git fetch origin stable && git tag $tag $(git rev-parse --short HEAD) && git push origin $tag"
 fi

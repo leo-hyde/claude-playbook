@@ -1,5 +1,5 @@
 # The set-up every project needs. playbook-sync.sh reads this file from the
-# playbook's main at every session start and checks each project against it,
+# playbook (its release, or main for the canary) at every session start and checks each project against it,
 # so a change here reaches every project without a catch-up.
 #
 #   gitignore: <line>   the project's .gitignore must have this exact line
