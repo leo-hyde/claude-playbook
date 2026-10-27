@@ -357,3 +357,10 @@ What to build:
 | Coaching: context nearly full, `/compact`, `/code-review`, better habits | `reference/efficient-sessions.md` |
 | Keeping the playbook current (edit the playbook, public, setup.txt and catch-ups) | "Ideas for the playbook" (file an `idea` issue); the setup.txt and catch-up mechanics stay in the playbook's own CLAUDE.md and `shared/catch-up.md` |
 | `CATCH-UP DUE`: tell, apply, record | In "Session start lines are for the user" |
+- 27 Oct 2026: the canary's first session on it (Sport Conditions, Mac,
+  Sonnet): no breakages. Catch-ups applied, `opusplan` set, the push check
+  refused then allowed as expected, `scout` ran on Haiku (agents load only
+  from the next session). Fixed from its findings: a note that new subagents
+  load next session; the sync reports once when it updates itself; the
+  tokens catch-up's check no longer matches its own record. Filed #7 (session
+  start ran in the main checkout, not the desktop worktree). 103 tests.
