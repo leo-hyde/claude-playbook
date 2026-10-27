@@ -169,6 +169,26 @@ check_visibility() {
   fi
 }
 
+# Open GitHub Issues, so every session sees them without being asked. Uses the GitHub
+# CLI where it exists (Leo's Mac); cloud sessions have none and use their GitHub tools.
+list_issues() {
+  local gh out
+  gh=$(command -v gh || { [ -x /opt/homebrew/bin/gh ] && echo /opt/homebrew/bin/gh; })
+  if [ -z "$gh" ]; then
+    echo "ISSUES: no GitHub CLI here. List open issues with the GitHub tools and tell Leo."
+    return
+  fi
+  if ! out=$("$gh" issue list --state open --limit 20 --json number,title,author,labels \
+      -q '.[] | "  #\(.number) \(.title) (from \(.author.login)\(if (.labels|length)>0 then ", "+([.labels[].name]|join(", ")) else "" end))"' 2>/dev/null); then
+    echo "ISSUES: couldn't read them (offline or not signed in). Try again before telling Leo."
+  elif [ -n "$out" ]; then
+    echo "ISSUES: open on GitHub. Tell Leo, and follow the rules for issues:"
+    echo "$out"
+  else
+    echo "Issues: none open."
+  fi
+}
+
 # ---------- Commands ----------
 
 cmd_start() {
@@ -193,6 +213,7 @@ cmd_start() {
       echo "NOT SET UP: $(basename "$d") doesn't follow the playbook yet. Tell Leo and offer to set it up."
     fi
   done
+  list_issues
   echo
   echo "--- Handover from docs/STATUS.md ---"
   sed -n '/^## Handover/,/^## Where we are/p' docs/STATUS.md | sed '$d'

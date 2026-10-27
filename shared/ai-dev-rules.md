@@ -41,8 +41,9 @@ Leo is not a developer: if he can't follow it, it hasn't been said.
 - **Never let a model guess facts** (dates, prices, API fields, web
   addresses): take them from data, documentation or a real test, or mark them
   as unverified.
-- **Open GitHub Issues** (to-do notes on the repo): at session start, list
-  them (GitHub tools, or `gh issue list` on the Mac) and tell Leo. After his
+- **Open GitHub Issues** (to-do notes on the repo): session start lists
+  them (`ISSUES:` line; with no GitHub CLI, list them with the GitHub tools):
+  tell Leo. After his
   request, fix the small, clear ones he or his apps opened: a commit each, then
   comment on the issue what changed and close it. Anything bigger waits for
   his yes, with your recommendation: a change to what the app does or shows,
