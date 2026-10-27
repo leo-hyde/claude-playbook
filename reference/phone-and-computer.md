@@ -116,6 +116,12 @@ changing it, so it pulls and syncs the playbook.
   so a session started with an outdated script can put back things the new
   one removed (an old lock file reappeared on main). Ignore `.session/` in
   `.gitignore` so old scripts can't commit it.
+- **Hooks in a worktree session look at the main checkout** (27 Oct 2026):
+  `$CLAUDE_PROJECT_DIR` stays at the folder the session started in, so the
+  end-of-reply check judged a stale main checkout with an old script, and
+  blocked on work that was already done. The hook's JSON input has the real
+  folder in `cwd`; `session.sh` now uses it. Scripts run by hand must not
+  wait forever for that input: it reads it for at most 2 seconds.
 - **A lock between devices didn't survive parallel sessions** (Oct 2026).
   First a lock for the whole session blocked the phone all morning; then a
   lock held only during a reply worked for one phone and one Mac session. But

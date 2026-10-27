@@ -207,6 +207,13 @@ detail in `docs/decisions.md`.
 - **A repo that was never set up gets nothing.** The sync only reaches repos
   that have `scripts/playbook-sync.sh`. The rules say every repo of the user's is
   set up, and tell Claude to offer when it finds one that isn't.
+- **Hooks run the main checkout's copy of `session.sh`**, even for a session
+  in a worktree (`$CLAUDE_PROJECT_DIR` is the folder the session started in).
+  The script reads the hook's `cwd` field, and if that's a worktree of the
+  same repo it checks there, with that worktree's own copy. Session start
+  also fast-forwards the main checkout (only if it's on main with nothing
+  unsaved), so the copy hooks start from stays current. Until it has the
+  new script once, a stale main checkout runs the old checks.
 - **Session start can't see a cloud session's work it hasn't pushed**, nor a
   Mac session's uncommitted changes. It shows only branches with commits.
   Two sessions can still edit the same file; git then flags a conflict when

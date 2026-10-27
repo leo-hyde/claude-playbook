@@ -11,6 +11,16 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 27 Oct 2026: The session script checks the session's own folder, from the hook's `cwd`
+- **What:** `session.sh` reads `cwd` from the hook's JSON input. If it's a
+  worktree of the same repo, the checks run there, with that worktree's copy
+  of the script. Session start fast-forwards a clean main checkout on `main`.
+- **Why:** Claude Code runs hooks from the folder the session started in,
+  not the worktree (its docs, checked 27 Oct), so the end check judged the
+  wrong files.
+- **Rejected:** changing each project's hook command (needs a catch-up in
+  every project, and `$CLAUDE_PROJECT_DIR` still wouldn't point at the worktree).
+
 ## 27 Oct 2026: Changes reach projects through releases, tried first in a canary
 - **What:** projects sync from the playbook's `stable` branch, which only
   moves when `scripts/release.sh` releases `main` (tests pass, a

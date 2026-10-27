@@ -20,7 +20,34 @@
 # This file comes from github.com/leo-hyde/claude-playbook (shared/session.sh): edit it there.
 
 set -u
-cd "$(git rev-parse --show-toplevel)" || exit 0
+
+# Claude Code passes JSON on stdin. Run by hand there may be none, or stdin may stay
+# open with nothing coming, so wait at most 2 seconds.
+INPUT=""; [ -t 0 ] || IFS= read -r -d '' -t 2 INPUT || true
+
+# Which folder is the session working in? Hooks run the main checkout's copy of this
+# script ($CLAUDE_PROJECT_DIR stays put), but a session in a worktree (its own copy of
+# the files) works elsewhere. The hook's JSON says where, in "cwd". If that's a
+# worktree of this same repo, check it, with its own copy of this script.
+session_dir() {
+  local cwd top
+  cwd=$(printf '%s' "$INPUT" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("cwd",""))' 2>/dev/null)
+  [ -n "$cwd" ] && [ -d "$cwd" ] || return 1
+  top=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null) || return 1
+  # Same repo? (A worktree shares the main checkout's .git folder.)
+  [ "$(cd "$top" && cd "$(git rev-parse --git-common-dir)" && pwd -P)" = \
+    "$(cd "$(git rev-parse --git-common-dir)" && pwd -P)" ] || return 1
+  echo "$top"
+}
+here=$(git rev-parse --show-toplevel) || exit 0
+if [ -z "${SESSION_SH_IN_WORKTREE:-}" ] && there=$(session_dir) && [ "$(cd "$there" && pwd -P)" != "$(cd "$here" && pwd -P)" ]; then
+  export SESSION_SH_IN_WORKTREE=1 SESSION_SH_LAUNCHER="$here"
+  cd "$there" || exit 0
+  script=scripts/session.sh; [ -f "$script" ] || script="$here/scripts/session.sh"
+  printf '%s' "$INPUT" | bash "$script" "$@"
+  exit $?   # its exit code, so a block (2) still blocks
+fi
+cd "$here" || exit 0
 
 COACH_EVERY=15  # remind Claude about session length every this many messages (a judgement call)
 RECENT_DAYS=14  # other branches with no commit for longer than this are treated as abandoned
@@ -171,7 +198,7 @@ list_issues() {
 # ---------- Commands ----------
 
 cmd_start() {
-  echo "=== Session start ($DEVICE, branch $(branch)) ==="
+  echo "=== Session start ($DEVICE, branch $(branch)${SESSION_SH_IN_WORKTREE:+, in the session worktree}) ==="
   [ -n "$(unsaved)" ] && { echo "WARNING: uncommitted changes already in this checkout:"; unsaved; }
   pull_main
   local others
@@ -183,6 +210,7 @@ cmd_start() {
     echo "No other unfinished work on other branches."
   fi
   [ -f scripts/playbook-sync.sh ] && bash scripts/playbook-sync.sh
+  update_launcher
   check_visibility
   local d
   for d in $(siblings); do
@@ -196,6 +224,17 @@ cmd_start() {
   echo
   echo "--- Handover from docs/STATUS.md ---"
   sed -n '/^## Handover/,/^## Where we are/p' docs/STATUS.md | sed '$d'
+}
+
+# Hooks run the main checkout's copy of this script, so keep that checkout up to date
+# when this session works in a worktree: fast-forward only, and only if it's on main
+# with nothing unsaved (otherwise someone is working there; leave it alone).
+update_launcher() {
+  local l=${SESSION_SH_LAUNCHER:-}
+  [ -n "$l" ] || return 0
+  [ "$(git -C "$l" rev-parse --abbrev-ref HEAD 2>/dev/null)" = main ] && [ -z "$(git -C "$l" status --porcelain 2>/dev/null)" ] || return 0
+  git -C "$l" merge -q --ff-only origin/main 2>/dev/null ||
+    echo "Note: the main checkout ($l) couldn't be brought up to date; hooks may run an old copy of this script."
 }
 
 # Count Leo's messages in this session (Claude Code passes the session id on stdin)
@@ -217,7 +256,7 @@ coach() {
 }
 
 cmd_busy() {
-  local input=""; [ -t 0 ] || input=$(cat)
+  local input=$INPUT
   coach "$input"
 }
 
@@ -255,7 +294,7 @@ json_str() { printf '%s' "$1" | python3 -c 'import json,sys; print(json.dumps(sy
 
 cmd_check() {
   # Claude Code passes JSON on stdin; if it is already retrying after a block, don't loop.
-  local input=""; [ -t 0 ] || input=$(cat)
+  local input=$INPUT
   case "$input" in *'"stop_hook_active":true'*|*'"stop_hook_active": true'*) exit 0 ;; esac
   local block remind
   find_problems
