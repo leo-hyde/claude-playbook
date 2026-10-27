@@ -1,0 +1,24 @@
+# Runs the playbook's kept tests (tests/run.sh) on every push and pull request,
+# on Linux and on macOS. On macOS it uses Apple's /bin/bash (3.2) and BSD tools,
+# which the shared scripts must work with on the user's Mac.
+name: tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run the tests (Linux)
+        if: runner.os == 'Linux'
+        run: bash tests/run.sh
+      - name: Run the tests (macOS, bash 3.2)
+        if: runner.os == 'macOS'
+        run: |
+          /bin/bash --version | head -1
+          /bin/bash tests/run.sh
