@@ -138,7 +138,7 @@ a { color: var(--link); }
 .btn.danger { color: var(--danger); }
 .icon-btn { width: 44px; font-size: 20px; }
 
-input[type="text"], input[type="number"], input[type="search"] {
+input:not([type]), input[type="text"], input[type="number"], input[type="search"] {
   width: 100%;
   min-height: 44px;
   padding: 0 12px;

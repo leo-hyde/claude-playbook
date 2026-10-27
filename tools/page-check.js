@@ -99,6 +99,7 @@ async function main() {
     problems += lines.filter((l) => !l.startsWith("page load") && !l.startsWith("accessibility check skipped")).length;
     console.log("- " + r.size + " " + r.scheme + ": " + (lines.length ? "\n    " + lines.join("\n    ") : "OK"));
   }
+  console.log("Accessibility (axe-core) runs at phone width only, light and dark.");
   console.log("Screenshots and report.json in " + out);
   console.log("PROBLEMS: " + problems);
 }

@@ -23,10 +23,14 @@ LOAD` (the address is blocked or down), say the measured checks weren't run
 and why. With no screenshots either, report "not reviewed" and stop: don't
 judge a page you haven't seen.
 
-Don't re-check by eye what the script measured.
+Don't re-check by eye what the script measured. If the app has its own
+preview tool with made-up data (like Sport Conditions' `tools/preview.js`),
+the page check still measures the layout, but say which runs had no data;
+take the judgement screenshots from the preview instead.
 
 ## 2. Look, for judgement only
-Look at **at most 6 screenshots**: the changed screens at phone width
+Look at **at most 6 screenshots in all** (the page check's or the app
+preview's): the changed screens at phone width
 (light, then dark), and desktop if the layout differs. Each image costs
 about as much as a page of text. Judge only what a script can't:
 - **Purpose and structure**: is the screen's one job obvious in two
@@ -41,6 +45,6 @@ about as much as a page of text. Judge only what a script can't:
 ## 3. Report
 Lead with what matters most. For each finding: the screen and screenshot,
 what's wrong in one line, the heuristic or checklist line it breaks, and a
-suggested fix. Then the script's problems (only those it found), then
-"Not checked" (anything skipped, and why). At most about 10 findings; no
+suggested fix. Then the script's problems (only those it found), one line
+on what passed, then "Not checked" (anything skipped, and why). At most about 10 findings; no
 praise, no style nits the checklist doesn't cover.

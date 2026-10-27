@@ -226,6 +226,22 @@ files, and read only extracts (headings, colours, the rules sections).
   (no problems at phone and desktop, light and dark, axe-core clean), and a
   trial of the design review on the live Sport Conditions site by a
   mid-model helper following the instructions cold.
+- The review's trial runs improved it: the page check crashed on a page
+  that wouldn't load (fixed: `COULD NOT LOAD`), used the phone's 44px on
+  desktop (now 24px there), and the instructions now cover "no spec", "no
+  screenshots" and apps with their own made-up-data preview.
+- **Sport Conditions findings from the trial** (for its canary session; a
+  mid-model review of its local copy with made-up data, 3 screenshots):
+  the two dropdowns (sport, forecast model) have 14px text, so iPhones zoom
+  in, and no accessible name; refresh and settings buttons are 40px, and
+  site-name buttons about 16px high; the "updated" line fails contrast in
+  light mode; the heading "Where & when" doesn't match its tab "Overview";
+  "HW", "LW", "Springs" and the compass dial are unexplained; site cards
+  repeat a lot and two fill a phone screen; past hours look like faded
+  "OK" rather than grey; "–" in the grid could mean no good hours, no data
+  or past; the sideways-scrolling grid has no hint; in dark mode "no"
+  cells are close to the card colour. What works: the "Next good session"
+  card answers the main question straight away.
 - Not done here: part 8 (the canary session and the release), which need a
   real Sport Conditions session and the user's yes.
 
