@@ -1,6 +1,6 @@
 # Spec: good UX design by default, and a library of styles
 
-Status: **built** (28 Oct 2026, one overnight session at the user's request),
+Status: **built** (27 Oct 2026, one overnight session at the user's request),
 on `main` for the canary. Waiting for a real Sport Conditions session on a
 screen, then a release (the user's yes). See Progress.
 
@@ -203,7 +203,7 @@ Rules from the playbook (`shared/ai-dev-rules.md`, "Using tokens well", and
 Each build session adds its notes here, not in `docs/STATUS.md`, which is
 overwritten once when the whole feature lands on `main`.
 
-**28 Oct 2026: all parts built in one session** (the user asked for it in
+**27 Oct 2026: all parts built in one session** (the user asked for it in
 one go, overnight, instead of three sessions). Research helpers on the
 cheapest model stalled, so the main session fetched the sources itself, to
 files, and read only extracts (headings, colours, the rules sections).
@@ -221,7 +221,7 @@ files, and read only extracts (headings, colours, the rules sections).
 - Parts 4–7: kick-off in `SKILL.md`, `reference/design-review.md` and
   `tools/page-check.js` (axe-core 4.13.0, fetched from cdnjs, jsdelivr or
   npm, whichever works), one line in the checker, `reference/client-style.md`,
-  catch-up `2026-10-28-design-method`.
+  catch-up `2026-10-27-design-method`.
 - Checks: `bash tests/run.sh` (6 new cases), the page check on the gallery
   (no problems at phone and desktop, light and dark, axe-core clean), and a
   trial of the design review on the live Sport Conditions site by a

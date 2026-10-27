@@ -6,7 +6,7 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Cloud, 27–28 Oct 2026 (overnight: building `specs/design-and-styles.md`) |
+| Last session | Cloud, 27 Oct 2026 (overnight: building `specs/design-and-styles.md`) |
 | Ended cleanly? | Yes, all pushed to `main` |
 | Mid-flight work | None. Good UX by default and the style library are built and on `main`, so only the canary (Sport Conditions) has them. Not released. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
 | Next step | The user looks at the gallery and swaps any of the six library styles they don't like (`in_library` in `styles/candidates.json`, then `python3 tools/styles.py build`). Then a Sport Conditions session that adds or reworks a screen, using the design method and review; then release (the user's yes) |
@@ -29,7 +29,7 @@ On `main`, not yet released (`specs/design-and-styles.md`):
 - `tools/page-check.js`: page width, tap targets, input text size and
   axe-core at phone and desktop, light and dark, with screenshots;
 - a recipe for clients' brands (`reference/client-style.md`), and catch-up
-  `2026-10-28-design-method`.
+  `2026-10-27-design-method`.
 
 On `main`, not yet released (`specs/efficient-sessions.md`,
 `specs/shareable-playbook.md`, part 4 of `specs/playbook-releases.md`):

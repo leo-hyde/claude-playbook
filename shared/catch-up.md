@@ -75,7 +75,7 @@ Claude reads the entry here when applying it, so the title must say what it is.
   finds nothing, and
   `.claude/settings.json` has the `push-check` hook.
 
-## 2026-10-28-design-method: DESIGN.md points to the playbook's design method
+## 2026-10-27-design-method: DESIGN.md points to the playbook's design method
 - At the top of the project's `DESIGN.md`, under its first paragraph, add:
   "Before designing a screen, read the playbook's `reference/design-method.md`."
   If the project has no DESIGN.md (no screens), there's nothing to do.

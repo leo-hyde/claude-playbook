@@ -172,7 +172,7 @@ work calls for it.
   (`reference/design-review.md`) runs `tools/page-check.js` for what can be
   measured, then looks at a few screenshots for judgement.
 - Every project's `DESIGN.md` points to the design method (catch-up
-  `2026-10-28-design-method`).
+  `2026-10-27-design-method`).
 
 ## Cost notes
 The rules' "Using tokens well" section says how Claude keeps sessions

@@ -11,7 +11,7 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## 28 Oct 2026: Good UX by default, and a style library, in the playbook
+## 27 Oct 2026: Good UX by default, and a style library, in the playbook
 Built from `specs/design-and-styles.md`, with every recommendation in its
 "Decisions for the user" (the user: "just do it", 27 Oct).
 - **It lives in the playbook, in files read only when needed** (`styles/`,
