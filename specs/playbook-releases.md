@@ -1,7 +1,8 @@
 # Spec: changing the playbook safely (releases)
 
-Status: **draft for the user's review** (27 Oct 2026). Build this first: the
-other specs ship through it.
+Status: **built, waiting for the canary and the first release** (27 Oct
+2026). Parts 1, 2, 3 and 5 are built; parts 4 and 6 are not (see Progress).
+The other specs ship through it.
 
 ## Goal
 A change to the playbook reaches every project only after it's been tested
@@ -134,3 +135,24 @@ monthly review re-checks them. A mismatch becomes an idea issue.
 
 ## Progress
 - 27 Oct 2026: spec drafted.
+- 27 Oct 2026: built parts 1, 2, 3 and 5, with the recommended decisions
+  (canary: Sport Conditions; about weekly; ideas as issues).
+  - Sync: reads `stable`, or `main` for a canary or while `stable` doesn't
+    exist. If fetching `stable` fails, it keeps the last one fetched. When an
+    old script updates itself, the new one fetches `stable` before reading.
+  - Tests: 66 cases, passing on `ubuntu-latest` and `macos-latest` (Apple's
+    bash 3.2, checked by the job). A deliberately broken end-of-reply check
+    failed them. Two cases test today's behaviour and change in session 2:
+    catch-ups are printed in full (one line each comes with the
+    efficient-sessions spec), and there's no cost hook or push-to-main hook
+    yet (the end-of-reply docs check and the message counter are tested
+    instead). The rules-size test fails only if the file grows past 197
+    lines, until session 2 trims it under 150.
+  - The canary's channel file is added with `git add -f` (projects ignore
+    `.claude/*`), not through `setup.txt`.
+  - Not built: part 4 (ideas as issues) rewrites a section of
+    `shared/ai-dev-rules.md`, so it moves to session 2. Part 6 (the
+    assumptions table) wasn't in this session's brief.
+  - Still to do, each with the user's yes: commit `.claude/playbook-channel`
+    (`main`) in Sport Conditions; then the first release, which creates
+    `stable`. Until then every project reads `main`, as before.
