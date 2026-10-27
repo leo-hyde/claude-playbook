@@ -6,6 +6,7 @@
 #   - RELEASES.md's newest entry is for this release (its heading is the new tag);
 #   - bash tests/run.sh passes;
 #   - the user says yes: asked here, or --yes once Claude has asked them in chat.
+# It pushes stable, then the tag; if the tag is refused (cloud sessions), it says how to add it.
 # Undo: revert the bad commit on main and release again. Never force-push stable.
 #
 #   scripts/release.sh          check, show what's going out, ask, push
@@ -35,8 +36,12 @@ if git rev-parse -q --verify origin/stable >/dev/null; then
   since=origin/stable..
 fi
 
+# A release counts as made if its tag exists or stable's RELEASES.md has its note
+# (a cloud session can't always push tags).
+released=$(git show origin/stable:RELEASES.md 2>/dev/null | awk '/^## release-/ { print $2 }')
+taken() { git rev-parse -q --verify "refs/tags/$1" >/dev/null || printf '%s\n' "$released" | grep -qx -- "$1"; }
 day=release-$(date +%Y-%m-%d); tag=$day; n=1
-while git rev-parse -q --verify "refs/tags/$tag" >/dev/null; do n=$((n + 1)); tag=$day-$n; done
+while taken "$tag"; do n=$((n + 1)); tag=$day-$n; done
 newest=$(awk '/^## release-/ { print $2; exit }' RELEASES.md 2>/dev/null)
 [ "$newest" = "$tag" ] || die "RELEASES.md's newest entry should be '## $tag' (found '${newest:-none}').
 Add it on main: two or three plain lines on what changes for the user, and any catch-up."
@@ -65,10 +70,12 @@ case "$mode" in
     [ "$answer" = yes ] || die "not confirmed." ;;
 esac
 
-git tag "$tag" HEAD || die "couldn't make the tag $tag."
-# Both or neither; no force, so GitHub refuses if stable would lose commits.
-if ! git push -q --atomic origin "HEAD:refs/heads/stable" "refs/tags/$tag"; then
-  git tag -d "$tag" >/dev/null
-  die "GitHub refused the push. Nothing was released."
-fi
+# No force, so GitHub refuses if stable would lose commits.
+git push -q origin "HEAD:refs/heads/stable" || die "GitHub refused the push to stable. Nothing was released."
 echo "Released $tag. Every project picks it up at its next session start."
+# The tag only marks the release; projects don't need it. Cloud sessions may not be allowed to push tags.
+if ! { git tag "$tag" HEAD && git push -q origin "refs/tags/$tag"; } 2>/dev/null; then
+  git tag -d "$tag" >/dev/null 2>&1
+  echo "TAG NOT PUSHED: GitHub refused the tag. Tell Leo; on the Mac, run in the playbook:"
+  echo "  git fetch origin stable && git tag $tag $(git rev-parse --short HEAD) && git push origin $tag"
+fi

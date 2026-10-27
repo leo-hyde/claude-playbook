@@ -1,7 +1,7 @@
 # Spec: changing the playbook safely (releases)
 
-Status: **built, waiting for the canary and the first release** (27 Oct
-2026). Parts 1, 2, 3 and 5 are built; parts 4 and 6 are not (see Progress).
+Status: **built and live** (27 Oct 2026): first release made, Sport
+Conditions is the canary. Parts 1, 2, 3 and 5 are built; parts 4 and 6 are not (see Progress).
 The other specs ship through it.
 
 ## Goal
@@ -156,5 +156,11 @@ monthly review re-checks them. A mismatch becomes an idea issue.
   - 27 Oct: Sport Conditions' `.claude/playbook-channel` (`main`) pushed,
     with the user's yes. Its old sync script updated itself and re-ran the
     new one, in real use.
-  - Still to do, with the user's yes: the first release, which creates
-    `stable`. Until then every project reads `main`, as before.
+  - 27 Oct: first release, `release-2026-10-27`, with the user's yes.
+    `stable` created at `9873c28`. A throwaway project with no channel file
+    then synced from it and printed the note. The tag was refused: this
+    cloud session's git can't push tags (nor delete branches). So
+    `scripts/release.sh` now pushes `stable` first and only warns, with the
+    command to run on the Mac, if the tag is refused. It also counts
+    releases from `stable`'s `RELEASES.md`, so a missing tag doesn't break
+    the `-2` numbering. Tests added for both (69 cases).

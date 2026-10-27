@@ -100,7 +100,9 @@ Work lands on the playbook's `main`. Projects don't read `main`: they read
 **release**. `scripts/release.sh` makes one: it runs the tests, checks that
 `RELEASES.md` has a note for it, asks the user, then moves `stable` to `main`
 and tags it `release-YYYY-MM-DD`. When a project updates, session start
-prints the note's first line.
+prints the note's first line. Projects don't use the tag; it only marks the
+release. Cloud sessions can't push tags, so from there the script says how
+to add it on the Mac.
 
 One project, the **canary** (Sport Conditions), reads `main` instead, so it
 tries every change in real use before the others get it. It says so in a

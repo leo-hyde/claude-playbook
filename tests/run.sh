@@ -308,6 +308,21 @@ check "nothing new: refuses" has "$out" "nothing to release"
   printf '# Releases\n\n## %s-2\nSecond today.\n' "$tag" >RELEASES.md && git commit -q -am "note 2" && git push -q origin main )
 release --yes
 check "second release in a day: tagged $tag-2" git -C "$T/rel.git" rev-parse -q --verify "refs/tags/$tag-2"
+# A tag GitHub refuses (as cloud sessions' git may): stable still moves, and it says how to add the tag.
+printf '#!/bin/sh\nwhile read old new ref; do case "$ref" in refs/tags/*) echo "tags refused" >&2; exit 1 ;; esac; done\n' \
+  >"$T/rel.git/hooks/pre-receive" && chmod +x "$T/rel.git/hooks/pre-receive"
+( cd "$r" && echo "- again" >>shared/setup.txt && git commit -q -am "again" &&
+  printf '# Releases\n\n## %s-3\nThird today.\n\n## %s-2\nSecond today.\n' "$tag" "$tag" >RELEASES.md &&
+  git commit -q -am "note 3" && git push -q origin main )
+release --yes
+check "tag refused: still released" [ "$(stable_at)" = "$(git -C "$T/rel.git" rev-parse main)" ]
+check "tag refused: says how to add it" has "$out" "TAG NOT PUSHED"
+( cd "$r" && echo "- once more" >>shared/setup.txt && git commit -q -am "once more" &&
+  printf '# Releases\n\n## %s-4\nFourth today.\n\n## %s-3\nThird.\n' "$tag" "$tag" >RELEASES.md &&
+  git commit -q -am "note 4" && git push -q origin main )
+release --check
+check "a release without its tag still counts: next is $tag-4" [ "$code" -eq 0 ]
+rm -f "$T/rel.git/hooks/pre-receive"
 ( cd "$r" && echo x >stray.txt )
 release --yes
 check "uncommitted changes: refuses" has "$out" "uncommitted changes"
