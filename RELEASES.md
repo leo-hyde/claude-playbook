@@ -10,6 +10,12 @@ Each entry: a heading with the release tag (`## release-YYYY-MM-DD`, with
 last line naming any catch-up it brings (or "Catch-up: none").
 `scripts/release.sh` refuses to release without one for its tag.
 
+## release-2026-10-28
+New screens are planned and checked for good design: Claude sorts each feature into main screen, one tap away or Settings before building, and new apps pick a look from a style library.
+- A design method (`reference/design-method.md`), a fuller UX checklist with the 10 usability heuristics, and a design review after new screens, with a page check for width, button size and accessibility (`tools/page-check.js`).
+- A style library (`styles/`): six styles to choose from in a gallery, all contrast-checked; a recipe for matching a client's brand.
+- Catch-up: 2026-10-27-design-method.
+
 ## release-2026-10-27-2
 Sessions should cost less: Claude now notes when a session has grown expensive, checks the docs only when work lands on main, and keeps small replies short.
 - Shorter shared rules (149 lines), with "Using tokens well" in place of coaching; two helper subagents, `scout` and `checker`; ideas for the playbook are filed as issues.
