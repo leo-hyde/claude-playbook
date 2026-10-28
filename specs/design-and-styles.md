@@ -1,8 +1,9 @@
 # Spec: good UX design by default, and a library of styles
 
-Status: **built** (27 Oct 2026, one overnight session at the user's request),
-on `main` for the canary. Waiting for a real Sport Conditions session on a
-screen, then a release (the user's yes). See Progress.
+Status: **released** in `release-2026-10-28` (28 Oct 2026; built in one
+overnight session at the user's request). The user chose to release before a
+canary session; Sport Conditions issue #13 is its first real use. Choosing
+styles on the gallery page itself: playbook issue #9.
 
 ## Goal
 Every app the user builds is easy to use and looks good, without the user

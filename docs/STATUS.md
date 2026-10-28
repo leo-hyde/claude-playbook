@@ -6,11 +6,11 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Cloud, 27 Oct 2026 (overnight: building `specs/design-and-styles.md`) |
+| Last session | Cloud, 27–28 Oct 2026 (built and released `specs/design-and-styles.md`) |
 | Ended cleanly? | Yes, all pushed to `main` |
-| Mid-flight work | None. Good UX by default and the style library are built and on `main`, so only the canary (Sport Conditions) has them. Not released. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
-| Next step | The user looks at the gallery and swaps any of the six library styles they don't like (`in_library` in `styles/candidates.json`, then `python3 tools/styles.py build`). Then a Sport Conditions session that adds or reworks a screen, using the design method and review; then release (the user's yes) |
-| Check first | That canary session: does it read `reference/design-method.md`, fill in "What's on screen", and run the design review? Sport Conditions' own findings from the trial review are in the spec's Progress notes |
+| Mid-flight work | None. **`release-2026-10-28` released 28 Oct** (the user's yes, before a canary session: the user chose to skip that wait). Its tag isn't on GitHub yet: cloud sessions can't push tags. On the Mac: `git fetch origin stable && git tag release-2026-10-28 140aac4 && git push origin release-2026-10-28`. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
+| Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json` |
+| Check first | That Sport Conditions session: does it read `reference/design-method.md`, fill in "What's on screen", and run the design review? Problems there are fixed in the playbook, and released straight away if a script breaks |
 
 ## Where we are
 The shared folder (the rules, the session script and the sync) is copied into
@@ -19,7 +19,7 @@ Tech Radar and its helper repo. Projects get changes only when the user
 releases them; Sport Conditions (the canary) gets them first, from `main`.
 Kept tests (107 cases) run on Linux and macOS on every push.
 
-On `main`, not yet released (`specs/design-and-styles.md`):
+Released in `release-2026-10-28` (`specs/design-and-styles.md`):
 - a UX method (`reference/design-method.md`), a rewritten checklist with the
   10 usability heuristics, a "What's on screen" section in feature specs,
   and a design review (`reference/design-review.md`) run by the `checker`;
@@ -44,10 +44,9 @@ On `main`, not yet released (`specs/efficient-sessions.md`,
   MIT licence.
 
 ## Next steps
-1. The design release: the user reviews the gallery and the six picks; a
-   Sport Conditions session on a screen (the canary); then the RELEASES.md
-   entry and `scripts/release.sh --check`, and `--yes` after the user's yes.
-   Also delete the merged `second-release` branch.
+1. Sport Conditions issue #13, then playbook issue #9 (see Handover). Push
+   the `release-2026-10-28` tag from the Mac. Delete the merged
+   `second-release` branch.
 2. Test in a cloud session that project subagents (`.claude/agents/`) load
    there. If not, stop syncing them (`FILES` in `shared/playbook-sync.sh`).
 3. A week after the release: the first monthly review
