@@ -39,7 +39,7 @@ Each step ends with a short, named output and says who acts next.
 | 3 | **Outline**: the good-enough answer (and the great one, if different) on one page with one picture. For something to build, tag each feature now / later / maybe | 1-page outline | Claude alone |
 | 4 | **Critique the outline**: a fresh AI critic with no stake in it asks "is this the best way? what's missing? what's overkill?" Claude makes the clear fixes | Short list: changed / not changed, and why | Claude turns the rest into decisions |
 | 5 | **The user decides**: one numbered list, each item with Claude's recommendation | Decision list | The user, in one pass; Claude records answers in `docs/decisions.md` |
-| 6 | **Write the document** once, for the named reader, in the agreed format. Then a fresh AI reads it as that reader and flags anything unclear | The document and a short check note | Claude alone; then the user reads it once |
+| 6 | **Write the document** once, for the named reader, in the agreed format: short (cut anything said twice; keep precise facts in Detail) and, usually, with a picture of the process or answer (a diagram drawn as an SVG, exported as a PNG). Then a fresh AI reads it as that reader and flags anything unclear | The document and a short check note | Claude alone; then the user reads it once |
 | 7 | **Prove the hardest claim**, when there is one: a small prototype or test | Prototype or test result | Claude alone |
 | 8 | **Review by others**, if anyone else must read it, through the project's review route (comments on a shared copy; the repo file stays the master) | Comments, then the updated master | Reviewers; then Claude |
 
@@ -68,7 +68,7 @@ step 7 is often a spike, a throwaway test of the riskiest part.
   the decisions needed, numbered, each with a recommendation; what wasn't
   checked. Then a link to the document.
 
-### Two rules for Claude
+### Three rules for Claude
 1. **Automate first.** Propose the fully automated way first. Before
    offering a manual step, try at least two tools or approaches and say
    what failed; write the reason next to the step. People judging or
@@ -78,6 +78,11 @@ step 7 is often a spike, a throwaway test of the riskiest part.
    project rule: `CLAUDE.md`; one document: its notes; a general lesson: a
    playbook `idea` issue), and say where. Check each new version against
    those corrections before handing it over.
+3. **Offer to improve the method.** When a use of this method shows a
+   better way (a correction that applies beyond this one document, a step
+   that helped, one that didn't), ask the user at the end: "Shall I feed
+   this back into the method?" With a yes, update this file and add a
+   change-log line.
 
 ## Detail
 
@@ -91,6 +96,15 @@ then three parts, each able to stand alone:
   cut precise details; they go here.
 Change the Detail first, then bring the other two into line in the same
 edit. End with a short change log.
+
+**Keep it short.** Say each thing once: no second table restating the
+first, no list repeating the summary. Merge earlier notes on the topic
+into the one document instead of keeping them beside it. Detail keeps
+the precise facts and sources, not the history of how they were found.
+
+**Add a picture where it helps** (most of the time): the process as a flow
+with who does each step, or the answer as one diagram. Readers see a
+process faster than they read it.
 
 ### Brief template (step 1)
 ```
@@ -164,6 +178,7 @@ Packaging this as its own skill (`/research-to-doc`) until it has been
 tested on at least one real deliverable.
 
 ## Change log
+- 1.2 (30 Oct 2026): from a second use: write short, add a picture where it helps, offer to feed lessons back into this method.
 - 1.1 (30 Oct 2026): every use updates this file.
 - 1.0 (30 Oct 2026): made general from a project-specific version 0.3;
   project details removed; brief template and checker prompts added;
