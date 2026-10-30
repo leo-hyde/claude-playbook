@@ -153,13 +153,18 @@ rounds with the user; points raised twice; features added then cut after
 the outline; manual steps proposed and why. **Passes if:** no point raised
 twice, nothing added then cut after the outline, and noticeably fewer
 rounds than before. A step that proves useless becomes optional, not
-deleted. Record the result in this file's change log.
+deleted.
+
+**After every use, in any project, update this file** with what the job
+taught, in general terms only (the playbook is public: no client, project
+or people's names), and add a change-log line.
 
 ### Out of scope
 Packaging this as its own skill (`/research-to-doc`) until it has been
 tested on at least one real deliverable.
 
 ## Change log
+- 1.1 (30 Oct 2026): every use updates this file.
 - 1.0 (30 Oct 2026): made general from a project-specific version 0.3;
   project details removed; brief template and checker prompts added;
   feature-spec use added.
