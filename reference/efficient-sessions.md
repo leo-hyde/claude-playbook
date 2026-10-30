@@ -95,6 +95,23 @@ The rules rarely do, as they hold no numbers.
 - Cloud sessions have no `~/.claude`: everything they need is in the repo
   (`.claude/rules/`, `.claude/agents/`, CLAUDE.md).
 
+## A retrospective after a long piece of work
+When something took more than about three rounds of the user's feedback, or
+the user felt it dragged, look back once, in a fresh session, before the next
+similar job. Session records show what memory and commits don't.
+1. **Collect:** the session transcripts (Mac: `~/.claude/projects/*/*.jsonl`;
+   boil them down with the `scout` subagent or a script, not by reading them
+   whole) and the git log of the documents or code involved.
+2. **Find:** the order things actually happened in; where the turns and the
+   user's time went (rough shares, marked as estimates); every correction the
+   user made, with a short quote and time; points raised twice; manual steps
+   Claude proposed; what was added and later cut.
+3. **Say what can't be seen:** phone and cloud sessions leave no transcript on
+   the Mac; commit times aren't work times.
+4. **Output:** a short file in the project (`docs/retrospective-<topic>.md`),
+   and changes to the method or rules it points to, offered to the user
+   (playbook lessons in general terms, as `idea` issues or with their yes).
+
 ## The monthly review
 Once a month, in a fresh session on a cheap model, in the playbook repo.
 1. **Collect, outside the conversation.**

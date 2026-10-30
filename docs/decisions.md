@@ -11,6 +11,28 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 30 Oct 2026: Six habits from a document-heavy project, on main
+The user asked which ways of working from a recent consulting project
+(mostly research, position papers and team reviews in Google Docs) would help
+every project; they agreed all six (30 Oct).
+- **Session start lists people's edits and notes to Claude** (`doc_edits` in
+  `shared/session.sh`): a document commit without the "Co-Authored-By:
+  Claude" line, in the last 30 days, after Claude's last commit to that file;
+  and `> To Claude` lines. Prints nothing when there is nothing, so the
+  session-start budget is untouched in most sessions. **Why:** it ran in that
+  project for two days and caught edits made on github.com. **Rejected:** a
+  separate synced script (another file and hook for every project).
+- **`reference/team-review.md`**: review rounds in Google Docs with the repo
+  file as master; the "How to edit" line on every Google file Claude makes.
+- **`reference/document-projects.md`**: set-up changes for a project that is
+  mostly documents; pointed to from the kick-off in SKILL.md.
+- **The facts rule covers effort** (rules file, same two lines): estimates
+  come from how long similar work took. **Why:** build estimates there were
+  3–4 times too high until checked against the git log.
+- **A retrospective after a long piece of work** (`reference/efficient-sessions.md`).
+- Not taken: brand styles for documents and decks (issue #10 already covers
+  it); project-only content.
+
 ## 27 Oct 2026: Good UX by default, and a style library, in the playbook
 Built from `specs/design-and-styles.md`, with every recommendation in its
 "Decisions for the user" (the user: "just do it", 27 Oct).

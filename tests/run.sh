@@ -83,7 +83,7 @@ make_project() {
     echo "old rules" >.claude/rules/playbook.md
     [ -n "$channel" ] && echo "$channel" >.claude/playbook-channel
     git add -A && { [ -z "$channel" ] || git add -f .claude/playbook-channel; } &&
-      git commit -q -m "start" && git remote add origin "$T/p/$name.git" && git push -q -u origin main
+      git commit -q -m "start" -m "Co-Authored-By: Claude <noreply@anthropic.com>" && git remote add origin "$T/p/$name.git" && git push -q -u origin main
   ) >/dev/null 2>&1 || return 1
   echo "$w"
 }
@@ -242,6 +242,19 @@ git -C "$p" checkout -q -b other && echo x >"$p/other.txt" && git -C "$p" add ot
 git -C "$p" branch -q -D other
 out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
 check "lists another session's branch" has "$out" "  other: 2 commit(s) not on main"
+check "no people's edits listed when Claude made every commit" hasnt "$out" "HUMAN EDITS"
+echo "A person's change." >>"$p/docs/decisions.md" && git -C "$p" commit -q -am "Edit on github.com" && git -C "$p" push -q origin main
+out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
+check "lists a person's edit to a document" has "$out" "  docs/decisions.md: 1 commit(s), last by Test"
+printf '\n> To Claude: please shorten this.\n' >>"$p/CLAUDE.md" &&
+  git -C "$p" commit -q -am "Playbook: a sync commit" && git -C "$p" push -q origin main
+out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
+check "lists a note to Claude" has "$out" "CLAUDE.md:3:> To Claude: please shorten this."
+check "a sync commit isn't a person's edit" hasnt "$out" "  CLAUDE.md: 1 commit"
+echo "Worked in." >>"$p/docs/decisions.md" &&
+  git -C "$p" commit -q -am "Work in the edit" -m "Co-Authored-By: Claude <noreply@anthropic.com>" && git -C "$p" push -q origin main
+out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
+check "Claude's next commit marks the edit worked in" hasnt "$out" "docs/decisions.md: 1 commit"
 
 # ---------- End-of-reply check ----------
 section "End-of-reply check"

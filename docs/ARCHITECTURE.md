@@ -134,7 +134,7 @@ macOS with Apple's bash 3.2.
 | Playbook file | Copy in each project | What it does |
 |---|---|---|
 | `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | The shared rules for every project, including using tokens well |
-| `shared/session.sh` | `scripts/session.sh` | Session start (pull, other work, issues, handover), the end-of-reply check for lost work, the push-to-main docs check, and the cost notes |
+| `shared/session.sh` | `scripts/session.sh` | Session start (pull, other work, issues, people's edits and notes to Claude in the docs, handover), the end-of-reply check for lost work, the push-to-main docs check, and the cost notes |
 | `shared/playbook-sync.sh` | `scripts/playbook-sync.sh` | The sync itself (copied too, so it can update itself) |
 | `shared/catch-up.md` | not copied (the sync reads it) | Rule changes each project must apply once to files it already has. Each project records the ones it has done in `docs/playbook-catch-up.md` |
 | `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |

@@ -35,6 +35,9 @@ Ask (in one message, not a questionnaire drip):
 Then research what's needed (APIs, existing data, libraries) and say plainly
 what's easy, what's hard, and what costs money.
 
+**Mostly documents, not an app** (consulting, research, a proposal)? Same
+set-up, with the changes in `reference/document-projects.md`.
+
 ## 2. Agree the plan in three short documents
 
 Copy and fill in the templates in `templates/`:
@@ -108,6 +111,8 @@ Then push, wait for the live site to update, and check it there too.
 | `templates/style.css` | Design tokens (light/dark), buttons, cards, dialogs, phone layout |
 | `templates/worker.js` | Cloudflare Worker skeleton: CORS, caching, a secret key, KV sync |
 | `templates/site-check.yml` | GitHub Action pattern: check + rebuild data on every change |
+| `reference/document-projects.md` | Set-up changes for a project that is mostly documents: plan, sourced facts, positions, agreed decisions |
+| `reference/team-review.md` | Review rounds in Google Docs and Slides with the repo file as master; the "How to edit" lines |
 | `reference/research-to-doc.md` | Turning a question into a spec or decision document: brief, research, outline, critique, one batch of decisions, write once |
 | `reference/design-method.md` | How Claude designs a screen: purpose, structure, patterns, words, look, accessibility, checking |
 | `reference/ux-checklist.md` | The design and UX review checklist |

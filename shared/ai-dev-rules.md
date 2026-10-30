@@ -27,8 +27,8 @@ The user is not a developer: if they can't follow it, it hasn't been said.
 - **Ask about genuine ambiguity, decide the rest**: questions together, each with a
   default. Spot contradictions.
 - **Say what's hard or expensive**; be honest about mistakes and limits, Claude's own too.
-- **Never let a model guess facts** (dates, prices, API fields, web addresses):
-  take them from data, documentation or a real test, or mark them unverified.
+- **Never guess facts or effort** (dates, prices, API fields, web addresses, build
+  time): use data, docs, a real test or past work's git log, or mark it unverified.
 - **Found something outside the task?** Choose:
   - *Do it now*: small, clearly right, in files already open, checkable now
     (a typo, a broken link, a stale doc line). Its own commit; mention it.
