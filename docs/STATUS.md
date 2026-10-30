@@ -9,7 +9,7 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 | Last session | Cloud, 27–28 Oct 2026 (built and released `specs/design-and-styles.md`) |
 | Ended cleanly? | Yes, all pushed to `main` |
 | Mid-flight work | None. **`release-2026-10-28` released 28 Oct** (the user's yes, before a canary session: the user chose to skip that wait). Its tag isn't on GitHub yet: cloud sessions can't push tags. On the Mac: `git fetch origin stable && git tag release-2026-10-28 140aac4 && git push origin release-2026-10-28`. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
-| Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json` |
+| Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json`. Proposed, waiting for the user's decisions: `specs/distinctive-design.md` (apps that don't look AI-made) |
 | Check first | That Sport Conditions session: does it read `reference/design-method.md`, fill in "What's on screen", and run the design review? Problems there are fixed in the playbook, and released straight away if a script breaks |
 
 ## Where we are
