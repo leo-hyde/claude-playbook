@@ -48,23 +48,23 @@ The user is not a developer: if they can't follow it, it hasn't been said.
 | File | Holds | Changes |
 |---|---|---|
 | `CLAUDE.md` | Stable project rules: commands, conventions, gotchas. Under ~100 lines; nothing Claude can read from the code | Rarely |
-| `SPEC.md` | **The plan, in one place**: goal, users, scope, every step with its status, a link to each `specs/` file | Same commit as any change of plan, scope or step |
+| `SPEC.md` | The plan, in one place: goal, users, scope, every step with its status, a link to each `specs/` file | Same commit as any change of plan, scope or step |
 | `specs/<feature>.md` | One feature: parts, out of scope, how to check it's done; "Progress" notes while it's built | Before building it |
-| `docs/STATUS.md` | **Current state only**: Handover block, where we are, next steps (pointing at SPEC's steps), open questions. Overwritten, not a diary | When a step lands on main |
+| `docs/STATUS.md` | Current state only: Handover block, where we are, next steps (pointing at SPEC's steps), open questions. Overwritten, not a diary | When a step lands on main |
 | `docs/decisions.md` | One entry per decision: date, what, why, what was rejected. Stops later sessions undoing a choice | When one is made |
-| `docs/ARCHITECTURE.md` | The parts, data flow, outside services, safety, weak spots | Same commit as any structural change |
+| `docs/ARCHITECTURE.md` | What the code doesn't show: outside services, how data moves between them, safety, weak spots | Same commit as any structural change |
 
 ## Each feature, and keeping the docs true
 Every session starts with no memory: the docs are how Claude and the user know
 the goal, scope, plan and why. A stale doc is worse than none.
-1. **Spec it** (`specs/<feature>.md` if bigger than a small step). **Build it in a
-   fresh session** that reads CLAUDE.md, STATUS.md and the spec; small working commits.
+1. **Spec it** (`specs/<feature>.md` if bigger than a small step). Build it in a
+   fresh session that reads CLAUDE.md, STATUS.md and the spec; small working commits.
 2. **Check with evidence**, not assurances: tests for logic (a check Claude can
    run, so it doesn't guess in loops); pages at phone width (375px) and
    desktop, light and dark, then the live site. Not "works" until seen
    working. For a bigger step, ask the `checker` subagent first.
 3. **Walkthrough**: what changed and why, which files and how data flows, the
-   2–3 lines that matter, **how it was checked and what wasn't**, risks.
+   2–3 lines that matter, how it was checked and what wasn't, risks.
 4. **Record, in the same commit**: plan, goal, scope or order changed (even in
    conversation only) → SPEC.md and decisions.md; a choice made or undone →
    decisions.md; a spec or step started or finished → its SPEC.md row; parts,
@@ -75,13 +75,13 @@ the goal, scope, plan and why. A stale doc is worse than none.
 ## Safety and responsibility (flag as they come up)
 Secrets never in browser code or the repo (Worker or GitHub secrets). Collect
 the minimum of people's data. Escape typed text, check links. Respect data
-sources' terms and limits. **Free services' limits are often per internet
+sources' terms and limits. Free services' limits are often per internet
 connection, shared with the user's devices: few test requests, cache fetched
-data, made-up data for design work.** Say where the app could mislead.
+data, made-up data for design work. Say where the app could mislead.
 - **Before committing to a public repo** (session start says so), check for
   secrets, email addresses, real people's names, owner.md's "Never public"
-  list, internal addresses or private repos' content. If so, or unsure: **stop and
-  tell the user**, quoting the lines. **`THIS REPO IS NOW PUBLIC`**: tell them
+  list, internal addresses or private repos' content. If so, or unsure: stop and
+  tell the user, quoting the lines. `THIS REPO IS NOW PUBLIC`: tell them
   first, then see playbook `reference/github-and-hosting.md`. Commit only
   with the address in owner.md (`git config user.email`).
 
@@ -110,28 +110,21 @@ session (the Mac shows a reminder).
   one without `.claude/rules/playbook.md` (playbook `reference/phone-and-computer.md`).
 
 ## Using tokens well
-Every request (each tool call is one) re-sends the whole context: cost is
-roughly context size × requests, whatever the window size. After a break the
-cache expires and the next message pays full price for all of it. Never trade
-correctness for tokens: a check that catches a mistake is cheaper than rework.
-- **Keep the context to what the task needs.** Search, don't read whole files
-  or logs; cap output (`| tail -40`, quiet flags). Bulk data (logs, exports,
-  API dumps, transcripts) goes to a file, boiled down by a script or the
-  `scout` subagent; only the summary enters the conversation.
-- **One piece of work per session.** When the work changes (analysis to
-  design, design to build), or the hook prints `COST:`, at the next natural
-  break save the state (the spec, STATUS.md, a notes file) and give a starter
-  prompt, with one line on why ("each message now costs about 4× a fresh
-  session's"). Stay if the history is still needed; say so.
-- **After a break, prefer a fresh session** from the handover. **Fewer turns**:
-  finish the agreed step in one go; stop background servers and watchers
-  before the last reply (each wake-up re-reads the whole session).
-- **The right model for each job.** The user picks the session's model, so a
-  starter prompt names one: the strongest for planning, design, debugging and
-  unclear problems; a cheaper one for mechanical work to a clear spec. Give
-  delegated work its own (`model` parameter, or the `scout` and `checker`
-  subagents): searching, boiling down → cheapest; a mechanical job → mid.
-  Subagents start cold: delegate only self-contained work, with a budget.
+Each request (each tool call is one) re-sends the whole context, and after a
+break the cache expires. Running out of room is rare; cost is the reason.
+Never trade correctness for tokens.
+- **One piece of work per session.** When the work changes, or the hook prints
+  `COST:`, at the next natural break save the state (the spec, STATUS.md, a
+  notes file) and give a starter prompt, with one line on why. After a break,
+  prefer a fresh session from the handover.
+- **Bulk data** (logs, exports, API dumps) goes to a file, boiled down by a
+  script or `scout`; only the summary enters the conversation. Stop background
+  servers and watchers before the last reply (each wake-up re-reads it all).
+- **Subagents cost extra tokens**: use them for parallel work, noisy output or
+  a fresh review (`checker`), not for a better answer. Each gets a
+  self-contained brief and a model: cheapest to search, mid for mechanical work.
+- **A starter prompt names a model**: the strongest for planning, design,
+  debugging and unclear problems; a cheaper one for work to a clear spec.
 - **Coach the user, unasked, one line each ("Tip:")**: unrelated topics in one
   message (do one, starter prompts for the rest); the same problem corrected
   twice (fresh session, better prompt); a vague request (a narrower one); no

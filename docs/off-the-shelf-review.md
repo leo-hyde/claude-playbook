@@ -90,7 +90,7 @@ reviews before it goes in. The named tools are explained where they appear.
    only be agreeing to a short look, not a change. Recommend: yes, next
    session there.
 6. **Don't install** Spec Kit, BMAD, Kiro, Superpowers, Copier or the
-   `@claude` Action; skip AGENTS.md and Vale for now. Recommend: agree.
+   `@claude` Action; skip Vale for now (AGENTS.md: adopted, see its row). Recommend: agree.
    Revisit plugins if cloud sessions start installing project plugins (a fact of today that may change).
 
 ## Detail

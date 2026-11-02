@@ -11,6 +11,22 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 2 Nov 2026: Rules pruned against Anthropic's best-practices page
+**What:** "Using tokens well" rewritten to match Anthropic's "What you can
+stop doing": no more "search, don't read whole files; cap output" or
+"finish the agreed step in one go"; subagents are for parallel work, noisy
+output or a fresh review, not to save context or get a better answer. Bold
+emphasis inside sentences removed (the page: emphasis makes Claude
+over-apply a rule). ARCHITECTURE.md holds only what the code doesn't show.
+150 → 143 lines. **Checked** with four fixed test tasks before and after
+(`tests/rule-tasks.md`): 19/20 before, 18/20 after; the one lost point
+(task 3, committing before warning about a secret) was lost the same way by
+the old rules on a rerun, so it is noise, not the prune.
+**Why:** decision 1 of `docs/off-the-shelf-review.md`. **Rejected:** cutting
+"Keep the context to what the task needs" entirely (bulk data still goes to a
+file: Anthropic still backs keeping noisy output out of the conversation);
+moving situational rules out now (that is the skills step, next).
+
 ## 2 Nov 2026: Keep the playbook; borrow standards, don't install frameworks
 The user decided, from `docs/off-the-shelf-review.md` (a comparison with
 off-the-shelf tools, sources checked 2 Nov).

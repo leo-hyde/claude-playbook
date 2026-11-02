@@ -42,8 +42,10 @@ table and those numbers, then check whether any habit below needs to change.
 The rules rarely do, as they hold no numbers.
 
 ## The habits, and why
-- **Search, don't read whole files or logs; cap output.** Everything read
-  stays in the context and is paid for on every later request.
+- **Search rather than read whole logs or data dumps.** Everything read
+  stays in the context and is paid for on every later request. (Reading the
+  code files a task needs is fine: running out of room is rare now, so this
+  is about cost, not space. Anthropic's best-practices page, 2 Nov 2026.)
 - **Bulk data goes to a file and is boiled down outside the conversation**
   (a script, or the `scout` subagent). On 27 Oct, raw logs pulled into a
   conversation (about 90,000 tokens) were then carried through 31 requests;
@@ -54,18 +56,18 @@ The rules rarely do, as they hold no numbers.
 - **After a break, start fresh rather than resume.** A session resumed the
   next morning re-wrote about 133,000 tokens at full price before any work;
   a fresh one from the handover started at about 60,000.
-- **Context nearly full?** Save the state to STATUS.md or the spec before the
-  app compacts it: compaction summarises older messages and loses detail.
-  For a long task, `/compact <what to keep>` at a natural break is cheaper
-  than letting it happen mid-step.
+- **Context nearly full?** Rare now (most models have a 1M-token window and
+  compact on their own), but compaction loses detail: for a long task,
+  `/compact <what to keep>` at a natural break beats it happening mid-step.
 - **After two failed corrections, restart** with a better prompt: a clean
   session with a better prompt almost always beats a long one full of
   corrections.
 - **Give Claude a check it can run** (tests, a check script), so it doesn't
   loop guessing.
-- **Fewer turns.** Ask questions together, each with a default; finish the
-  agreed step in one go; stop background watchers before the last reply
-  (each wake-up re-reads the whole session).
+- **Fewer turns.** Ask questions together, each with a default; stop
+  background watchers before the last reply (each wake-up re-reads the whole
+  session). No "keep going" or "be thorough" lines in prompts: current models
+  carry on through an agreed task, and such lines cause over-work.
 - **Short replies for small changes.** A reply is re-read on every later
   message; the five-part summary is for finished steps.
 - **Keep CLAUDE.md lean** (under about 100 lines): for each line, "would
@@ -82,9 +84,11 @@ The rules rarely do, as they hold no numbers.
   - `scout` (Haiku; read and search only): finds files and facts, boils down
     logs and data into a short summary.
   - `checker` (Sonnet; read only): checks a finished step against its spec.
-  - Any other delegated job can take a `model` per call. Subagents start
-    cold and re-read what they need, so delegate only self-contained work,
-    with a budget (searches, sources, summary length).
+  - Any other delegated job can take a `model` per call. Subagents cost
+    extra tokens and give no better answer than doing it here: use them for
+    parallel work, noisy output, or a fresh review (one that hasn't seen the
+    reasoning). They start cold, so give a self-contained brief and a budget
+    (searches, sources, summary length).
 - **`opusplan`** suits "plan first, then build". On trial as the canary
   project's default from the second release; the monthly review compares
   rework and cost before it's offered elsewhere.

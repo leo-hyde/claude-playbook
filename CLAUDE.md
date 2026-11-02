@@ -15,7 +15,9 @@ skill (`new-app`) on the user's Mac, at `~/.claude/skills/new-app`. How it works
   session of every project; the tests fail it over 150 lines); run `bash tests/run.sh`
   before pushing, and add a case to it when you change a script (don't
   write throwaway tests inline); scripts must work on macOS (bash 3.2, BSD
-  tools) and Linux. The GitHub Action runs the tests on both.
+  tools) and Linux. The GitHub Action runs the tests on both. A change to
+  `ai-dev-rules.md` runs the fixed test tasks in `tests/rule-tasks.md`
+  before and after.
 - Projects' copies must not be edited there; this repo is the source.
 - Templates (`templates/`) are copied once into new projects and don't update,
   except the hooks in `templates/.claude/settings.json`, which every session

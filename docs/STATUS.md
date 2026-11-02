@@ -6,8 +6,8 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Cloud, 2 Nov 2026: compared the playbook with off-the-shelf tools (`docs/off-the-shelf-review.md`); the user's decisions in decisions.md, 2 Nov. Anthropic's best-practices page joins the monthly review; client work gets an AI-use and client-data rule (`reference/document-projects.md`, SKILL.md) |
-| Ended cleanly? | Yes, pushed to branch `ccr-b7e4f51b-b1xdei`; merge to `main` when the user agrees |
+| Last session | Mac, 2 Nov 2026: merged the off-the-shelf review into `main`; pruned the rules against Anthropic's best-practices page (150 → 143 lines), checked with four fixed test tasks before and after (`tests/rule-tasks.md`, results there); idea issue #12 (a hook for the public-repo secret check) |
+| Ended cleanly? | Yes, on `main` |
 | Mid-flight work | None. On `main`, not released: people's edits and notes to Claude at session start, `reference/team-review.md`, `reference/document-projects.md`, a retrospective guide, and estimates in the facts rule. **`release-2026-10-28` released 28 Oct** (the user's yes, before a canary session: the user chose to skip that wait). Its tag isn't on GitHub yet: cloud sessions can't push tags. On the Mac: `git fetch origin stable && git tag release-2026-10-28 140aac4 && git push origin release-2026-10-28`. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
 | Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json`. Proposed, waiting for the user's decisions: `specs/distinctive-design.md` (apps that don't look AI-made) |
 | Check first | That Sport Conditions session: does it read `reference/design-method.md`, fill in "What's on screen", and run the design review? Problems there are fixed in the playbook, and released straight away if a script breaks |
@@ -45,8 +45,8 @@ On `main`, not yet released (`specs/efficient-sessions.md`,
 
 ## Next steps
 - **From the 2 Nov review (decisions.md), each its own playbook session, in
-  this order:** (a) prune the rules against Anthropic's best-practices page,
-  with three or four fixed test tasks run before and after; (b) adopt
+  this order:** (a) ~~prune the rules~~ done 2 Nov, on `main` for the
+  canary; release once it has had a session with it; (b) adopt
   AGENTS.md (design how the rules reach it, for people using other AI
   tools); (c) move situational rules into skills, synced like the subagents;
   (d) freeze the sync scripts and count, from projects' history, what each
