@@ -1,6 +1,6 @@
 # Off-the-shelf tools vs the playbook: what to keep, replace or borrow
 
-**Version 1.1 · 2 Nov 2026, 15:30 (UK time) · Status: proposed; waiting for the user's decisions**
+**Version 1.1 · 2 Nov 2026, 15:30 (UK time) · Status: decided by the user, 2 Nov 2026 (see `docs/decisions.md`)**
 
 Made with the playbook's [research-to-doc method](../reference/research-to-doc.md):
 brief, four research agents in parallel, a one-page outline, a fresh critic
@@ -55,7 +55,7 @@ reviews before it goes in. The named tools are explained where they appear.
 | **research-to-doc and document checks** | **Keep** | No standard for checking AI-written research was found. Google design docs [13] match its shape | None |
 | **Documents pipeline (repo master, team edits a Google Docs copy)** | **Review, in the project that uses it** | The usual way is to write where the reviewers are. The Mac now has Docs editing connectors, so the copy-and-read-back step may no longer be needed | Decide in that project |
 | **Format standards: Diátaxis [14] (sorts guides into tutorials, how-tos, reference and explanation), C4 (a way to draw a system), GOV.UK's words-to-avoid list [15], Vale [16] (a tool that checks writing against style rules)** | **Later, only if a problem shows** | Each is sound, but none fixes a problem you've had. Vale has no plain-English or GOV.UK package, so it needs a custom style [16] | None now |
-| **AGENTS.md** (a rules file other AI tools read) | **No** | Claude Code reads it only when there is no CLAUDE.md [17]; you use Claude only | None |
+| **AGENTS.md** (a rules file other AI tools read) | **Adopt** (the user, 2 Nov: the playbook will be used with other people and other AI tools) | Claude Code reads it only when there is no CLAUDE.md, but a CLAUDE.md can import it [17] | A playbook session: design how the rules reach AGENTS.md |
 | **Design method, styles, page check** | Not assessed | Out of scope of this note | None |
 
 ### The wider picture: standard ways of AI-supported work
@@ -172,5 +172,6 @@ method. The user works from a phone (cloud sessions) and a Mac.
 Making any of these changes; the design method, styles and page check.
 
 ## Change log
+- 1.2 (2 Nov 2026): the user's decisions: recommendations agreed; AGENTS.md adopted; Anthropic's page checked at every monthly review; client work gets the AI-use rule (drafted in the consulting project).
 - 1.1 (2 Nov 2026): after the reader check: words explained, decisions split and scoped.
 - 1.0 (2 Nov 2026): first version.

@@ -22,6 +22,8 @@ Ask (in one message, not a questionnaire drip):
   screen; everything else is one tap away or in Settings
   (`reference/design-method.md`).
 - Phone, computer or both? (Usually both: design phone-first.)
+- Is it for a client? Then it gets a written AI-use and client-data rule
+  before any client material goes in (`reference/document-projects.md`).
 - What data does it need, and from where? (Research free sources yourself;
   check usage limits, keys and whether browsers may fetch them: "CORS".)
 - 2–3 apps or sites the user likes the look and feel of, and one the user finds

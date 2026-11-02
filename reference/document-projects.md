@@ -32,10 +32,17 @@ decisions.md); these changes make it fit.
   SPEC.md or the paper until then.
 - **People who don't use GitHub review in Google Docs:**
   `reference/team-review.md`.
-- **Other people's data:** before anything from a client or partner goes
-  in the repo (documents, data extracts, meeting notes), agree a data rule
-  with them and record it. Until then, keep it out, even in a private repo.
-  Summaries of the user's own plans are fine.
+- **Client work gets a written AI-use and client-data rule** at kick-off:
+  `positions/ai-use-and-client-data.md`, in five parts: where client
+  material lives; which AI tools may read it (only ones whose terms rule out
+  training on it, that the contract allows and the client agreed); what the
+  client is told (a "How this was made" line and a paragraph in the
+  engagement terms); a log of which documents went into which tool; who
+  signs off each deliverable. Check which plan each AI tool is on: consumer
+  and business plans differ. Professional bodies now require this (for
+  example RICS, since March 2026). Until it is agreed, keep client material
+  out of AI tools and the repo, even a private one. Summaries of the user's
+  own plans are fine.
 - **AI meeting notes misspell names** (people, companies, products). Keep
   the correct spellings in CONTEXT.md and fix them when reading notes.
 
@@ -47,4 +54,5 @@ and say which wins when they conflict. Otherwise work for one quietly
 takes time from another.
 
 ## Change log
+- 1.1 (2 Nov 2026): client work gets a written AI-use and client-data rule.
 - 1.0 (30 Oct 2026): first version, from a consulting project.
