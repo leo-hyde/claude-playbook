@@ -11,12 +11,12 @@ decisions.md); these changes make it fit.
 ## What changes
 - **SPEC.md is the plan, not a software spec:** the goal, the stages and
   their gates, essentials versus extras, the risks. Say so at the top of
-  CLAUDE.md.
+  AGENTS.md.
 - **`docs/CONTEXT.md`: the facts, each with its source.** Deliverables,
   dates, people, hours, budgets, each with where it came from (document,
   page or section, or "the user, <date>"). Anything else is marked
   "assumption" or "to confirm". Check it before reading a big source again.
-- **A table of the source documents in CLAUDE.md,** each with its live link
+- **A table of the source documents in AGENTS.md,** each with its live link
   or file id, read with the connector when needed. Don't copy them into the
   repo; read only what the task needs.
 - **Two kinds of document, in two folders.**

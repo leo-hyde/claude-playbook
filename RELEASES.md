@@ -10,6 +10,12 @@ Each entry: a heading with the release tag (`## release-YYYY-MM-DD`, with
 last line naming any catch-up it brings (or "Catch-up: none").
 `scripts/release.sh` refuses to release without one for its tag.
 
+## release-2026-11-02
+The last release: from now on, playbook changes reach your projects at their next session, as soon as they're on the playbook's main.
+- Each project's rules move from CLAUDE.md to AGENTS.md, so other AI tools can follow them too; CLAUDE.md becomes one line that imports it.
+- Shorter shared rules, pruned against Anthropic's best-practices page; people's edits and notes to Claude listed at session start; a team-review guide (Google Docs), set-up for document projects, estimates from past work, retrospectives, the research-to-doc method.
+- Catch-up: 2026-11-02-agents-md.
+
 ## release-2026-10-28
 New screens are planned and checked for good design: Claude sorts each feature into main screen, one tap away or Settings before building, and new apps pick a look from a style library.
 - A design method (`reference/design-method.md`), a fuller UX checklist with the 10 usability heuristics, and a design review after new screens, with a page check for width, button size and accessibility (`tools/page-check.js`).

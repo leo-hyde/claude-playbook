@@ -18,7 +18,7 @@ app.
 |---|---|
 | `shared/` | **Copied into every project automatically.** The shared rules for Claude (`ai-dev-rules.md`), plus two small programs (scripts): one keeps sessions in step and checks nothing is lost, the other keeps each project's copy up to date |
 | `SKILL.md` | The playbook itself: first questions, planning documents, setting up, building, checking |
-| `templates/` | Starting points copied once into a new project: the plan (SPEC), the look (DESIGN), Claude's instructions (CLAUDE.md), the status page, the decisions log, a feature plan, a style sheet, a Cloudflare Worker (a small program that runs online) and a GitHub Action (a job GitHub runs for you) |
+| `templates/` | Starting points copied once into a new project: the plan (SPEC), the look (DESIGN), the AI's instructions (AGENTS.md, read by Claude through a one-line CLAUDE.md and by other AI tools directly), the status page, the decisions log, a feature plan, a style sheet, a Cloudflare Worker (a small program that runs online) and a GitHub Action (a job GitHub runs for you) |
 | `reference/` | Know-how Claude reads when it needs it: how to design a screen, a design checklist and review, matching a client's brand, GitHub and hosting steps, past mistakes and their fixes, working from phone and Mac, and making sure AI-built work is understood and safe |
 | `styles/` | **The style library**: a few looks a new app can choose from, and a gallery (`gallery.html`) showing each one on the same sample screen |
 | `owner/` | Everything specific to the playbook's owner: `profile.md` (accounts, devices, how they like to work; copied into every project as `.claude/rules/owner.md`) and `personal-CLAUDE.md` (notes for Claude that only apply on the owner's Mac, a copy of `~/.claude/CLAUDE.md`). Someone copying the playbook replaces this folder |
@@ -37,9 +37,9 @@ Each project then picks up the change by itself. When a Claude session opens
 in a project, a script there (`scripts/playbook-sync.sh`) copies the new
 rules in as `.claude/rules/playbook.md`, and saves that change in the project.
 
-Changes reach projects in tested batches called **releases**
-([RELEASES.md](RELEASES.md)): one project, the canary, tries each change
-first. It works the other way too. When a session in any project learns
+A change reaches every project at its next session, once the tests pass
+and it's on `main` (releases, tried first in one project, are switched off
+for now). It works the other way too. When a session in any project learns
 something that would help every project, the rules tell Claude to file it
 as an `idea` issue here, and a playbook session works through them in
 batches. How this works, and where it can fail:

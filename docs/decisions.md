@@ -11,6 +11,33 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 2 Nov 2026: No canary or releases for now; projects read the playbook's main
+**What:** every project syncs from the playbook's `main` (the default in
+`shared/playbook-sync.sh`); one last release (`release-2026-11-02`) moves
+projects still on `stable` over. The release machinery stays, unused: a
+project's `.claude/playbook-channel` reading `stable` still gets only releases.
+**Why:** the user: changes have worked so far, undo (a revert on `main`) is
+easy, and waiting for a canary session slowed work down and left changes
+unreleased. **Rejected:** deleting `scripts/release.sh` and the channel code
+(more change to frozen scripts, and harder to bring back). **Bring releases
+back if** a playbook change breaks projects, or the same fix has to be
+undone in several projects: change the default channel back to `stable`,
+give the canary a `.claude/playbook-channel` reading `main`, and follow the
+release steps in this repo's git history (AGENTS.md before 2 Nov). Replaces
+the canary/stable part of 27 Oct's releases decision.
+
+## 2 Nov 2026: AGENTS.md is each project's main rules file
+**What:** a project's own rules live in `AGENTS.md`; `CLAUDE.md` is one
+`@AGENTS.md` import (plus anything only for Claude Code). AGENTS.md tells
+other tools to read the synced `.claude/rules/playbook.md` and `owner.md`
+too. Templates changed; catch-up `2026-11-02-agents-md` moves existing
+projects; the playbook did the same. **Why:** the playbook will be used with
+other people and non-Claude AI tools, and Claude Code reads AGENTS.md only
+through an import. **Rejected:** a pointer AGENTS.md beside CLAUDE.md (two
+files to keep in step); copying the full rules into AGENTS.md through the
+sync (a change to frozen scripts, and 144 lines duplicated). **Weak spot:**
+other tools must open the two rules files they're pointed to.
+
 ## 2 Nov 2026: Rules pruned against Anthropic's best-practices page
 **What:** "Using tokens well" rewritten to match Anthropic's "What you can
 stop doing": no more "search, don't read whole files; cap output" or

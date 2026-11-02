@@ -11,9 +11,9 @@ PLAYBOOK_URL=${PLAYBOOK_URL:-https://github.com/leo-hyde/claude-playbook.git}   
 #      (a cloud session with the playbook attached): any clone, refreshed with fetch
 #   2. A small copy downloaded from GitHub into .session/playbook (not committed)
 # It always reads a branch of the playbook on GitHub, never a clone's unsaved edits:
-# `stable` (moved on by each release), or `main` for a canary project, whose
-# committed .claude/playbook-channel reads "main". If `stable` doesn't exist yet,
-# it reads `main` (the change-over from before releases).
+# `main`, unless the project's committed .claude/playbook-channel reads "stable"
+# (a release, kept for the day releases come back: docs/decisions.md, 2 Nov 2026).
+# If `stable` doesn't exist, it reads `main`.
 # If the playbook can't be reached, the copies already committed here are used.
 #
 # This file comes from the playbook (shared/playbook-sync.sh): edit it there.
@@ -44,9 +44,9 @@ GH=/opt/homebrew/bin/gh
 channel=$( [ -f .claude/playbook-channel ] && tr -d ' \t\r\n' <.claude/playbook-channel)
 case "$channel" in
   main|stable) ;;
-  "") channel=stable ;;
-  *) echo "SETUP: .claude/playbook-channel should read main or stable, not '$channel'. Using stable. Tell the user."
-     channel=stable ;;
+  "") channel=main ;;
+  *) echo "SETUP: .claude/playbook-channel should read main or stable, not '$channel'. Using main. Tell the user."
+     channel=main ;;
 esac
 # Explicit refspecs, so a single-branch clone still records origin/stable.
 fetch_branch() {  # dir branch [depth]
@@ -125,7 +125,7 @@ if [ -n "$changed" ]; then
       tag && NF { print tag ": " $0; exit }')
     [ -n "$note" ] && echo "Playbook: updated to $note"
   else
-    echo "Playbook: read from the playbook's main ($( [ "$channel" = main ] && echo "canary" || echo "no stable branch yet")), not a release."
+    [ "$channel" = stable ] && echo "Playbook: read from the playbook's main (no stable branch yet), not a release."
   fi
   case "$changed" in *.claude/rules/*)
     echo "Playbook: the shared rules changed; read .claude/rules/ again before starting." ;;

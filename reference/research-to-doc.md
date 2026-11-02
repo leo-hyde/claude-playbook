@@ -75,7 +75,7 @@ step 7 is often a spike, a throwaway test of the riskiest part.
    deciding are not "manual steps"; they are the point.
 2. **Corrections stick.** When the user corrects Claude, write the
    correction down in the same turn where later sessions will read it (a
-   project rule: `CLAUDE.md`; one document: its notes; a general lesson: a
+   project rule: `AGENTS.md`; one document: its notes; a general lesson: a
    playbook `idea` issue), and say where. Check each new version against
    those corrections before handing it over.
 3. **Offer to improve the method.** When a use of this method shows a

@@ -4,7 +4,7 @@
      Projects get a copy at .claude/rules/playbook.md, refreshed at every session start. Edit the playbook. -->
 
 Loaded in every session with `.claude/rules/owner.md` (who the user is: accounts,
-devices, how they work) and the project's CLAUDE.md, which wins where they differ.
+devices, how they work) and the project's AGENTS.md, which wins where they differ.
 
 ## Writing for people (every reply, report and doc a person reads)
 The user is not a developer: if they can't follow it, it hasn't been said.
@@ -47,7 +47,7 @@ The user is not a developer: if they can't follow it, it hasn't been said.
 ## Where things live (each fact in one place)
 | File | Holds | Changes |
 |---|---|---|
-| `CLAUDE.md` | Stable project rules: commands, conventions, gotchas. Under ~100 lines; nothing Claude can read from the code | Rarely |
+| `AGENTS.md` | Stable project rules, for any AI tool (`CLAUDE.md` only imports it): commands, conventions, gotchas. Under ~100 lines; nothing Claude can read from the code | Rarely |
 | `SPEC.md` | The plan, in one place: goal, users, scope, every step with its status, a link to each `specs/` file | Same commit as any change of plan, scope or step |
 | `specs/<feature>.md` | One feature: parts, out of scope, how to check it's done; "Progress" notes while it's built | Before building it |
 | `docs/STATUS.md` | Current state only: Handover block, where we are, next steps (pointing at SPEC's steps), open questions. Overwritten, not a diary | When a step lands on main |
@@ -58,7 +58,7 @@ The user is not a developer: if they can't follow it, it hasn't been said.
 Every session starts with no memory: the docs are how Claude and the user know
 the goal, scope, plan and why. A stale doc is worse than none.
 1. **Spec it** (`specs/<feature>.md` if bigger than a small step). Build it in a
-   fresh session that reads CLAUDE.md, STATUS.md and the spec; small working commits.
+   fresh session that reads AGENTS.md, STATUS.md and the spec; small working commits.
 2. **Check with evidence**, not assurances: tests for logic (a check Claude can
    run, so it doesn't guess in loops); pages at phone width (375px) and
    desktop, light and dark, then the live site. Not "works" until seen
@@ -97,7 +97,7 @@ session (the Mac shows a reminder).
   push (`git push origin HEAD:main`), say it landed. A small one-commit change
   can go straight to main. The session's own branch needn't then match main.
   Never force-push. A rejected push or conflict: stop and tell the user
-  (unless CLAUDE.md names an Action that pushes: then pull and carry on).
+  (unless AGENTS.md names an Action that pushes: then pull and carry on).
 - Mid-step notes go in the step's spec, not STATUS.md (parallel sessions
   would clash); STATUS.md is overwritten once, as the step lands.
 - **Another repo** ("Also attached"), or hooks didn't fire: run
@@ -130,7 +130,7 @@ Never trade correctness for tokens.
   twice (fresh session, better prompt); a vague request (a narrower one); no
   way to check the work (a test first). Don't repeat a declined tip.
 A starter prompt, in a code block, names the repo, the goal, what to read
-first (CLAUDE.md, docs/STATUS.md), what's out of scope, how to check it's done,
+first (AGENTS.md, docs/STATUS.md), what's out of scope, how to check it's done,
 and the model. Detail: playbook `reference/efficient-sessions.md`.
 
 ## Ideas for the playbook
@@ -140,4 +140,5 @@ and the model. Detail: playbook `reference/efficient-sessions.md`.
 - **Research to a document** (a question into a spec, decision note, report):
   follow the playbook's `reference/research-to-doc.md` (on its `main` branch)
   and, at the end, update it there with what the job taught (general terms).
-- **A playbook script breaks a session?** Stop, tell the user, offer a fix. Project lessons: CLAUDE.md.
+- **A playbook script breaks a session?** Stop, tell the user, offer a fix. Project lessons: AGENTS.md.
+  Playbook changes breaking projects more than once? Suggest bringing back its releases.

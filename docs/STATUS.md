@@ -6,18 +6,18 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Mac, 2 Nov 2026: merged the off-the-shelf review into `main`; pruned the rules against Anthropic's best-practices page (150 → 143 lines), checked with four fixed test tasks before and after (`tests/rule-tasks.md`, results there); idea issue #12 (a hook for the public-repo secret check) |
-| Ended cleanly? | Yes, on `main` |
-| Mid-flight work | None. On `main`, not released: people's edits and notes to Claude at session start, `reference/team-review.md`, `reference/document-projects.md`, a retrospective guide, and estimates in the facts rule. **`release-2026-10-28` released 28 Oct** (the user's yes, before a canary session: the user chose to skip that wait). Its tag isn't on GitHub yet: cloud sessions can't push tags. On the Mac: `git fetch origin stable && git tag release-2026-10-28 140aac4 && git push origin release-2026-10-28`. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
+| Last session | Mac, 2 Nov 2026: merged the off-the-shelf review; pruned the rules against Anthropic's best-practices page, checked with four fixed test tasks (`tests/rule-tasks.md`); AGENTS.md is now each project's main rules file (templates, catch-up `2026-11-02-agents-md`, this repo too); canary and releases switched off, projects read `main` (decisions.md, 2 Nov); idea issue #12 |
+| Ended cleanly? | Yes, on `main`. **One last release is needed** (`release-2026-11-02`, note written) so projects still on `stable` get the sync script that reads `main`: `scripts/release.sh --check`, then `--yes` after the user's yes |
+| Mid-flight work | The final release above. `release-2026-10-28`'s tag isn't on GitHub yet: on the Mac, `git fetch origin stable && git tag release-2026-10-28 140aac4 && git push origin release-2026-10-28`. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
 | Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json`. Proposed, waiting for the user's decisions: `specs/distinctive-design.md` (apps that don't look AI-made) |
-| Check first | That Sport Conditions session: does it read `reference/design-method.md`, fill in "What's on screen", and run the design review? Problems there are fixed in the playbook, and released straight away if a script breaks |
+| Check first | Each project's next session: it applies catch-up `2026-11-02-agents-md` (CLAUDE.md becomes `@AGENTS.md`) and its rules still load. If a playbook change breaks projects, recommend bringing releases back (AGENTS.md) |
 
 ## Where we are
 The shared folder (the rules, the session script and the sync) is copied into
 every project when a session opens: Sport Conditions, a private project, AEC
 Tech Radar and its helper repo. Projects get changes only when the user
-releases them; Sport Conditions (the canary) gets them first, from `main`.
-Kept tests (107 cases) run on Linux and macOS on every push.
+pushes them to `main` (no releases since 2 Nov 2026).
+Kept tests (114 cases) run on Linux and macOS on every push.
 
 Released in `release-2026-10-28` (`specs/design-and-styles.md`):
 - a UX method (`reference/design-method.md`), a rewritten checklist with the
@@ -45,13 +45,10 @@ On `main`, not yet released (`specs/efficient-sessions.md`,
 
 ## Next steps
 - **From the 2 Nov review (decisions.md), each its own playbook session, in
-  this order:** (a) ~~prune the rules~~ done 2 Nov, on `main` for the
-  canary; release once it has had a session with it; (b) adopt
-  AGENTS.md (design how the rules reach it, for people using other AI
-  tools); (c) move situational rules into skills, synced like the subagents;
+  this order:** (a) ~~prune the rules~~ done 2 Nov; (b) ~~adopt AGENTS.md~~ done 2 Nov (AGENTS.md is the main file); (c) move situational rules into skills, synced like the subagents;
   (d) freeze the sync scripts and count, from projects' history, what each
   check has caught before cutting anything.
-0. Release the 30 Oct additions once the canary has had a session with them (session start's new edits check is the one script change). After that release, the consulting project that first had the edits check can drop its own `scripts/doc-edits.sh` and hook, or it will print twice.
+0. The final release (`release-2026-11-02`, see Handover) carries the 30 Oct additions too. After it, the consulting project that first had the edits check can drop its own `scripts/doc-edits.sh` and hook, or it will print twice.
 1. Sport Conditions issue #13, then playbook issue #9 (see Handover). Push
    the `release-2026-10-28` tag from the Mac. Delete the merged
    `second-release` branch.

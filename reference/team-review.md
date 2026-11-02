@@ -32,7 +32,7 @@ to read, comment on or change a document that lives in the repo.
    line near the top; add pictures (Detail).
 3. **Name it by a fixed rule:** "<Document> v<version> (for <reviewer>'s
    review)". Record the new Doc's id where the project lists its files
-   (usually CLAUDE.md), and mark the older copy superseded.
+   (usually AGENTS.md), and mark the older copy superseded.
 4. **Reviewers comment, or edit with Suggesting mode on,** so each change
    stays separate and named.
 5. **Read the comments and suggestions,** work them into the Markdown, log

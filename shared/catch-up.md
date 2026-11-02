@@ -84,3 +84,20 @@ Claude reads the entry here when applying it, so the title must say what it is.
 - Don't restyle the app or rework its screens. Offer it to the user as a
   separate job ("the playbook now has a style library and a design review").
 - Check: `grep -n design-method DESIGN.md` finds the line.
+
+## 2026-11-02-agents-md: The project's rules move from CLAUDE.md to AGENTS.md
+- `git mv CLAUDE.md AGENTS.md`. At its top, in place of any "Claude reads
+  this file..." paragraph, put the opening of the playbook's
+  `templates/AGENTS.md` (up to "What we're building"): it says every AI tool
+  reads the file, and to read `.claude/rules/playbook.md` and
+  `.claude/rules/owner.md` too. Keep the rest of the project's rules as they
+  are; in them, change "Claude" to "the assistant" only where the rule is
+  for any tool.
+- Create `CLAUDE.md` as a copy of the playbook's `templates/CLAUDE.md` (one
+  `@AGENTS.md` line and a comment). If the old file had Claude-only lines
+  (Claude Code commands, subagents, hooks), move them below the import.
+- Change links and mentions of the project's `CLAUDE.md` to `AGENTS.md` in
+  the project's own docs (README, SPEC.md, specs/, docs/ARCHITECTURE.md),
+  not in history (decisions.md entries, git log).
+- Check: `head -1 CLAUDE.md` prints `@AGENTS.md`; `/memory` in Claude Code,
+  or a fresh session's first answer, shows the project rules loaded.

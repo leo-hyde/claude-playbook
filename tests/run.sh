@@ -123,12 +123,12 @@ check "shared/ doesn't name the owner" [ -z "$out" ]
 section "Sync: which playbook branch"
 p=$(make_project stable-default)
 sync "$p" "$T/pb"
-check "no channel file: reads stable" rules_from_stable "$p"
+check "no channel file: reads main" rules_from_main "$p"
 check "copies the owner file to .claude/rules/owner.md" cmp -s "$p/.claude/rules/owner.md" "$ROOT/owner/profile.md"
 check "copies the scout and checker subagents" cmp -s "$p/.claude/agents/checker.md" "$ROOT/templates/.claude/agents/checker.md"
 check "the subagents are committed" git -C "$p" ls-files --error-unmatch .claude/agents/scout.md
 check "says new subagents load from the next session" has "$out" "subagents (.claude/agents/) changed"
-check "prints the newest release note" has "$out" "Playbook: updated to release-2026-01-01: The first line of the note."
+check "main: no release note" hasnt "$out" "Playbook: updated to release"
 check "commits the update" clean "$p"
 sync "$p" "$T/pb"
 check "second run: up to date, no note" has "$out" "shared rules are up to date"
@@ -136,23 +136,23 @@ check "second run: up to date, no note" has "$out" "shared rules are up to date"
 p=$(make_project canary main)
 sync "$p" "$T/pb"
 check "channel main (canary): reads main" rules_from_main "$p"
-check "says it's the canary" has "$out" "(canary), not a release"
 
 p=$(make_project explicit-stable stable)
 sync "$p" "$T/pb"
 check "channel stable: reads stable" rules_from_stable "$p"
+check "stable: prints the newest release note" has "$out" "Playbook: updated to release-2026-01-01: The first line of the note."
 
 p=$(make_project bad-channel nightly)
 sync "$p" "$T/pb"
 check "unknown channel: says so" has "$out" "SETUP: .claude/playbook-channel should read main or stable, not 'nightly'"
-check "unknown channel: reads stable" rules_from_stable "$p"
+check "unknown channel: reads main" rules_from_main "$p"
 
-p=$(make_project no-stable)
+p=$(make_project no-stable stable)
 sync "$p" "$T/pbnew"
 check "no stable branch yet: falls back to main" rules_from_main "$p"
 check "says there's no stable yet" has "$out" "no stable branch yet"
 
-p=$(make_project download)
+p=$(make_project download stable)
 out=$(cd "$p" && PLAYBOOK_URL="file://$T/pb.git" bash scripts/playbook-sync.sh 2>&1)
 check "no clone nearby: downloads a copy and reads stable" rules_from_stable "$p"
 check "the downloaded copy is kept out of git" clean "$p"
@@ -179,10 +179,10 @@ p=$(make_project old-after)
 cp "$ROOT/tests/fixtures/old-playbook-sync.sh" "$p/scripts/playbook-sync.sh"
 git -C "$p" commit -q -am "old sync script"
 sync "$p" "$T/pb"
-check "old script, after the first release: updates itself, then reads stable" rules_from_stable "$p"
+check "old script, after the first release: updates itself, then reads main" rules_from_main "$p"
 check "old script replaced by the new one" cmp -s "$p/scripts/playbook-sync.sh" "$ROOT/shared/playbook-sync.sh"
 sync "$p" "$T/pb"
-check "next session: stays on stable" rules_from_stable "$p"
+check "next session: stays on main" rules_from_main "$p"
 
 p=$(make_project self-update)
 printf '# an older copy\n' >>"$p/scripts/playbook-sync.sh" && git -C "$p" commit -q -am "older sync script"
@@ -213,7 +213,7 @@ sync "$p" "$T/pb"
 check "catch-up not recorded: CATCH-UP DUE" has "$out" "CATCH-UP DUE"
 check "prints one line for it: id and title" has "$out" "  2026-01-01-first: The first catch-up"
 check "doesn't print the entry itself" hasnt "$out" "Do the first thing."
-check "says where to read the entry" has "$out" "show origin/stable:shared/catch-up.md"
+check "says where to read the entry" has "$out" "show origin/main:shared/catch-up.md"
 
 # ---------- Sync: a fork of the playbook ----------
 section "Sync: a fork (its own owner/ and PLAYBOOK_URL)"

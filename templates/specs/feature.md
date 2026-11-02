@@ -1,7 +1,7 @@
 # <Feature name>
 
 Written before building. The build happens in a **fresh session** that reads
-CLAUDE.md, docs/STATUS.md and this file. Copy to `specs/<feature-name>.md`.
+AGENTS.md, docs/STATUS.md and this file. Copy to `specs/<feature-name>.md`.
 
 ## Goal
 <One or two sentences: what the user will be able to do, and why it matters.>

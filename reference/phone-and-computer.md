@@ -74,14 +74,14 @@ which fetches the playbook's latest `main` and commits any changes as
    local Claude files and the session's scratch files aren't.
    From then on, every session start checks these against the playbook's
    `shared/setup.txt` and adds any missing hook or line itself.
-4. Trim the project's CLAUDE.md to project-only rules (`templates/CLAUDE.md`):
+4. Trim the project's AGENTS.md to project-only rules (`templates/AGENTS.md`):
    the generic ones now come from `.claude/rules/playbook.md`.
 5. Commit and push to main.
 
 **Helper repos** (a data store, saved sources, a tool, often written mostly
 by a GitHub Action) get the same set-up, just smaller: every repo of the user's
 follows the playbook, so a session there knows the rules. Skip SPEC, DESIGN
-and ARCHITECTURE unless it needs them. CLAUDE.md says in a few lines what the
+and ARCHITECTURE unless it needs them. AGENTS.md says in a few lines what the
 repo is, which project it serves, and what must never happen (for example
 "private: never copy this into the public repo"). STATUS.md can be short.
 Commits by Action bots (`…[bot]@…` authors) don't count as unrecorded work,
@@ -95,7 +95,7 @@ changing it, so it pulls and syncs the playbook.
 
 - **Cloud sessions can't see the Mac's `~/.claude`, and don't load plugins**
   (Claude Code docs, Oct 2026). Anything Claude must know on the phone goes in
-  the project's repo: its CLAUDE.md, or the synced `.claude/rules/playbook.md`.
+  the project's repo: its AGENTS.md, or the synced `.claude/rules/playbook.md`.
 - **The playbook repo is public** so any cloud session can sync from it.
   Keep private details out of it (see "Keeping the playbook current" in
   `shared/ai-dev-rules.md`).

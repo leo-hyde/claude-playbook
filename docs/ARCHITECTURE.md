@@ -16,13 +16,12 @@ flowchart LR
     Sync -->|"copies + commits<br/>'Playbook: update…'"| Rules[".claude/rules/playbook.md<br/>scripts/*.sh"]
     Rules -->|"loaded by Claude Code<br/>every session"| Claude["Claude"]
   end
-  PB -->|"git fetch of stable<br/>(main for the canary)"| Sync
+  PB -->|"git fetch of main"| Sync
   Claude -.->|"general lesson learned:<br/>edit shared/, push"| PB
 ```
 
 In words: the playbook on GitHub holds the rules and two scripts. When a
-session opens in a project, the project fetches the latest release of the
-playbook, copies in anything that changed, and Claude reads the rules. When Claude learns
+session opens in a project, the project fetches the playbook's `main`, copies in anything that changed, and Claude reads the rules. When Claude learns
 something useful for every project, it adds it back to the playbook.
 
 ## Words used on this page
@@ -51,8 +50,7 @@ something useful for every project, it adds it back to the playbook.
    to the project (a cloud session with the playbook attached); or a fresh
    download of just the latest version into `.session/playbook` (which git
    ignores). Whichever it uses, it always reads a branch of the playbook on
-   GitHub, never unsaved edits in a clone: `stable`, or `main` for the
-   canary (see "Releases" below).
+   GitHub, never unsaved edits in a clone: `main` (see "Releases" below).
 3. **It copies in what changed.** For each shared file, it compares the
    playbook's version with the project's copy. If they differ, it replaces
    the copy and commits just those files as "Playbook: update shared files
@@ -103,26 +101,20 @@ something useful for every project, it adds it back to the playbook.
    docs true" in `shared/ai-dev-rules.md`.
 
 ## Releases: how a change reaches the projects
-Work lands on the playbook's `main`. Projects don't read `main`: they read
-`stable`, a second branch that only moves forward when the user agrees to a
-**release**. `scripts/release.sh` makes one: it runs the tests, checks that
-`RELEASES.md` has a note for it, asks the user, then moves `stable` to `main`
-and tags it `release-YYYY-MM-DD`. When a project updates, session start
-prints the note's first line. Projects don't use the tag; it only marks the
-release. Cloud sessions can't push tags, so from there the script says how
-to add it on the Mac.
+Since 2 Nov 2026, every project reads the playbook's `main`: a change pushed
+there reaches each project at its next session. To undo one, revert the
+commit on `main` and push; never force-push.
 
-One project, the **canary** (Sport Conditions), reads `main` instead, so it
-tries every change in real use before the others get it. It says so in a
-one-word file, `.claude/playbook-channel` (`main` or `stable`; no file means
-`stable`). Projects ignore `.claude/*` in git, so that file is added with
-`git add -f`.
-
-If `stable` doesn't exist (before the first release), the sync reads `main`.
-A project with a sync script from before releases reads `main`, copies in
-the new script, and runs it straight away, which then reads `stable`. To undo
-a bad release: revert the commit on `main` and release again. `stable` is
-never rewound.
+**Releases are switched off, not removed** (`docs/decisions.md`, 2 Nov 2026).
+A project whose one-word `.claude/playbook-channel` file reads `stable`
+reads the `stable` branch instead, which moves only when
+`scripts/release.sh` makes a release (tests, a `RELEASES.md` note, the user's
+yes, then `stable` moved to `main` and tagged). Before 2 Nov that was every
+project's default, with one canary project (Sport Conditions) on `main`.
+No file, or `main`, means `main`; if `stable` doesn't exist, the sync reads
+`main`. Projects ignore `.claude/*` in git, so that file is added with
+`git add -f`. To bring releases back for everyone: change the default in
+`shared/playbook-sync.sh` to `stable`, the canary keeps a file reading `main`.
 
 The tests (`tests/run.sh`) build throwaway playbooks and projects in a
 temporary folder and run the real scripts against them. A GitHub Action
@@ -145,7 +137,7 @@ macOS with Apple's bash 3.2.
 | `RELEASES.md` | not copied (the sync reads it) | One note per release, newest first. Session start prints the newest note's first line when a project updates |
 | `scripts/release.sh` | not copied | Makes a release: tests, note, the user's yes, then `stable` moved to `main` and tagged |
 | `tests/run.sh` | not copied | The kept tests, run by the GitHub Action on Linux and macOS |
-| (none) | `.claude/playbook-channel` | Only in the canary: reads `main`, so it syncs from `main` |
+| (none) | `.claude/playbook-channel` | Optional: `stable` pins a project to releases (switched off since 2 Nov 2026); no file or `main` reads `main` |
 | `owner/profile.md` | `.claude/rules/owner.md` | The owner's accounts, devices and preferences, kept apart so others can copy the playbook (a fork replaces `owner/` and `PLAYBOOK_URL` in `shared/playbook-sync.sh`) |
 | `templates/.claude/agents/*.md` | `.claude/agents/*.md` | The `scout` (cheap model: searching, boiling down data) and `checker` (mid model: checking a step against its spec) subagents |
 
@@ -264,10 +256,11 @@ detail in `docs/decisions.md`.
   Mac session's uncommitted changes. It shows only branches with commits.
   Two sessions can still edit the same file; git then flags a conflict when
   the second one merges, and Claude stops and tells the user.
-- **A broken `shared/session.sh` would spread to every project at the next
-  release.** The tests and the canary are there to catch it first. They only
-  catch what they test, and the canary only what its sessions use.
-- **If fetching `stable` fails but `main` worked,** the sync uses the last
+- **A broken `shared/session.sh` would spread to every project at its next
+  session.** Only the tests stand in the way now (no canary): they catch
+  only what they test. If that ever bites, bring releases back (above).
+- **If fetching `stable` fails but `main` worked** (a project pinned to
+  releases), the sync uses the last
   `stable` it fetched (an older release, which is safe).
 - **Claude Code may read `.claude/rules/` before the hook runs**, so a session
   can start on the previous rules. The sync's message asks Claude to read

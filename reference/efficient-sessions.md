@@ -5,7 +5,7 @@ Read on demand. The every-session version is "Using tokens well" in
 monthly review. Why it exists: `specs/efficient-sessions.md`.
 
 ## How cost works
-- **Every request re-sends the whole context**: the rules, CLAUDE.md, the
+- **Every request re-sends the whole context**: the rules, AGENTS.md, the
   conversation so far, and every file read and command output still in it.
   Each tool call is a request, so one reply can be many requests.
 - **Cost is roughly context size × number of requests.** A session whose
@@ -70,7 +70,7 @@ The rules rarely do, as they hold no numbers.
   carry on through an agreed task, and such lines cause over-work.
 - **Short replies for small changes.** A reply is re-read on every later
   message; the five-part summary is for finished steps.
-- **Keep CLAUDE.md lean** (under about 100 lines): for each line, "would
+- **Keep AGENTS.md lean** (under about 100 lines): for each line, "would
   removing this cause a mistake?"
 - **A second opinion is cheap**: the `checker` subagent (a mid model, read
   only) before the walkthrough, or `/code-review` in a fresh session.
@@ -97,7 +97,7 @@ The rules rarely do, as they hold no numbers.
 - A new session is the reset: there's no `/clear` in the same way. Pick the
   model when starting it.
 - Cloud sessions have no `~/.claude`: everything they need is in the repo
-  (`.claude/rules/`, `.claude/agents/`, CLAUDE.md).
+  (`.claude/rules/`, `.claude/agents/`, AGENTS.md).
 
 ## A retrospective after a long piece of work
 When something took more than about three rounds of the user's feedback, or

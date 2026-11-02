@@ -113,8 +113,8 @@ If unsure whether a repo is public, check its page on GitHub signed out.
 - **Remote Control** (Claude desktop app): drive this Mac's session from the
   Claude app on the phone; the Mac must be on and awake.
 - **Cloud sessions** (claude.ai/code, with GitHub connected): work on the repo
-  with the Mac off. They read the project's CLAUDE.md but not this Mac's
-  `~/.claude`, so key rules must be in the project's CLAUDE.md.
+  with the Mac off. They read the project's AGENTS.md but not this Mac's
+  `~/.claude`, so key rules must be in the project's AGENTS.md.
 - Either way: push after every step, `git pull` before starting.
 
 ## Useful free services we've used

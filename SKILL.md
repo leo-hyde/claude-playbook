@@ -1,6 +1,6 @@
 ---
 name: new-app
-description: A playbook for starting and building a new app or website with Claude - kick-off questions, SPEC/DESIGN/CLAUDE.md templates, GitHub + GitHub Pages + Cloudflare Worker setup, the UX/design checklist, and hard-won gotchas. Use when the user starts a new app or project, asks how to set one up, wants a design/UX review of a web app, or types /new-app.
+description: A playbook for starting and building a new app or website with Claude - kick-off questions, SPEC/DESIGN/AGENTS.md templates, GitHub + GitHub Pages + Cloudflare Worker setup, the UX/design checklist, and hard-won gotchas. Use when the user starts a new app or project, asks how to set one up, wants a design/UX review of a web app, or types /new-app.
 ---
 
 # New app playbook
@@ -52,9 +52,10 @@ Copy and fill in the templates in `templates/`:
   designing a screen, read `reference/design-method.md`. For anything
   visual, offer 2–3 quick mockups in that style (shown inline) and let the
   user pick or mix.
-- **CLAUDE.md**: project-only rules, short. The general rules arrive by
-  themselves as `.claude/rules/playbook.md` (set-up step 5), which cloud sessions
-  see too; don't copy them in.
+- **AGENTS.md**: project-only rules, short, read by any AI tool; copy
+  `templates/CLAUDE.md` as it is (one line that imports AGENTS.md). The
+  general rules arrive by themselves as `.claude/rules/playbook.md` (set-up
+  step 5), which cloud sessions see too; don't copy them in.
 - **docs/decisions.md**: one entry per decision (`templates/decisions.md`).
 - **docs/ARCHITECTURE.md** (once there's code): the parts, the data flow,
   outside services, safety, weak spots. See `reference/understanding-and-quality.md`
@@ -109,7 +110,7 @@ Then push, wait for the live site to update, and check it there too.
 | `owner/profile.md`, `owner/personal-CLAUDE.md` | The owner's details (synced into each project as `.claude/rules/owner.md`); a copy of `~/.claude/CLAUDE.md` |
 | `templates/.claude/agents/` | The `scout` and `checker` subagents, synced into each project |
 | `reference/efficient-sessions.md` | How cost works, the habits, the dated assumptions, the monthly review |
-| `templates/SPEC.md`, `DESIGN.md`, `CLAUDE.md`, `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |
+| `templates/SPEC.md`, `DESIGN.md`, `AGENTS.md` (+ the `CLAUDE.md` that imports it), `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |
 | `templates/style.css` | Design tokens (light/dark), buttons, cards, dialogs, phone layout |
 | `templates/worker.js` | Cloudflare Worker skeleton: CORS, caching, a secret key, KV sync |
 | `templates/site-check.yml` | GitHub Action pattern: check + rebuild data on every change |

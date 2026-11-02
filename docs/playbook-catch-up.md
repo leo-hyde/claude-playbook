@@ -23,3 +23,6 @@ catch-up.
   mentions left outside history.
 - 2026-10-27-design-method: checked 27 Oct 2026. Nothing to change: the
   playbook has no DESIGN.md of its own (its design files are templates).
+- 2026-11-02-agents-md: done 2 Nov 2026. The playbook's rules for itself
+  moved to `AGENTS.md`; `CLAUDE.md` imports it, the shared rules and the
+  owner profile.
