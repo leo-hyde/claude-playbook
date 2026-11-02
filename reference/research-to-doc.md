@@ -117,6 +117,20 @@ Checks: critic + reader [+ fact-checker] [+ method checker] [+ phasing]
 Out of scope:
 ```
 
+### When research comes back thin
+- **Go to the people in between.** When the organisations themselves don't
+  publish what you need (prices, pay, terms), the intermediaries often do:
+  recruiters, brokers, agents, resellers, trade press. Their adverts, guides
+  and posts filled the gaps where the first round found almost nothing.
+- **Ask the user for their own data points early.** Real figures they hold
+  (quotes, offers, past projects) are better evidence than most web sources,
+  and they calibrate the rest.
+- **Size the answer to the cases the reader actually meets.** Count them in
+  the project's own data before building a big grid of categories; leave the
+  cells with no evidence empty rather than guessing.
+- **Grade confidence per item**, with a stated rule (how many independent
+  sources agree), not one label for the whole document.
+
 ### Prompts for the fresh checkers
 Run each as a subagent that has not seen the drafting conversation.
 - **Critic (step 4):** "Here is a brief and a one-page outline. Is this the
@@ -178,6 +192,7 @@ Packaging this as its own skill (`/research-to-doc`) until it has been
 tested on at least one real deliverable.
 
 ## Change log
+- 1.3 (2 Nov 2026): from a third use: what to do when research comes back thin (intermediaries, the user's own figures, size to real cases, confidence per item).
 - 1.2 (30 Oct 2026): from a second use: write short, add a picture where it helps, offer to feed lessons back into this method.
 - 1.1 (30 Oct 2026): every use updates this file.
 - 1.0 (30 Oct 2026): made general from a project-specific version 0.3;
