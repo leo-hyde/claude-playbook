@@ -7,8 +7,8 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 | | |
 |---|---|
 | Last session | Mac, 2 Nov 2026: merged the off-the-shelf review; pruned the rules against Anthropic's best-practices page, checked with four fixed test tasks (`tests/rule-tasks.md`); AGENTS.md is now each project's main rules file (templates, catch-up `2026-11-02-agents-md`, this repo too); canary and releases switched off, projects read `main` (decisions.md, 2 Nov); idea issue #12 |
-| Ended cleanly? | Yes, on `main`. **One last release is needed** (`release-2026-11-02`, note written) so projects still on `stable` get the sync script that reads `main`: `scripts/release.sh --check`, then `--yes` after the user's yes |
-| Mid-flight work | The final release above. `release-2026-10-28`'s tag isn't on GitHub yet: on the Mac, `git fetch origin stable && git tag release-2026-10-28 140aac4 && git push origin release-2026-10-28`. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
+| Ended cleanly? | Yes, on `main`. **`release-2026-11-02` released 2 Nov** (the user's yes): the last release; every project now moves to reading `main`. Tags `release-2026-10-28` and `release-2026-11-02` are on GitHub |
+| Mid-flight work | None. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
 | Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json`. Proposed, waiting for the user's decisions: `specs/distinctive-design.md` (apps that don't look AI-made) |
 | Check first | Each project's next session: it applies catch-up `2026-11-02-agents-md` (CLAUDE.md becomes `@AGENTS.md`) and its rules still load. If a playbook change breaks projects, recommend bringing releases back (AGENTS.md) |
 
@@ -48,9 +48,8 @@ On `main`, not yet released (`specs/efficient-sessions.md`,
   this order:** (a) ~~prune the rules~~ done 2 Nov; (b) ~~adopt AGENTS.md~~ done 2 Nov (AGENTS.md is the main file); (c) move situational rules into skills, synced like the subagents;
   (d) freeze the sync scripts and count, from projects' history, what each
   check has caught before cutting anything.
-0. The final release (`release-2026-11-02`, see Handover) carries the 30 Oct additions too. After it, the consulting project that first had the edits check can drop its own `scripts/doc-edits.sh` and hook, or it will print twice.
-1. Sport Conditions issue #13, then playbook issue #9 (see Handover). Push
-   the `release-2026-10-28` tag from the Mac. Delete the merged
+0. Released 2 Nov with the 30 Oct additions. Now the consulting project that first had the edits check can drop its own `scripts/doc-edits.sh` and hook, or it will print twice.
+1. Sport Conditions issue #13, then playbook issue #9 (see Handover). Delete the merged
    `second-release` branch.
 2. Test in a cloud session that project subagents (`.claude/agents/`) load
    there. If not, stop syncing them (`FILES` in `shared/playbook-sync.sh`).
