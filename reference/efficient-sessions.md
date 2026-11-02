@@ -128,6 +128,10 @@ Once a month, in a fresh session on a cheap model, in the playbook repo.
    review (27 Oct 2026 baseline: two long sessions used 64% of a week;
    playbook sessions about 13%).
 4. **Check the assumptions table** against the docs; update dates.
+   **Read Anthropic's best-practices page**
+   (https://code.claude.com/docs/en/best-practices), above all "What you can
+   stop doing": anything the rules still ask for that it now calls
+   unnecessary, or new advice they lack, becomes an `idea` issue.
 5. **Output**: up to three ideas, filed as `idea` issues on the playbook
    repo, and a one-paragraph note to the user. No other changes in that
    session.

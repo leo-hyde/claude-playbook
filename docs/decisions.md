@@ -11,6 +11,26 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 2 Nov 2026: Keep the playbook; borrow standards, don't install frameworks
+The user decided, from `docs/off-the-shelf-review.md` (a comparison with
+off-the-shelf tools, sources checked 2 Nov).
+- **Agreed as recommended:** prune the rules against Anthropic's
+  best-practices page, with fixed test tasks before and after; then move
+  situational rules into skills; freeze the sync scripts and measure what
+  each check caught before cutting; review the Google Docs pipeline in the
+  project that uses it; don't install Spec Kit, BMAD, Kiro, Superpowers,
+  Copier or the `@claude` GitHub workflow; Vale later.
+- **AGENTS.md: adopt** (reverses the note's "no"). **Why:** the playbook will
+  be used with other people and non-Claude AI tools.
+- **Anthropic's best-practices page is checked at every monthly review**
+  (`reference/efficient-sessions.md`). **Why:** Anthropic updates it, and it
+  already retired some of the rules' token-saving habits.
+- **Client work gets a written AI-use and client-data rule** at kick-off
+  (`reference/document-projects.md`, SKILL.md). **Why:** professional bodies
+  now require one, and client contracts decide which tools may be used.
+- **Rejected:** replacing the sync with plugins (cloud sessions don't
+  install a project's plugins) or Copier (needs Python 3.10+, run by hand).
+
 ## 30 Oct 2026: Six habits from a document-heavy project, on main
 The user asked which ways of working from a recent consulting project
 (mostly research, position papers and team reviews in Google Docs) would help

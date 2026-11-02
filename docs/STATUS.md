@@ -6,8 +6,8 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Mac, 30 Oct 2026 (six habits from a document-heavy project added; see decisions.md, 30 Oct) |
-| Ended cleanly? | Yes, all pushed to `main` |
+| Last session | Cloud, 2 Nov 2026: compared the playbook with off-the-shelf tools (`docs/off-the-shelf-review.md`); the user's decisions in decisions.md, 2 Nov. Anthropic's best-practices page joins the monthly review; client work gets an AI-use and client-data rule (`reference/document-projects.md`, SKILL.md) |
+| Ended cleanly? | Yes, pushed to branch `ccr-b7e4f51b-b1xdei`; merge to `main` when the user agrees |
 | Mid-flight work | None. On `main`, not released: people's edits and notes to Claude at session start, `reference/team-review.md`, `reference/document-projects.md`, a retrospective guide, and estimates in the facts rule. **`release-2026-10-28` released 28 Oct** (the user's yes, before a canary session: the user chose to skip that wait). Its tag isn't on GitHub yet: cloud sessions can't push tags. On the Mac: `git fetch origin stable && git tag release-2026-10-28 140aac4 && git push origin release-2026-10-28`. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
 | Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json`. Proposed, waiting for the user's decisions: `specs/distinctive-design.md` (apps that don't look AI-made) |
 | Check first | That Sport Conditions session: does it read `reference/design-method.md`, fill in "What's on screen", and run the design review? Problems there are fixed in the playbook, and released straight away if a script breaks |
@@ -44,6 +44,13 @@ On `main`, not yet released (`specs/efficient-sessions.md`,
   MIT licence.
 
 ## Next steps
+- **From the 2 Nov review (decisions.md), each its own playbook session, in
+  this order:** (a) prune the rules against Anthropic's best-practices page,
+  with three or four fixed test tasks run before and after; (b) adopt
+  AGENTS.md (design how the rules reach it, for people using other AI
+  tools); (c) move situational rules into skills, synced like the subagents;
+  (d) freeze the sync scripts and count, from projects' history, what each
+  check has caught before cutting anything.
 0. Release the 30 Oct additions once the canary has had a session with them (session start's new edits check is the one script change). After that release, the consulting project that first had the edits check can drop its own `scripts/doc-edits.sh` and hook, or it will print twice.
 1. Sport Conditions issue #13, then playbook issue #9 (see Handover). Push
    the `release-2026-10-28` tag from the Mac. Delete the merged
