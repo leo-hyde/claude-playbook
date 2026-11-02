@@ -1,11 +1,22 @@
 # Off-the-shelf tools vs the playbook: what to keep, replace or borrow
 
-**Version 1.0 · 2 Nov 2026, 15:00 (UK time) · Status: proposed; waiting for the user's decisions**
+**Version 1.1 · 2 Nov 2026, 15:30 (UK time) · Status: proposed; waiting for the user's decisions**
 
 Made with the playbook's [research-to-doc method](../reference/research-to-doc.md):
 brief, four research agents in parallel, a one-page outline, a fresh critic
 (it changed five verdicts), a fact-checker on 14 claims, and a reader check.
 All web sources were checked on 2 Nov 2026.
+
+**Words used here.** A **rules file** is text Claude reads at the start of
+every session. A **hook** runs a script automatically at a set moment. A
+**subagent** is a second Claude that does one job and reports back. A
+**skill** is a set of instructions Claude loads only when a task needs it. A
+**plugin** is an add-on package of skills and hooks. **MCP connectors** let
+Claude reach outside services such as Google Drive. **Canary/stable**: one
+project gets playbook changes first (the canary), the rest only after a
+release (stable). A **catch-up** is a one-off change every project applies to
+its existing files. A **pull request** is a proposed change that a person
+reviews before it goes in. The named tools are explained where they appear.
 
 ## Summary
 - **The question:** is there a standard tool or framework that already does
@@ -15,7 +26,7 @@ All web sources were checked on 2 Nov 2026.
   connectors (MCP) and GitHub as shared memory are how Anthropic and GitHub
   say to work. The frameworks that do exist (GitHub Spec Kit, BMAD, Kiro,
   Superpowers) are built for developer teams and are heavier than you need.
-- **But you have built too much machinery.** In the playbook's first 11 days,
+- **But you have built too much machinery.** Since the playbook began (22 Oct),
   18 of its 51 commits (about a third) changed the sync scripts or their tests,
   adding about 1,450 lines. No off-the-shelf tool can replace it, because
   cloud sessions ignore plugins. The fix is to do less: freeze it and simplify it.
@@ -35,16 +46,16 @@ All web sources were checked on 2 Nov 2026.
 ### Each part of the playbook
 | Part | Verdict | Why | Effort |
 |---|---|---|---|
-| **Sync, releases (stable/canary), catch-ups, set-up check** | **Keep, freeze, simplify** | Plugins don't install in cloud sessions [1] and can't carry always-loaded rules [2]. Copier needs Python 3.10+ (the Mac has 3.9) and is run by hand [3]. But it has cost about a third of all playbook work so far | A playbook session: stop adding features; list what each check has caught; cut what caught nothing |
+| **Sync, releases (stable/canary), catch-ups, set-up check** | **Keep, freeze, simplify** | Plugins don't install in cloud sessions today [1] and can't carry always-loaded rules [2]. Copier (a tool that pushes template changes into existing projects) needs Python 3.10+ (the Mac has 3.9) and is run by hand [3]. But it has cost about a third of all playbook work so far | A playbook session: stop adding features; list what each check has caught; cut what caught nothing |
 | **Rules file (150 lines)** | **Keep, but borrow skills and prune** | Skills load only when relevant and work in cloud sessions [1][4]. Situational rules (public-repo checks, catch-ups, "check feedback", starter prompts) can move into skills. Anthropic now says aggressive context management and "subagents to protect context" are habits you can stop [5]: the "Using tokens well" section and the `COST:` notes should shrink | One playbook session, strongest model. The sync needs to copy `.claude/skills/` as it copies agents |
 | **Checking that a rule works** | **Borrow** | Anthropic's guide: give Claude a check it can run [5]. For rules, that means a few fixed test tasks re-run after a change, so pruning isn't guesswork | Small, with the row above |
-| **SPEC.md, specs/, plan first** | **Keep** | Spec Kit [6], BMAD [7], Kiro [8] and OpenSpec [9] add templates and commands, but a critique found them verbose, hard to review and a poor fit for small steps [10]. Superpowers [11] is the closest match, but it is a plugin (Mac only) and would compete with your own process | None |
-| **decisions.md** | **Keep** | It already records what was rejected, which is MADR's core "considered options" [12]. One file per decision only helps tools you don't use | None |
+| **SPEC.md, specs/, plan first** | **Keep** | Spec-driven frameworks turn a request into spec, plan and task files that the AI then builds from: GitHub's Spec Kit [6], BMAD (adds role-play agents such as product manager and architect) [7], Amazon's Kiro editor [8] and OpenSpec [9]. They but a critique found them verbose, hard to review and a poor fit for small steps [10]. Superpowers [11], a set of skills that enforces brainstorm, plan, test-first and review, is the closest match, but it is a plugin (Mac only) and would compete with your own process | None |
+| **decisions.md** | **Keep** | It already records what was rejected, which is the core of MADR (a standard template for decision records): "considered options" [12]. One file per decision only helps tools you don't use | None |
 | **STATUS.md handover, session checks** | **Keep** | No standard for handover across parallel sessions and devices was found | None |
 | **research-to-doc and document checks** | **Keep** | No standard for checking AI-written research was found. Google design docs [13] match its shape | None |
 | **Documents pipeline (repo master, team edits a Google Docs copy)** | **Review, in the project that uses it** | The usual way is to write where the reviewers are. The Mac now has Docs editing connectors, so the copy-and-read-back step may no longer be needed | Decide in that project |
-| **Format standards: Diátaxis [14], C4, GOV.UK word list [15], Vale [16]** | **Later, only if a problem shows** | Each is sound, but none fixes a problem you've had. Vale has no plain-English or GOV.UK package, so it needs a custom style [16] | None now |
-| **AGENTS.md** | **No** | Claude Code reads it only when there is no CLAUDE.md [17]; you use Claude only | None |
+| **Format standards: Diátaxis [14] (sorts guides into tutorials, how-tos, reference and explanation), C4 (a way to draw a system), GOV.UK's words-to-avoid list [15], Vale [16] (a tool that checks writing against style rules)** | **Later, only if a problem shows** | Each is sound, but none fixes a problem you've had. Vale has no plain-English or GOV.UK package, so it needs a custom style [16] | None now |
+| **AGENTS.md** (a rules file other AI tools read) | **No** | Claude Code reads it only when there is no CLAUDE.md [17]; you use Claude only | None |
 | **Design method, styles, page check** | Not assessed | Out of scope of this note | None |
 
 ### The wider picture: standard ways of AI-supported work
@@ -55,21 +66,32 @@ All web sources were checked on 2 Nov 2026.
 | **Issue → `@claude` on GitHub → pull request → human review** [18] | Becoming the default for developer teams: agents started over 40% of pull requests in Sept 2026 [19, secondary source] | **No for now.** It needs an API key and pay-per-use billing, and produces code reviews you can't easily judge. Phone sessions and "check feedback" already cover this |
 | **A written AI-use policy and client-data rules** | Required by some professional bodies, e.g. RICS from 9 Mar 2026 [20] | **Adopt for client work**: which AI tools the contract allows, which plan and data terms apply, where client material may sit, and what you tell clients. Whether RICS applies to you: to confirm. Keep it in a private repo |
 | **Spec-driven development frameworks** [6–11] | Promising, unproven [10] | Borrow ideas, don't install |
-| **Organisation frameworks** (DORA AI Capabilities Model [21], NIST AI RMF, ISO/IEC 42001) | Standard for organisations | Not at solo scale. DORA's findings (small batches, version control, a clear AI stance) back what you already do |
+| **Organisation frameworks**: Google's DORA AI Capabilities Model [21] (seven habits that make AI help teams), and the NIST and ISO frameworks for managing AI risk | Standard for organisations | Not at solo scale. DORA's findings (small batches, version control, a clear AI stance) back what you already do |
 
 ### Decisions for you
-1. **Move situational rules into skills and prune the rest against Anthropic's
-   page, with a few test tasks to check the result.** Recommend: yes, in its
-   own playbook session.
-2. **Freeze the sync machinery and simplify it.** Recommend: yes. No new
-   checks unless something breaks; cut what has caught nothing.
-3. **Write an AI-use and client-data policy for consulting work.** Recommend:
-   yes, in the private consulting repo, not here.
-4. **Review the Google Docs pipeline** now that the Mac can edit Docs.
-   Recommend: yes, in that project's next session.
-5. **Don't install** Spec Kit, BMAD, Kiro, Superpowers, Copier or the
+1. **Prune the rules against Anthropic's page.** The "Using tokens well"
+   section and the `COST:` notes shrink most. Recommend: yes, in a playbook
+   session, with three or four fixed test tasks run before and after, so you
+   can see nothing broke.
+2. **Move situational rules into skills.** A separate job: it changes the
+   sync too, so it is riskier. Recommend: yes, after 1, as its own step
+   through the canary.
+3. **Freeze the sync machinery, then measure before cutting.** Recommend:
+   yes. No new checks unless something breaks. A playbook session first
+   counts, from projects' git history, what each check has caught; only then
+   does anything get cut, with your agreement.
+4. **Write a one-page AI-use and client-data note for consulting work**:
+   which AI tools each contract allows, which plan's data terms apply, where
+   client material may sit, what you tell clients. Recommend: yes, Claude
+   drafts it in the private consulting repo and you approve it. It's worth
+   doing even if RICS doesn't apply, because client contracts decide it.
+5. **Review the Google Docs pipeline** in that project: could the team edit
+   the Google Doc as the master copy, now that the Mac can edit Docs? You'd
+   only be agreeing to a short look, not a change. Recommend: yes, next
+   session there.
+6. **Don't install** Spec Kit, BMAD, Kiro, Superpowers, Copier or the
    `@claude` Action; skip AGENTS.md and Vale for now. Recommend: agree.
-   Revisit plugins if cloud sessions start installing project plugins.
+   Revisit plugins if cloud sessions start installing project plugins (a fact of today that may change).
 
 ## Detail
 
@@ -150,4 +172,5 @@ method. The user works from a phone (cloud sessions) and a Mac.
 Making any of these changes; the design method, styles and page check.
 
 ## Change log
+- 1.1 (2 Nov 2026): after the reader check: words explained, decisions split and scoped.
 - 1.0 (2 Nov 2026): first version.
