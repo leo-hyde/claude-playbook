@@ -19,5 +19,4 @@ gitignore: !.claude/rules/
 gitignore: .session/
 hooks: templates/.claude/settings.json
 file: CLAUDE.md
-file: docs/STATUS.md
 file: docs/decisions.md

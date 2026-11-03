@@ -5,18 +5,20 @@
 # This script makes sure each session starts up to date, sees other unfinished
 # work, and doesn't end with work that only it can see.
 #
-#   scripts/session.sh start          a session opens: pull main, list other unfinished work, issues,
-#                                     people's edits and notes to Claude in the docs, handover
+#   scripts/session.sh start          a session opens: pull main, list open pull requests and branches
+#                                     without one, issues, decisions waiting, people's edits and notes
+#                                     to Claude in the docs, the plan's Now and Next
 #   scripts/session.sh busy           the user sends a message: note when the context has grown costly
-#   scripts/session.sh check          Claude finishes a reply: cloud blocks on work not on GitHub; the Mac
-#                                     shows the user a reminder
-#   scripts/session.sh push-check     Claude runs a command: a push to main must bring its docs with it
+#   scripts/session.sh check          Claude finishes a reply: blocks only on work not saved to GitHub
+#   scripts/session.sh push-check     Claude runs a command: a push to main must bring PLAN.md with it
 #   scripts/session.sh end            the checks, printed, before switching device
 #   scripts/session.sh status         git state, and other unfinished work
 #   scripts/session.sh visibility-ok  after a privacy review, record the repo's visibility as reviewed
 #
 # There used to be a lock on a `session-lock` branch (Oct 2026). It tracked devices,
 # not sessions, so it couldn't handle several sessions at once; git does the real job.
+# The plan lives in PLAN.md (Nov 2026). Projects not yet moved over still have
+# SPEC.md and docs/STATUS.md, and get the older checks on those instead.
 # Claude Code runs start, busy, check and push-check automatically (see .claude/settings.json).
 # `start` also runs scripts/playbook-sync.sh (shared rules from the playbook).
 # This file comes from the playbook (shared/session.sh): edit it there.
@@ -59,7 +61,8 @@ cd "$here" || exit 0
 COST_NOTE=3       # note once when each message re-reads this many times a fresh session's context
 COST_FIRM=6       # and once more past this
 CACHE_MINUTES=55  # a gap longer than this since the last reply: the prompt cache has likely expired
-RECENT_DAYS=14    # other branches with no commit for longer than this are treated as abandoned
+PR_LIMIT=5        # open pull requests per repo, paused ones included: a soft limit (a warning)
+PAUSED_DAYS=14    # a paused pull request untouched for longer: ask the user to keep or close it
 
 # Which device is this? Cloud sessions (phone, web) set CLAUDE_CODE_REMOTE.
 if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ] || [ "$(uname -s)" != "Darwin" ]; then
@@ -75,24 +78,29 @@ branch() { git rev-parse --abbrev-ref HEAD; }
 unsaved() { git status --porcelain; }
 # Commits on no branch on GitHub: only this checkout has them.
 unpushed() { git log --oneline HEAD --not --remotes=origin 2>/dev/null; }
-# Is this checkout's work on main? Docs are checked only then: mid-step work on a
-# session's own branch keeps its notes in its spec, and STATUS.md changes at step end.
+# Is this checkout's work on main? Docs are checked only then: work in progress on a
+# session's own branch is described by its pull request.
 on_main() { git merge-base --is-ancestor HEAD origin/main 2>/dev/null; }
 
-# Commits since STATUS.md was last changed. Playbook syncs don't count, nor do
+# The file that must change when work lands on main: PLAN.md, or in a project
+# not yet moved over, docs/STATUS.md.
+plan_doc() { if [ -f PLAN.md ]; then echo PLAN.md; else echo docs/STATUS.md; fi; }
+
+# Commits since the plan doc was last changed. Playbook syncs don't count, nor do
 # commits by GitHub Action bots (a daily data run isn't a step to record).
 unlogged() {
-  local last
-  last=$(git log -1 --format=%H -- docs/STATUS.md)
+  local last doc
+  doc=$(plan_doc)
+  last=$(git log -1 --format=%H -- "$doc")
   [ -z "$last" ] && return
-  git log --format='%h %ae' --invert-grep --grep='^Playbook: ' "$last"..HEAD -- . ":(exclude)docs/STATUS.md" |
+  git log --format='%h %ae' --invert-grep --grep='^Playbook: ' "$last"..HEAD -- . ":(exclude)$doc" |
     awk '$2 !~ /\[bot\]@/ { print $1 }'
 }
 
-# Commits that changed specs/ since SPEC.md was last changed: a feature plan
-# moved on but the overall plan didn't. Same exclusions as unlogged.
+# Older projects only (SPEC.md, no PLAN.md): commits that changed specs/ since
+# SPEC.md was last changed. Same exclusions as unlogged.
 unplanned() {
-  [ -f SPEC.md ] || return
+  [ -f SPEC.md ] && [ ! -f PLAN.md ] || return
   local last
   last=$(git log -1 --format=%H -- SPEC.md)
   [ -z "$last" ] && return
@@ -100,19 +108,19 @@ unplanned() {
     awk '$2 !~ /\[bot\]@/ { print $1 }'
 }
 
-# Other sessions' unfinished work: branches (on GitHub, or local ones, which Mac
-# worktrees share) with commits not on main, touched in the last RECENT_DAYS days.
+# Unfinished work that no pull request shows: branches (on GitHub, or local ones,
+# which Mac worktrees share) with commits not on main, of any age, except those
+# named in $1 (" branch1 branch2 ", the open pull requests' branches).
 # One line each: "name: N commits not on main, last <when>".
 other_work() {
-  local me ref name n when seen=" "
+  local me ref name n when seen=" ${1:-} "
   me=$(branch)
-  git for-each-ref --sort=-committerdate --format='%(refname) %(committerdate:unix)' refs/heads refs/remotes/origin |
-  while read -r ref t; do
+  git for-each-ref --sort=-committerdate --format='%(refname)' refs/heads refs/remotes/origin |
+  while read -r ref; do
     name=${ref#refs/heads/}; name=${name#refs/remotes/origin/}
     case "$name" in main|HEAD|session-lock|"$me") continue ;; esac
     case "$seen" in *" $name "*) continue ;; esac
     seen="$seen$name "
-    [ $(( $(date +%s) - t )) -lt $(( RECENT_DAYS * 86400 )) ] || continue
     n=$(git rev-list --count origin/main.."$ref" 2>/dev/null) || continue
     [ "$n" -gt 0 ] || continue
     when=$(git log -1 --format=%cr "$ref")
@@ -184,11 +192,56 @@ check_visibility() {
   fi
 }
 
-# Open GitHub Issues, so every session sees them without being asked. Uses the GitHub
-# CLI where it exists (the Mac); cloud sessions have none and use their GitHub tools.
+# The GitHub CLI, where it exists (the Mac); cloud sessions have none and use their GitHub tools.
+gh_cli() { command -v gh || { [ -x /opt/homebrew/bin/gh ] && echo /opt/homebrew/bin/gh; }; }
+
+# Open pull requests: in progress or paused work (GitHub flow; Kanban counts paused
+# work too). Then branches without one. Sets nothing; prints the lines for session start.
+list_work() {
+  local gh prs heads n others
+  gh=$(gh_cli)
+  if [ -z "$gh" ]; then
+    echo "PULL REQUESTS: no GitHub CLI here. List the open ones with the GitHub tools and tell the user (soft limit $PR_LIMIT; paused over $PAUSED_DAYS days: keep or close?)."
+  elif ! prs=$("$gh" pr list --state open --limit 50 --json number,title,headRefName,labels,updatedAt \
+      -q '.[] | "\(.number)\t\(.headRefName)\t\((now - (.updatedAt | fromdateiso8601)) / 86400 | floor)\t\(if any(.labels[]; .name == "paused") then "paused" else "" end)\t\(.title)"' 2>/dev/null); then
+    echo "PULL REQUESTS: couldn't read them (offline or not signed in). Try again before telling the user."
+  elif [ -z "$prs" ]; then
+    echo "Pull requests: none open."
+  else
+    n=$(printf '%s\n' "$prs" | grep -c .)
+    echo "PULL REQUESTS open ($n; soft limit $PR_LIMIT, paused included). Tell the user:"
+    printf '%s\n' "$prs" | awk -F '\t' -v d="$PAUSED_DAYS" '{
+      note = ""
+      if ($4 == "paused") note = ($3 > d) ? ", PAUSED " $3 " days: ask the user to keep or close it" : ", paused"
+      print "  #" $1 " " $5 " (" $2 note ")" }'
+    [ "$n" -gt "$PR_LIMIT" ] && echo "OVER THE LIMIT: $n open pull requests. Suggest finishing or closing one before starting another."
+    heads=$(printf '%s\n' "$prs" | cut -f2 | tr '\n' ' ')
+  fi
+  others=$(other_work "${heads:-}")
+  if [ -n "$others" ]; then
+    if [ -n "$gh" ]; then
+      echo "BRANCHES WITHOUT A PULL REQUEST (unfinished work nobody can see; tell the user, and don't edit the same files):"
+    else
+      echo "BRANCHES not on main (check which have a pull request; don't edit the same files):"
+    fi
+    echo "$others"
+  else
+    echo "No other unfinished work on other branches."
+  fi
+}
+
+# Decisions waiting on the user: headings marked (proposed) in docs/decisions.md.
+waiting() {
+  local w
+  w=$(grep -E '^## .*\(proposed\)' docs/decisions.md 2>/dev/null | sed 's/^## /  /' | head -5)
+  [ -n "$w" ] && { echo "WAITING ON THE USER (proposed in docs/decisions.md):"; echo "$w"; }
+  return 0
+}
+
+# Open GitHub Issues, so every session sees them without being asked.
 list_issues() {
   local gh out
-  gh=$(command -v gh || { [ -x /opt/homebrew/bin/gh ] && echo /opt/homebrew/bin/gh; })
+  gh=$(gh_cli)
   if [ -z "$gh" ]; then
     echo "ISSUES: no GitHub CLI here. List open issues with the GitHub tools and tell the user."
     return
@@ -239,14 +292,7 @@ cmd_start() {
   echo "=== Session start ($DEVICE, branch $(branch)${SESSION_SH_IN_WORKTREE:+, in the session worktree}) ==="
   [ -n "$(unsaved)" ] && { echo "WARNING: uncommitted changes already in this checkout:"; unsaved; }
   pull_main
-  local others
-  others=$(other_work)
-  if [ -n "$others" ]; then
-    echo "OTHER WORK not on main yet (other sessions, maybe still running). Avoid editing the same files; tell the user if it overlaps:"
-    echo "$others"
-  else
-    echo "No other unfinished work on other branches."
-  fi
+  list_work
   [ -f scripts/playbook-sync.sh ] && bash scripts/playbook-sync.sh
   update_launcher
   check_visibility
@@ -259,10 +305,16 @@ cmd_start() {
     fi
   done
   list_issues
+  waiting
   doc_edits
   echo
-  echo "--- Handover from docs/STATUS.md ---"
-  sed -n '/^## Handover/,/^## Where we are/p' docs/STATUS.md | sed '$d'
+  if [ -f PLAN.md ]; then
+    echo "--- PLAN.md: Now and Next (read README.md and PLAN.md before starting) ---"
+    sed -n '/^### Now/,/^### Later/p' PLAN.md | sed '$d'
+  else
+    echo "--- Handover from docs/STATUS.md ---"
+    sed -n '/^## Handover/,/^## Where we are/p' docs/STATUS.md | sed '$d'
+  fi
 }
 
 # Hooks run the main checkout's copy of this script, so keep that checkout up to date
@@ -333,19 +385,18 @@ cmd_busy() {
   cost
 }
 
-# Fills $block (must be fixed before the reply ends) and $remind (the user is told).
-# Only lost work counts: work not on GitHub blocks in the cloud, where it's lost when
-# the session closes; on the Mac it's safe in its folder, so the user gets a reminder.
-# Docs are checked when work lands on main instead (push-check), mid-turn.
+# Fills $block (must be fixed before the reply ends) and $remind (for `end`).
+# Only unsaved work blocks, on every device (Nov 2026): work not on GitHub is
+# invisible to other sessions, and lost when a cloud session closes. Unfinished
+# work is fine once it's pushed: its pull request shows it. Docs are checked when
+# work lands on main instead (push-check), mid-turn.
 find_problems() {
   block=""; remind=""
   git fetch -q origin 2>/dev/null
-  local lost=""
-  [ -n "$(unsaved)" ] && lost="$lost
+  [ -n "$(unsaved)" ] && block="$block
 - Uncommitted changes. Commit them."
-  [ -n "$(unpushed)" ] && lost="$lost
-- Commits on no branch on GitHub. Push this branch (git push origin HEAD), or, if the step is finished, merge into main and push (git push origin HEAD:main)."
-  if [ "$DEVICE" = phone/cloud ]; then block="$lost"; else remind="$lost"; fi
+  [ -n "$(unpushed)" ] && block="$block
+- Commits on no branch on GitHub. Push this branch (git push origin HEAD) and open a pull request if it has none; if the work is finished and checked, merge it."
   local d
   for d in $(siblings); do
     [ -n "$(git -C "$d" status --porcelain 2>/dev/null)" ] && block="$block
@@ -356,10 +407,6 @@ find_problems() {
   return 0
 }
 
-# A JSON string, for the reminder Claude Code shows the user.
-json_str() { printf '%s' "$1" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))' 2>/dev/null ||
-             printf '"%s"' "$(printf '%s' "$1" | tr '\n"\\' " '/")"; }
-
 cmd_check() {
   # Claude Code passes JSON on stdin; if it is already retrying after a block, don't loop.
   local input=$INPUT
@@ -367,11 +414,8 @@ cmd_check() {
   local block remind
   find_problems
   if [ -n "$block" ]; then
-    echo "Not finished: other sessions and devices would not see this work.$block" >&2
+    echo "Not saved to GitHub: other sessions and devices would not see this work.$block" >&2
     exit 2   # tells Claude Code to keep going and fix these
-  fi
-  if [ -n "$remind" ]; then
-    echo "{\"systemMessage\": $(json_str "Not on GitHub yet (safe on this Mac):$remind")}"
   fi
   exit 0
 }
@@ -442,6 +486,11 @@ docs_missing() {  # src
     awk '$2 !~ /\[bot\]@/ { print $1 }')
   [ -n "$commits" ] || return 0
   files=$(git log --format= --name-only origin/main.."$1")
+  if git cat-file -e "$1:PLAN.md" 2>/dev/null; then
+    printf '%s\n' "$files" | grep -qx PLAN.md ||
+      echo "- PLAN.md: move the feature's line (to Done, with the date and how it was checked). A change of mind also goes in docs/decisions.md."
+    return 0
+  fi
   if [ -n "$(git log -1 --format=%H "$1" -- docs/STATUS.md)" ] && ! printf '%s\n' "$files" | grep -qx docs/STATUS.md; then
     echo "- docs/STATUS.md: update the Handover block and 'Where we are'. If the plan, scope or a choice changed, SPEC.md and docs/decisions.md too ('Keeping the docs true' in .claude/rules/playbook.md)."
   fi
@@ -477,7 +526,7 @@ cmd_end() {
   find_problems
   if on_main; then
     [ -n "$(unlogged)" ] && remind="$remind
-- Work reached main since docs/STATUS.md was last updated."
+- Work reached main since $(plan_doc) was last updated."
     [ -n "$(unplanned)" ] && remind="$remind
 - specs/ changed on main since SPEC.md was last updated."
   fi
@@ -493,9 +542,9 @@ cmd_status() {
   echo "Device: $DEVICE   Branch: $(branch)   On main: $(on_main && echo yes || echo no)"
   echo "Unsaved:";  unsaved
   echo "Not on GitHub:"; unpushed
-  echo "Not in STATUS.md:"; unlogged
+  echo "Not in $(plan_doc):"; unlogged
   echo "Spec changed, SPEC.md not:"; unplanned
-  echo "Other unfinished work:"; other_work
+  echo "Branches not on main:"; other_work
 }
 
 case "${1:-status}" in

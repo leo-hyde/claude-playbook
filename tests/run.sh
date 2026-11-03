@@ -26,7 +26,8 @@ git config --global advice.detachedHead false
 # Every nested "bash" is this one, so macOS runs everything on its bash 3.2.
 ln -s "$BASH" "$T/bin/bash"
 printf '#!/bin/sh\nexit 1\n' >"$T/bin/curl"   # GitHub's API "can't be reached": visibility says nothing
-printf '#!/bin/sh\nexit 0\n' >"$T/bin/gh"     # a GitHub CLI with no open issues
+# A GitHub CLI with no open issues; "pr list" prints $T/prs (already in the -q output's shape).
+printf '#!/bin/sh\n[ "$1 $2" = "pr list" ] && [ -f "%s/prs" ] && cat "%s/prs"\nexit 0\n' "$T" "$T" >"$T/bin/gh"
 chmod +x "$T/bin/curl" "$T/bin/gh"
 export PATH="$T/bin:$PATH"
 
@@ -242,6 +243,26 @@ git -C "$p" checkout -q -b other && echo x >"$p/other.txt" && git -C "$p" add ot
 git -C "$p" branch -q -D other
 out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
 check "lists another session's branch" has "$out" "  other: 2 commit(s) not on main"
+check "says it has no pull request" has "$out" "BRANCHES WITHOUT A PULL REQUEST"
+check "no pull requests: says none open" has "$out" "Pull requests: none open."
+( cd "$p" && git checkout -q -b old main && echo y >old.txt && git add old.txt &&
+  GIT_COMMITTER_DATE="$(( $(date +%s) - 60 * 86400 )) +0000" git commit -q -m old && git push -q origin old &&
+  git checkout -q main && git branch -q -D old )
+printf '7\tother\t1\t\tAdd other\n9\tparked\t20\tpaused\tParked work\n' >"$T/prs"
+out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
+check "lists a branch of any age (60 days)" has "$out" "  old: 2 commit(s) not on main, last 9 weeks ago"
+check "lists open pull requests" has "$out" "  #7 Add other (other)"
+check "a branch with a pull request isn't listed again" hasnt "$out" "  other: 2 commit(s)"
+check "a paused pull request over 14 days: ask to keep or close" has "$out" "#9 Parked work (parked, PAUSED 20 days: ask the user to keep or close it)"
+check "2 open: under the limit" hasnt "$out" "OVER THE LIMIT"
+for i in 1 2 3 4; do printf '1%s\tb%s\t1\t\tMore\n' "$i" "$i" >>"$T/prs"; done
+out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
+check "6 open: over the soft limit of 5" has "$out" "OVER THE LIMIT: 6 open pull requests"
+rm -f "$T/prs"
+out=$(cd "$p" && PATH="$(printf '%s' "$PATH" | sed "s#$T/bin:##")" PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
+if ! command -v gh >/dev/null 2>&1 && [ ! -x /opt/homebrew/bin/gh ]; then
+  check "no GitHub CLI: says to use the GitHub tools" has "$out" "PULL REQUESTS: no GitHub CLI here"
+fi
 check "no people's edits listed when Claude made every commit" hasnt "$out" "HUMAN EDITS"
 echo "A person's change." >>"$p/docs/decisions.md" && git -C "$p" commit -q -am "Edit on github.com" && git -C "$p" push -q origin main
 out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
@@ -255,6 +276,16 @@ echo "Worked in." >>"$p/docs/decisions.md" &&
   git -C "$p" commit -q -am "Work in the edit" -m "Co-Authored-By: Claude <noreply@anthropic.com>" && git -C "$p" push -q origin main
 out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
 check "Claude's next commit marks the edit worked in" hasnt "$out" "docs/decisions.md: 1 commit"
+check "no proposed decisions: nothing waiting" hasnt "$out" "WAITING ON THE USER"
+( cd "$p" && printf '\n## 1 Jan 2026: Use the blue theme (proposed)\n## 1 Jan 2026: Old idea (agreed)\n' >>docs/decisions.md &&
+  printf '# Plan\n\n### Now\n- **Search** (1): find things.\n\n### Next\n- **Export** (1): save a file.\n\n### Later\n- **Sync**: later.\n' >PLAN.md &&
+  git add -A && git commit -q -m "plan" -m "Co-Authored-By: Claude <noreply@anthropic.com>" && git push -q origin main )
+out=$(cd "$p" && PLAYBOOK_DIR="$T/pb" bash scripts/session.sh start 2>&1)
+check "lists proposed decisions as waiting on the user" has "$out" "  1 Jan 2026: Use the blue theme (proposed)"
+check "doesn't list agreed ones" hasnt "$out" "Old idea"
+check "PLAN.md: shows its Now and Next" has "$out" "- **Export** (1): save a file."
+check "PLAN.md: not its Later" hasnt "$out" "**Sync**"
+check "PLAN.md: no STATUS.md handover" hasnt "$out" "Handover from docs/STATUS.md"
 
 # ---------- End-of-reply check ----------
 section "End-of-reply check"
@@ -275,11 +306,9 @@ git -C "$p" add new.txt && git -C "$p" commit -q -m "unpushed work"
 git -C "$p" checkout -q -b work
 run_check CLAUDE_CODE_REMOTE=true
 check "cloud, commits on no GitHub branch: blocks" has "$out" "Commits on no branch on GitHub"
-if [ "$(uname -s)" = Darwin ]; then
-  run_check CLAUDE_CODE_REMOTE=false
-  check "Mac, unpushed: reminds, doesn't block" [ "$code" -eq 0 ]
-  check "Mac reminder is a systemMessage" has "$out" '"systemMessage"'
-fi
+run_check CLAUDE_CODE_REMOTE=false
+check "Mac too, unpushed: blocks" [ "$code" -eq 2 ]
+check "says to open a pull request" has "$out" "open a pull request if it has none"
 git -C "$p" push -q origin work
 run_check CLAUDE_CODE_REMOTE=true
 check "work pushed to its own branch: no docs check yet" [ "$code" -eq 0 ]
@@ -329,6 +358,14 @@ check "specs/ changed, SPEC.md not: refused" has "$out" "SPEC.md: specs/ changed
 ( cd "$p" && echo "- Feature" >>SPEC.md && git commit -q -am "SPEC" )
 push_check "git push origin HEAD:main"
 check "SPEC.md updated too: allowed" [ "$code" -eq 0 ]
+p=$(make_project push-plan)
+( cd "$p" && echo "# Plan" >PLAN.md && git add PLAN.md && git commit -q -m "plan" && git push -q origin main &&
+  echo x >app.txt && echo "Status." >>docs/STATUS.md && git add -A && git commit -q -m "a feature" )
+push_check "git push origin HEAD:main"
+check "PLAN.md project, PLAN.md not changed: refused (STATUS.md doesn't count)" has "$out" "PLAN.md: move the feature's line"
+( cd "$p" && echo "- Feature: done" >>PLAN.md && git commit -q -am "PLAN" )
+push_check "git push origin HEAD:main"
+check "PLAN.md updated: allowed" [ "$code" -eq 0 ]
 p_settings=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["hooks"]["PreToolUse"][0]["hooks"][0]["command"])' "$ROOT/templates/.claude/settings.json")
 check "the template's PreToolUse hook runs push-check" has "$p_settings" "session.sh\" push-check"
 
