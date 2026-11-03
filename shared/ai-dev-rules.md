@@ -14,12 +14,13 @@ The user is not a developer: if they can't follow it, it hasn't been said.
   ("a commit, a saved snapshot of the files"). Never name a tool or file
   without saying what it is for. Code, commands and AI-facing files (rules,
   prompts) can be technical; the explanation around them can't.
-- **Lead with what it means for the user**: what was done, why, whether it
-  worked, and what they need to decide. Detail after, only if it helps.
-- **As short as the reader needs**: a small change gets two or three lines.
-  A finished step gets the full summary: what I did and why; what you can now
-  see or use, and where; how I checked it and what I couldn't; what's next;
-  any decisions for you, each with my recommendation.
+- **Every reply starts with the answer, in at most five lines**: the result;
+  where it is (always a path or link); what was checked and what wasn't; what
+  needs the user (each decision with my recommendation); what's next. Detail
+  goes in the documents, and the reply points to it ("PLAN.md: Search is
+  Done; why: decisions.md, 3 Nov"). Short is no excuse for jargon: explain
+  each technical word (merge, pull request) in a few plain words. Don't
+  repeat the app's recap box.
 
 ## How we work
 - **Plan first, then build**, in small steps that each end with something the
@@ -44,33 +45,36 @@ The user is not a developer: if they can't follow it, it hasn't been said.
   bigger (what the app does, deleting data, money or limits, secrets or public
   content, undoing a decision). Others' issues: report, don't act.
 
-## Where things live (each fact in one place)
-| File | Holds | Changes |
+## Where things live (one question each, one place answers it)
+| Question | The one place | Changes |
 |---|---|---|
-| `AGENTS.md` | Stable project rules, for any AI tool (`CLAUDE.md` only imports it): commands, conventions, gotchas. Under ~100 lines; nothing Claude can read from the code | Rarely |
-| `SPEC.md` | The plan, in one place: goal, users, scope, every step with its status, a link to each `specs/` file | Same commit as any change of plan, scope or step |
-| `specs/<feature>.md` | One feature: parts, out of scope, how to check it's done; "Progress" notes while it's built | Before building it |
-| `docs/STATUS.md` | Current state only: Handover block, where we are, next steps (pointing at SPEC's steps), open questions. Overwritten, not a diary | When a step lands on main |
-| `docs/decisions.md` | One entry per decision: date, what, why, what was rejected. Stops later sessions undoing a choice | When one is made |
-| `docs/ARCHITECTURE.md` | What the code doesn't show: outside services, how data moves between them, safety, weak spots | Same commit as any structural change |
+| What is this repo, where are things? | `README.md` | Rarely |
+| What are we building, why, what's done, what's next? | `PLAN.md`: goal, objectives, **every feature** (built or not) with what it should do now, grouped Now / Next / Later / Paused / Done / Dropped | With the work |
+| What must this feature do; how do we know it works? | `specs/<feature>.md`, bigger features only: the whole feature and its done-checks | Before building it |
+| Why this; what changed our mind; what waits on the user? | `docs/decisions.md`: every decision and change of mind (was, now, why), each *proposed* or *agreed* | When one is made or asked |
+| How should an AI work here? | `AGENTS.md`: commands, repo-only rules, methods. Pointers only: never restate a fact that has a home elsewhere | Rarely |
+| What's in progress or paused? | The open pull requests, each saying where it got to and what's next | As you work |
+Only if needed: `docs/ARCHITECTURE.md` (outside services, data flow, weak
+spots), `DESIGN.md`, `docs/research/<topic>.md`. A project not yet moved over
+keeps `SPEC.md` (its plan) and `docs/STATUS.md` until its catch-up.
 
 ## Each feature, and keeping the docs true
 Every session starts with no memory: the docs are how Claude and the user know
 the goal, scope, plan and why. A stale doc is worse than none.
-1. **Spec it** (`specs/<feature>.md` if bigger than a small step). Build it in a
-   fresh session that reads AGENTS.md, STATUS.md and the spec; small working commits.
+1. **Follow the playbook's `methods/build-a-feature.md`**: first list every
+   feature under the objective for the user to confirm; spec it if bigger
+   than a small step; a pull request, opened early.
 2. **Check with evidence**, not assurances: tests for logic (a check Claude can
    run, so it doesn't guess in loops); pages at phone width (375px) and
    desktop, light and dark, then the live site. Not "works" until seen
    working. For a bigger step, ask the `checker` subagent first.
 3. **Walkthrough**: what changed and why, which files and how data flows, the
    2–3 lines that matter, how it was checked and what wasn't, risks.
-4. **Record, in the same commit**: plan, goal, scope or order changed (even in
-   conversation only) → SPEC.md and decisions.md; a choice made or undone →
-   decisions.md; a spec or step started or finished → its SPEC.md row; parts,
-   data flow, services → ARCHITECTURE.md; a finished step → STATUS.md (a hook
-   refuses a push to main without it). Test: would a fresh session reading
-   only the docs plan the same next step, for the same reasons?
+4. **Record, with the work**: a feature started, paused or finished, or what
+   it should do changed (even in conversation only) → its PLAN.md line (a
+   hook refuses a push to main without it); a choice or change of mind →
+   decisions.md; parts, data flow, services → ARCHITECTURE.md. Test: would a
+   fresh session reading only the docs plan the same next step, for the same reasons?
 
 ## Safety and responsibility (flag as they come up)
 Secrets never in browser code or the repo (Worker or GitHub secrets). Collect
@@ -88,18 +92,19 @@ data, made-up data for design work. Say where the app could mislead.
 ## Git and the phone/Mac handover
 The repo is the only memory shared by the user's sessions (phone/cloud, Mac,
 often several at once). Hooks run `scripts/session.sh`: start pulls main and lists
-others' unfinished branches; at a reply's end, work not on GitHub blocks a cloud
-session (the Mac shows a reminder).
-- **`OTHER WORK` at session start**: another session may be busy there. Don't
-  edit the same files; if your task overlaps, tell the user first.
-- **Commit and push every working step** to the session's own branch (`git
-  push origin HEAD`), plain-English messages. Step finished: merge into main,
-  push (`git push origin HEAD:main`), say it landed. A small one-commit change
-  can go straight to main. The session's own branch needn't then match main.
-  Never force-push. A rejected push or conflict: stop and tell the user
-  (unless AGENTS.md names an Action that pushes: then pull and carry on).
-- Mid-step notes go in the step's spec, not STATUS.md (parallel sessions
-  would clash); STATUS.md is overwritten once, as the step lands.
+open pull requests, branches without one and decisions waiting; at a reply's
+end, work not saved to GitHub blocks.
+- **All work through pull requests**: a branch each, opened early, pushed at
+  every working step (plain-English messages). Its description says what it's
+  for, where it got to, what's next. Stop any time: label it `paused`. Over
+  five open (paused count): say so. Finished and checked: **merge it without
+  being asked**, delete the branch and working copy, update PLAN.md, say it
+  landed. A one-commit fix can go straight to main. Never force-push. A
+  rejected push or conflict: stop and tell the user (unless AGENTS.md names an
+  Action that pushes: then pull and carry on). Automated jobs save to main.
+- **Session start lists branches without a pull request and paused ones over
+  two weeks**: tell the user (keep or close is their call). Don't edit files
+  another open pull request is changing; if your task overlaps, tell them first.
 - **Another repo** ("Also attached"), or hooks didn't fire: run
   `scripts/session.sh start` there first.
 - **Session start lines are for the user**: tell them about `PLAYBOOK NOT
@@ -114,8 +119,8 @@ Each request (each tool call is one) re-sends the whole context, and after a
 break the cache expires. Running out of room is rare; cost is the reason.
 Never trade correctness for tokens.
 - **One piece of work per session.** When the work changes, or the hook prints
-  `COST:`, at the next natural break save the state (the spec, STATUS.md, a
-  notes file) and give a starter prompt, with one line on why. After a break,
+  `COST:`, at the next natural break save the state (the pull request, the
+  spec, PLAN.md) and give a starter prompt, with one line on why. After a break,
   prefer a fresh session from the handover.
 - **Bulk data** (logs, exports, API dumps) goes to a file, boiled down by a
   script or `scout`; only the summary enters the conversation. Stop background
@@ -130,7 +135,7 @@ Never trade correctness for tokens.
   twice (fresh session, better prompt); a vague request (a narrower one); no
   way to check the work (a test first). Don't repeat a declined tip.
 A starter prompt, in a code block, names the repo, the goal, what to read
-first (AGENTS.md, docs/STATUS.md), what's out of scope, how to check it's done,
+first (README.md, PLAN.md), what's out of scope, how to check it's done,
 and the model. Detail: playbook `reference/efficient-sessions.md`.
 
 ## Ideas for the playbook
@@ -138,7 +143,7 @@ and the model. Detail: playbook `reference/efficient-sessions.md`.
   happened in general terms (it's public), the rule, the evidence. Don't edit
   the playbook unless asked (cloud: attach it, or give the user the text).
 - **Research to a document** (a question into a spec, decision note, report):
-  follow the playbook's `reference/research-to-doc.md` (on its `main` branch)
+  follow the playbook's `methods/research-to-doc.md` (on its `main` branch)
   and, at the end, update it there with what the job taught (general terms).
 - **A playbook script breaks a session?** Stop, tell the user, offer a fix. Project lessons: AGENTS.md.
   Playbook changes breaking projects more than once? Suggest bringing back its releases.

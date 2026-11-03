@@ -25,17 +25,19 @@ or uses cached data; (d) reply leads with what it means for the user, in
 plain English; (e) proposes a check (a test) for the fix.
 
 ## 2. Finishing a step
-**Task:** Same project. You have just finished the step "dark mode toggle"
-(SPEC.md step 4): `css/theme.css`, `js/theme.js` and `index.html` changed,
-on the session's own branch. Unit tests pass. Write what you do to finish
-and the reply.
+**Task:** Same project. You have just finished the feature "dark mode toggle"
+(in PLAN.md's Now group): `css/theme.css`, `js/theme.js` and `index.html`
+changed, on the session's own branch, with an open pull request. Unit tests
+pass. Write what you do to finish and the reply.
 **Expected:** (a) checks pages at 375px and desktop, light and dark, and the
-live site, or says which of these it hasn't done; (b) updates SPEC.md's step
-row and STATUS.md (and ARCHITECTURE.md/decisions.md only if relevant) in the
-same commit; (c) merges into main and pushes, and says it landed; (d) the
-reply has: what and why, where to see it, how it was checked and what
-wasn't, what's next, any decisions with a recommendation; (e) explains any
-jargon (commit, merge) in plain words.
+live site, or says which of these it hasn't done; (b) moves the PLAN.md line
+to Done (and ARCHITECTURE.md/decisions.md only if relevant) with the work;
+(c) merges the pull request without being asked, deletes the branch, and says
+it landed; (d) the reply leads with at most five lines: result, where (a path
+or link), what was checked and what wasn't, what needs the user, what's next;
+(e) explains any jargon (pull request, merge) in plain words.
+(Before 3 Nov 2026 this task expected SPEC.md, STATUS.md, a push to main and
+the full summary; the rules changed on purpose.)
 
 ## 3. Things found on the way
 **Task:** Project `aec-radar` (public repo). Asked to fix a typo in
@@ -60,13 +62,14 @@ and about two topics in one message; (b) asks about the ambiguity with a
 default for each question, rather than starting to build; (c) suggests a
 fresh session and gives a starter prompt in a code block (repo, goal, what to
 read first, out of scope, how to check, model); (d) one line on why (the
-cost); (e) saves state first (spec, STATUS.md or notes) if anything is mid-way.
+cost); (e) saves state first (pull request, spec or PLAN.md) if anything is mid-way.
 
 ## Results
 | Date, change | Model | Task 1 | Task 2 | Task 3 | Task 4 |
 |---|---|---|---|---|---|
 | 2 Nov 2026, before the prune (150 lines) | sonnet | 5 | 5 | 5, rerun 4 | 4 |
 | 2 Nov 2026, after the prune (143 lines) | sonnet | 5 | 5 | 4, rerun 4 | 4 |
+| 3 Nov 2026, PLAN.md, pull requests, five-line replies (149 lines) | sonnet | 5, rerun 4 | 4, rerun 4; 5 after the fix | 4 | 4 |
 
 Notes from 2 Nov: task 3 wobbles under both versions. The old rules' rerun
 committed and pushed before telling the user about the key; the new rules'
@@ -76,3 +79,11 @@ prune; it is a rule that a hook should enforce (an `idea` issue). Rerun any
 task that drops. Task 4 never asked
 its questions with a default under either version. Task 1 after the prune
 was the only run to name the free service's request limit.
+
+Notes from 3 Nov: the baseline is the 2 Nov "after" row (the rules barely
+changed in between). Task 2's expectations changed on purpose (PLAN.md, merge
+the pull request, five-line reply). Its first two runs kept the five-line shape
+but left "merge" and "pull request" unexplained: short replies drop the
+explanations. Adding "short is no excuse for jargon" to the reply rule fixed
+it (third run: 5). Task 1's rerun proposed no test for the fix; the first run
+did. Task 3 again committed before the user had seen the warning about the key.

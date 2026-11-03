@@ -14,7 +14,7 @@ user" and reads the details from here.
 - Wants direct critique, explicit confidence levels, and a clear line
   between what's verified and what's assumed.
 - UK English.
-- Research-to-doc method (any project): https://github.com/leo-hyde/claude-playbook/blob/main/reference/research-to-doc.md
+- Research-to-doc method (any project): https://github.com/leo-hyde/claude-playbook/blob/main/methods/research-to-doc.md
 - Works from a phone (Claude Code cloud sessions) and a Mac, often with
   several sessions at once.
 
@@ -36,4 +36,6 @@ the user's CV, job search and employers, health, and money.
   from reading: copy files to the scratchpad and serve with the playbook's
   `tools/serve.py`.
 - Python 3.9; no Node.js or Homebrew Python tools assumed.
+- Output style "Concise for Leo" (`owner/output-styles/`), installed in
+  `~/.claude/output-styles/` and set as `outputStyle` in `~/.claude/settings.json`.
 - The playbook is cloned at `~/.claude/skills/new-app`.

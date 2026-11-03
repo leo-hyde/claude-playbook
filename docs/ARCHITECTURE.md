@@ -43,7 +43,13 @@ something useful for every project, it adds it back to the playbook.
 ## What happens when a session opens in a project
 1. **Claude Code runs the start hook** (`SessionStart` in
    `.claude/settings.json`). It runs `scripts/session.sh start`.
-   That script fetches the project's latest `main` and lists other sessions' unfinished branches.
+   That script fetches the project's latest `main` and lists the open pull
+   requests (warning over 5, paused ones untouched for 14 days flagged) and any
+   branch with work not on main and no pull request, of any age. Then the
+   decisions waiting (marked *proposed* in `docs/decisions.md`), and PLAN.md's
+   Now and Next (older projects: STATUS.md's Handover block). The pull requests
+   come from the GitHub CLI (`gh`) on the Mac; a cloud session has none, so
+   the script tells Claude to list them with its GitHub tools.
 2. **The sync finds the playbook.** `session.sh` runs
    `scripts/playbook-sync.sh`. It looks for the playbook in three places, in
    order: the clone on the user's Mac (`~/.claude/skills/new-app`); a clone next
@@ -75,7 +81,7 @@ something useful for every project, it adds it back to the playbook.
 7. **Set-up check.** The playbook's `shared/setup.txt` lists what every
    project needs besides the copied files: lines in `.gitignore` (the list
    of files git leaves out), the hooks in `.claude/settings.json`, and a few
-   files such as `docs/STATUS.md`. The sync checks the project against that
+   files such as `docs/decisions.md`. The sync checks the project against that
    list. It adds a missing `.gitignore` line or hook itself, and commits it
    as "Playbook: complete the project set-up". It keeps the project's other
    settings. A missing file is only reported, under `SETUP:`, because its
@@ -91,13 +97,14 @@ something useful for every project, it adds it back to the playbook.
 9. **Docs kept true, checked as work lands.** A hook runs `session.sh
    push-check` before every shell command Claude runs; it leaves at once
    unless the command is a push. A `git push` to `main` (in any of its usual
-   forms) is refused until docs/STATUS.md is part of what's pushed, and
-   SPEC.md too if a file in `specs/` changed (projects without a SPEC.md are
-   skipped). Playbook sync commits and GitHub Action bots' commits don't
+   forms) is refused until PLAN.md is part of what's pushed. A project not
+   yet moved to PLAN.md gets the older check instead: docs/STATUS.md, and
+   SPEC.md too if a file in `specs/` changed. Playbook sync commits and GitHub Action bots' commits don't
    count. Claude is mid-turn when it's refused, so it adds the docs and
    pushes again without an extra turn. Until 27 Oct 2026 the end-of-reply
    check did this, which cost a whole extra turn each time; it now only
-   checks for lost work. The rule behind it: "Each feature, and keeping the
+   checks for unsaved work, and since 3 Nov 2026 blocks on the Mac too (it
+   used to only remind there), so unfinished work is always visible on GitHub. The rule behind it: "Each feature, and keeping the
    docs true" in `shared/ai-dev-rules.md`.
 
 ## Releases: how a change reaches the projects
@@ -126,12 +133,14 @@ macOS with Apple's bash 3.2.
 | Playbook file | Copy in each project | What it does |
 |---|---|---|
 | `shared/ai-dev-rules.md` | `.claude/rules/playbook.md` | The shared rules for every project, including using tokens well |
-| `shared/session.sh` | `scripts/session.sh` | Session start (pull, other work, issues, people's edits and notes to Claude in the docs, handover), the end-of-reply check for lost work, the push-to-main docs check, and the cost notes |
+| `shared/session.sh` | `scripts/session.sh` | Session start (pull, open pull requests and branches without one, issues, decisions waiting, people's edits and notes to Claude in the docs, PLAN.md's Now and Next), the end-of-reply check for unsaved work, the push-to-main docs check, and the cost notes |
 | `shared/playbook-sync.sh` | `scripts/playbook-sync.sh` | The sync itself (copied too, so it can update itself) |
 | `shared/catch-up.md` | not copied (the sync reads it) | Rule changes each project must apply once to files it already has. Each project records the ones it has done in `docs/playbook-catch-up.md` |
 | `shared/setup.txt` | not copied (the sync reads it) | The set-up every project needs: `.gitignore` lines, hooks, required files. Checked at every session start |
 | `templates/*` | copied once, by hand | Starting points for a new project. They don't update afterwards, except the hooks (through `setup.txt`). Any other template change that existing projects need gets a catch-up entry |
 | `reference/*` | not copied | Know-how Claude reads only when it needs it |
+| `methods/*` | not copied | Written ways of doing recurring work (build a feature, research to a document, pick up where we left off); each project's AGENTS.md lists them |
+| `owner/output-styles/*` | not copied | The owner's output style (short replies), installed by hand in `~/.claude/output-styles/` on the Mac. Cloud sessions don't read `~/.claude`; whether they load a style kept in a repo is untested |
 | `styles/*` | not copied | The style library. A new app copies one style's tokens into its `style.css` and its `DESIGN.md` from it, once. `candidates.json` is the one source: `tools/styles.py` builds the style folders and the gallery from it, and checks contrast (the tests run it) |
 | `tools/page-check.js` | not copied (run from the playbook) | The measured part of a design review: page width, tap targets, input text size and axe-core, at phone and desktop, light and dark, with screenshots. Needs Node.js and Playwright (cloud sessions) |
 | `RELEASES.md` | not copied (the sync reads it) | One note per release, newest first. Session start prints the newest note's first line when a project updates |

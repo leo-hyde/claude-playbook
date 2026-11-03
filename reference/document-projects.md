@@ -5,11 +5,11 @@
 
 Some projects are mostly planning, research and documents for other people
 (consulting, a proposal, a strategy), with some building later. The playbook's
-set-up still applies (the rules, the session script, STATUS.md,
+set-up still applies (the rules, the session script, PLAN.md,
 decisions.md); these changes make it fit.
 
 ## What changes
-- **SPEC.md is the plan, not a software spec:** the goal, the stages and
+- **PLAN.md is the plan, not a software spec** (SPEC.md in older projects): the goal, the stages and
   their gates, essentials versus extras, the risks. Say so at the top of
   AGENTS.md.
 - **`docs/CONTEXT.md`: the facts, each with its source.** Deliverables,
@@ -25,11 +25,11 @@ decisions.md); these changes make it fit.
     kept alongside.
   - `specs/`: things to build, and methods.
 - **Every question answered with a document follows
-  `reference/research-to-doc.md`** and says so in its "How this was made".
+  `methods/research-to-doc.md`** and says so in its "How this was made".
 - **Decisions: only what a named person agreed.** Each entry in
   `docs/decisions.md` names who agreed it (the user, a client, a manager)
   and where (a call, a comment). Claude's ideas stay marked "proposed" in
-  SPEC.md or the paper until then.
+  docs/decisions.md or the paper until then.
 - **People who don't use GitHub review in Google Docs:**
   `reference/team-review.md`.
 - **Client work gets a written AI-use and client-data rule** at kick-off:
@@ -49,7 +49,7 @@ decisions.md); these changes make it fit.
 ## Several jobs in one project
 A project can be several jobs at once, judged differently: delivering for
 a client, building something reusable, testing whether there's a business
-in it. Name each job in SPEC.md with who it's for and what success means,
+in it. Name each job in PLAN.md with who it's for and what success means,
 and say which wins when they conflict. Otherwise work for one quietly
 takes time from another.
 

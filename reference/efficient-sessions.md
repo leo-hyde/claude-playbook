@@ -52,7 +52,7 @@ The rules rarely do, as they hold no numbers.
   the same data processed by a script cost almost nothing.
 - **One piece of work per session; hand over when the work changes.**
   Analysis, design and build need different context. Save the findings to a
-  file (the spec, STATUS.md, notes), then start fresh with a starter prompt.
+  file (the pull request, the spec, PLAN.md), then start fresh with a starter prompt.
 - **After a break, start fresh rather than resume.** A session resumed the
   next morning re-wrote about 133,000 tokens at full price before any work;
   a fresh one from the handover started at about 60,000.

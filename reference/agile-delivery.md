@@ -45,16 +45,16 @@ Claude. Pick one and keep it for four cycles before changing it.
 4. **Check.** Done means checked with evidence (the "How to check" in the
    spec), not "built".
 5. **Record** in the same commit: the list's status, `docs/decisions.md` for
-   a choice, `docs/STATUS.md` when a step lands on main.
+   a choice; the PLAN.md line moves to Done as the pull request merges.
 6. **Look back** at each gate or stage end, and monthly in a long project:
    what slowed us, what to keep. A general lesson becomes an `idea` issue.
 
 ### Where each part lives
 | Part | Where |
 |---|---|
-| The ordered list | The steps table in `SPEC.md`. For a team, a shared tracker people really use; `SPEC.md` links to it |
+| The ordered list | PLAN.md's feature list, Now / Next / Later (`SPEC.md` in older projects). For a team, a shared tracker people really use; PLAN.md links to it |
 | What "done" means | The spec's "how to check it's done" |
-| The handover | `docs/STATUS.md` |
+| The handover | The open pull requests (`docs/STATUS.md` in older projects) |
 | Changes and look-backs | `docs/decisions.md`; general lessons as playbook `idea` issues |
 
 ### Rules
@@ -79,10 +79,10 @@ the work loop ("cycle") so the two are never confused.
 
 ### What the playbook already does
 Plan first and small steps ending in something visible (`ai-dev-rules.md`,
-"How we work"); a spec before building; checking with evidence; STATUS.md
-as the handover; `decisions.md` for choices; a monthly review in
+"How we work"); a spec before building; checking with evidence; pull requests
+as the handover (once STATUS.md); `decisions.md` for choices; a monthly review in
 `efficient-sessions.md`; the research-to-doc method's approval points
-(`research-to-doc.md`). What this page adds: an ordered list the whole team
+(`methods/research-to-doc.md`). What this page adds: an ordered list the whole team
 can see, a work-in-progress limit, a swap rule, and a scheduled look-back.
 
 ### What not to copy

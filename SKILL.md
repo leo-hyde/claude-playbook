@@ -43,20 +43,22 @@ set-up, with the changes in `reference/document-projects.md`.
 ## 2. Agree the plan in three short documents
 
 Copy and fill in the templates in `templates/`:
-- **SPEC.md**: what we're building. Key concepts, version 1 as numbered steps
-  (each one visible when done), a "Later" list (each item with a line on why it
-  waits), open questions.
+- **README.md**: the front door, two lines and where to find things.
+- **PLAN.md**: what we're building and why: goal, objectives, every feature
+  with what it should do, grouped Now / Next / Later / Paused / Done /
+  Dropped. Before writing a spec, list every feature and ask the user to
+  confirm (`methods/build-a-feature.md`).
 - **DESIGN.md**: how it looks. Start from the chosen style's
   `styles/<name>/DESIGN.md` (its tokens go in `style.css`:
   `styles/README.md` says how), fill in the user's references. Before
   designing a screen, read `reference/design-method.md`. For anything
   visual, offer 2–3 quick mockups in that style (shown inline) and let the
   user pick or mix.
-- **AGENTS.md**: project-only rules, short, read by any AI tool; copy
+- **AGENTS.md**: pointers only (commands, repo-only rules, the methods), read by any AI tool; copy
   `templates/CLAUDE.md` as it is (one line that imports AGENTS.md). The
   general rules arrive by themselves as `.claude/rules/playbook.md` (set-up
   step 5), which cloud sessions see too; don't copy them in.
-- **docs/decisions.md**: one entry per decision (`templates/decisions.md`).
+- **docs/decisions.md**: every decision and change of mind, each proposed or agreed (`templates/decisions.md`).
 - **docs/ARCHITECTURE.md** (once there's code): the parts, the data flow,
   outside services, safety, weak spots. See `reference/understanding-and-quality.md`
   for why, and how it fits with the other documents.
@@ -75,7 +77,7 @@ See `reference/github-and-hosting.md` for exact commands. In order:
    third-party is in it), create it, push.
 4. Hosting: GitHub Pages (free) → `https://<github-user>.github.io/<repo>/ (accounts: `owner/profile.md`)`.
 5. **Phone + computer handover and shared rules** (every project):
-   `docs/STATUS.md`, the session script and hooks, one branch, and the playbook
+   the session script and hooks, pull requests for all work, and the playbook
    sync. Follow "Setting it up in a project" in `reference/phone-and-computer.md`.
 6. Only if needed: a Cloudflare Worker for secrets, sources that block browsers,
    or syncing between devices (`reference/github-and-hosting.md`,
@@ -90,7 +92,7 @@ first if it changes the structure) → build →
 check with evidence (tests for logic; the browser at phone 375px and desktop,
 light and dark) → walkthrough: what changed, files and data flow, key lines,
 how it was checked and what wasn't, risks → update ARCHITECTURE.md,
-decisions.md and STATUS.md → commit and push. Use made-up data for design work so you don't
+decisions.md and the PLAN.md line → merge the pull request (`methods/build-a-feature.md`). Use made-up data for design work so you don't
 burn through a free service's daily limit; a reusable preview script (like
 Sport Conditions' `tools/preview.js`) saves writing test code each time.
 
@@ -110,13 +112,14 @@ Then push, wait for the live site to update, and check it there too.
 | `owner/profile.md`, `owner/personal-CLAUDE.md` | The owner's details (synced into each project as `.claude/rules/owner.md`); a copy of `~/.claude/CLAUDE.md` |
 | `templates/.claude/agents/` | The `scout` and `checker` subagents, synced into each project |
 | `reference/efficient-sessions.md` | How cost works, the habits, the dated assumptions, the monthly review |
-| `templates/SPEC.md`, `DESIGN.md`, `AGENTS.md` (+ the `CLAUDE.md` that imports it), `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |
+| `templates/README.md`, `PLAN.md`, `DESIGN.md`, `AGENTS.md` (+ the `CLAUDE.md` that imports it), `decisions.md`, `specs/feature.md` | Starting points for a new project's documents |
+| `methods/` | Written ways of doing recurring work: build a feature, research to a document, pick up where we left off |
 | `templates/style.css` | Design tokens (light/dark), buttons, cards, dialogs, phone layout |
 | `templates/worker.js` | Cloudflare Worker skeleton: CORS, caching, a secret key, KV sync |
 | `templates/site-check.yml` | GitHub Action pattern: check + rebuild data on every change |
 | `reference/document-projects.md` | Set-up changes for a project that is mostly documents: plan, sourced facts, positions, agreed decisions |
 | `reference/team-review.md` | Review rounds in Google Docs and Slides with the repo file as master; the "How to edit" lines |
-| `reference/research-to-doc.md` | Turning a question into a spec or decision document: brief, research, outline, critique, one batch of decisions, write once |
+| `methods/research-to-doc.md` | Turning a question into one growing document: brief, research, proposal, critique, decisions written in it |
 | `reference/agile-delivery.md` | Running a project in short cycles on purpose: the loop, the rules, and how it sits inside a client contract |
 | `reference/design-method.md` | How Claude designs a screen: purpose, structure, patterns, words, look, accessibility, checking |
 | `reference/ux-checklist.md` | The design and UX review checklist |
@@ -127,8 +130,9 @@ Then push, wait for the live site to update, and check it there too.
 | `tools/page-check.js` | Measures a page at phone and desktop, light and dark: width, tap targets, accessibility (axe-core), screenshots |
 | `reference/github-and-hosting.md` | GitHub, Pages, Actions, Cloudflare Worker, KV: exact steps |
 | `reference/gotchas.md` | Things that went wrong before, and their fixes |
-| `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: STATUS.md, branches, the session script, hooks |
+| `reference/phone-and-computer.md` | Keeping phone (cloud) and Mac sessions in step: pull requests, the session script, hooks |
 | `reference/understanding-and-quality.md` | How we make sure AI-built apps are understood, good and safe; using AI efficiently |
 | `templates/ARCHITECTURE.md` | Starting point for a project's architecture overview |
-| `templates/STATUS.md`, `templates/.claude/settings.json` | The handover kit to copy into a project (with `shared/`) |
+| `templates/.claude/settings.json` | The hooks to copy into a project (with `shared/`) |
+| `owner/output-styles/` | The owner's output style for short replies (Mac sessions) |
 | `tools/serve.py` | No-cache preview server for the scratchpad copy |

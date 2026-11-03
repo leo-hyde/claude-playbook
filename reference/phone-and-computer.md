@@ -10,40 +10,42 @@ GitHub.
 
 ## The four parts
 
-1. **`docs/STATUS.md`**, the live record (template: `templates/STATUS.md`).
-   - A **Handover block** at the top, *overwritten* when a step finishes:
-     which device, did it end cleanly, anything half-done, the next step.
-     Progress during a step goes in the step's spec instead, so parallel
-     sessions don't clash over this file.
-   - Where we are, next steps and open questions for the user. **Current state
-     only**: decisions go in `docs/decisions.md`, history is `git log`.
-     (Until Oct 2026 it also held a session log; it grew to 100+ lines that
-     every session re-read, so it was dropped.)
-   - Read it at the start of every session; update it after every finished
-     step, not just at the end.
-2. **Own branch while working, `main` when finished.** Every session works on
+1. **`PLAN.md` and the open pull requests**, the live record (templates:
+   `templates/PLAN.md`, `templates/README.md`).
+   - PLAN.md lists every feature, grouped Now / Next / Later / Paused / Done
+     / Dropped: reading it top to bottom is the board. It changes with the work.
+   - Work in progress or paused is an **open pull request** whose description
+     says where it got to and what's next, so any session (or the user on a
+     phone) can see it. Decisions waiting on the user are the *proposed*
+     entries in `docs/decisions.md`.
+   - Until Nov 2026 this was `docs/STATUS.md`, a Handover block overwritten
+     at each step; projects not yet moved over still have it, and the
+     scripts check it instead (`methods/` and catch-ups move them over).
+2. **A branch and pull request per piece of work.** Every session works on
    its own branch (cloud: `claude/...` or `ccr-...`; Mac: its worktree's
-   branch) and pushes it as it goes. A finished step is merged into main
-   (`git push origin HEAD:main`), and Claude says so. Git does the safety
-   work: GitHub refuses a push that would overwrite newer work, so Claude
-   merges and tries again.
+   branch), pushes it as it goes and opens a pull request early. Finished
+   and checked: Claude merges it without being asked, the branch is
+   deleted, and PLAN.md's line moves to Done (`methods/build-a-feature.md`).
+   Git does the safety work: GitHub refuses a push that would overwrite
+   newer work, so Claude merges and tries again.
 3. **The session script** (`shared/session.sh`).
-   - `session.sh start` (session opens): pulls main, lists **other unfinished
-     work** (`OTHER WORK`: branches with commits not on main, touched in the
-     last 14 days, including other Mac worktrees' unpushed ones), syncs the
-     playbook, lists open issues, prints the Handover block.
+   - `session.sh start` (session opens): pulls main, lists **open pull
+     requests** (warning over 5, paused included, and flagging paused ones
+     untouched for 14 days) and **branches without one**, of any age
+     (including other Mac worktrees' unpushed ones), syncs the playbook,
+     lists open issues and proposed decisions, prints PLAN.md's Now and Next.
    - `session.sh busy` (the user sends a message): measures the context from
      the session's transcript and prints a `COST:` line when each message
      re-reads about 3× (then 6×) a fresh session's, or when the cache has
      likely expired after a break. See `reference/efficient-sessions.md`.
-   - `session.sh check` (a reply finishes): in a **cloud** session, refuses
-     to finish with uncommitted work or commits on no branch on GitHub (they'd
-     be lost when the session closes). On the **Mac** it shows the user a reminder
-     instead: the work is safe in its folder. It checks nothing else, so it
-     never costs an extra turn for docs.
+   - `session.sh check` (a reply finishes): on every device, refuses to
+     finish with uncommitted work or commits on no branch on GitHub (other
+     sessions can't see them, and a cloud session loses them when it
+     closes). It checks nothing else, so it never costs an extra turn for docs.
+     (Until Nov 2026 the Mac only showed a reminder.)
    - `session.sh push-check` (before every command Claude runs): a `git push`
-     to **main** is refused until STATUS.md (and SPEC.md, if `specs/`
-     changed) is part of what's pushed. Claude is mid-turn then, so it adds
+     to **main** is refused until PLAN.md is part of what's pushed (older
+     projects: STATUS.md, and SPEC.md if `specs/` changed). Claude is mid-turn then, so it adds
      the docs and pushes again.
    - `session.sh end`: the checks, printed, before the user switches device.
 4. **Hooks** (`templates/.claude/settings.json`) make Claude Code run
@@ -59,8 +61,9 @@ themselves up to date: `session.sh start` runs `scripts/playbook-sync.sh`,
 which fetches the playbook's latest `main` and commits any changes as
 "Playbook: update shared files…". See `docs/ARCHITECTURE.md` in the playbook.
 
-1. Copy `templates/STATUS.md` to `docs/STATUS.md` and `templates/decisions.md`
-   to `docs/decisions.md`, and fill them in.
+1. Copy `templates/README.md`, `templates/PLAN.md` and `templates/decisions.md`
+   (to `docs/decisions.md`), and fill them in. On GitHub, turn on
+   "Automatically delete head branches" (Settings, General).
 2. Copy `shared/session.sh` and `shared/playbook-sync.sh` into `scripts/`
    (`chmod +x scripts/*.sh`), then run `bash scripts/playbook-sync.sh` once:
    it adds `.claude/rules/playbook.md` (the shared rules).
@@ -80,12 +83,12 @@ which fetches the playbook's latest `main` and commits any changes as
 
 **Helper repos** (a data store, saved sources, a tool, often written mostly
 by a GitHub Action) get the same set-up, just smaller: every repo of the user's
-follows the playbook, so a session there knows the rules. Skip SPEC, DESIGN
-and ARCHITECTURE unless it needs them. AGENTS.md says in a few lines what the
+follows the playbook, so a session there knows the rules. Skip DESIGN and
+ARCHITECTURE unless it needs them. AGENTS.md says in a few lines what the
 repo is, which project it serves, and what must never happen (for example
-"private: never copy this into the public repo"). STATUS.md can be short.
+"private: never copy this into the public repo"). PLAN.md can be short.
 Commits by Action bots (`…[bot]@…` authors) don't count as unrecorded work,
-so a daily data run doesn't make every session update STATUS.md.
+so a daily data run doesn't make every session update PLAN.md.
 
 **Sessions with several repos.** Hooks only run in the repo the session was
 opened in. Run `bash scripts/session.sh start` in each other repo before

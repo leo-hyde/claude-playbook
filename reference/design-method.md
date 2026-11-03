@@ -14,7 +14,7 @@ style, which of two layouts) or about what the app is for.
 ## 1. Purpose: one job per app, one job per screen
 - Before anything visual, write down who it's for and the **one job** they
   open the app to do ("see when it's dry enough to walk the dog"). The kick-off
-  in `SKILL.md` asks for it; it goes in SPEC.md.
+  in `SKILL.md` asks for it; it goes in PLAN.md (SPEC.md in older projects).
 - Each screen gets one job too, and **one main action**. If a screen has two
   jobs, it's two screens, or one of them is one tap away.
 - Start from the person's need, not the data or the feature list. Real
@@ -31,7 +31,7 @@ building, by sorting every feature and piece of information:
 | Every time the app is opened | **Main screen**: the answer and the one main action |
 | Now and then | **One tap away**: detail, "Show all", secondary actions |
 | Set once, rarely changed | **Settings**, with a sensible default so most people never go there |
-| Nice to have, not needed yet | **Later**: SPEC.md's "Later" list, not built |
+| Nice to have, not needed yet | **Later**: PLAN.md's Later group, not built |
 
 - **Show the answer first, the workings on request** (progressive disclosure:
   only the essentials up front, the rest when asked for). The main screen

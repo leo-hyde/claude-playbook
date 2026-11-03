@@ -11,7 +11,7 @@ What professionals use, and the lightweight version we keep in each project.
 
 | Industry practice | The question it answers | Ours |
 |---|---|---|
-| Product spec / requirements, with acceptance criteria | What are we building, for whom, and how do we know a step is done? | `SPEC.md`: numbered steps, each visible when done; `specs/<feature>.md` for bigger features (`templates/specs/feature.md`) |
+| Product spec / requirements, with acceptance criteria | What are we building, for whom, and how do we know a step is done? | `PLAN.md`: every feature, grouped Now / Next / Later / Done; `specs/<feature>.md` for bigger features (`templates/specs/feature.md`) |
 | Architecture overview (the "C4 model": a context diagram and a containers diagram) | What are the parts, how does data flow, what do we depend on? | `docs/ARCHITECTURE.md`, with a diagram GitHub draws from text ("Mermaid") |
 | Architecture Decision Records ("ADRs") | Why did we choose X over Y? | `docs/decisions.md`: date, decision, why, what was rejected (`templates/decisions.md`) |
 | Design system | How does it look and behave? | `DESIGN.md` |
@@ -26,7 +26,7 @@ Template: `templates/ARCHITECTURE.md`.
 
 ## 2. The loop for each feature
 
-1. **Spec it** in SPEC.md or `specs/<feature>.md`, including what's out of
+1. **Spec it** in PLAN.md or `specs/<feature>.md`, including what's out of
    scope and how we'll know it's done. Then build it in a **fresh session**
    (Anthropic's best-practice guide: write the spec, then run it in a new session).
 2. **Design note first** for anything structural: which files change, how
@@ -38,8 +38,8 @@ Template: `templates/ARCHITECTURE.md`.
 5. **Walkthrough:** what changed and why, which files, how data flows, the
    2–3 lines that matter, **how it was checked and what wasn't**, risks.
 6. **Record:** update the docs the change touched, in the same commit:
-   SPEC.md if the plan, scope or a step's status changed; `docs/decisions.md`
-   for a choice; ARCHITECTURE.md for structure; always STATUS.md ("Keeping
+   PLAN.md if the plan, scope or a feature's state changed; `docs/decisions.md`
+   for a choice; ARCHITECTURE.md for structure ("Keeping
    the docs true" in `shared/ai-dev-rules.md`).
 
 ## 3. Telling good AI code from junk
