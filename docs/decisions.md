@@ -11,6 +11,25 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 3 Nov 2026: The playbook runs on PLAN.md and pull requests too (agreed)
+- **What:** the playbook's README is the front door, `PLAN.md` holds every
+  feature by state, `docs/STATUS.md` is retired (its next steps moved to
+  PLAN.md, its open question here), and playbook work goes through pull
+  requests that Claude merges when the tests pass.
+- **Why:** the user asked (3 Nov) for the new way of working to apply to the
+  playbook itself; it is step 4 of the plan, brought forward.
+- **Rejected:** waiting for the pilot (the playbook is where the rules are
+  made, so it should use them first).
+
+## 3 Nov 2026 (asked 30 Oct): Apps that don't look AI-made: four choices (proposed)
+- **Recommendation** (`specs/distinctive-design.md`, "Decisions for the
+  user"): retire `clear` as the automatic default; re-tune `paper`, `ledger`
+  and `night` (new font and accent); show the blind test to some who said the
+  apps look AI-made, plus a couple who haven't seen them; restyle Sport
+  Conditions only, as the trial.
+- **Options:** keep `clear` as the default; drop the three styles; restyle
+  every app. Recorded here 3 Nov so session start lists it.
+
 ## 3 Nov 2026: How we run projects: PLAN.md, pull requests, methods, five-line replies (agreed)
 - **What:** step 1 of a plan the user agreed (in a private project, 3 Nov):
   each repo answers each question in one place: README (front door),

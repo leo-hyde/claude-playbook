@@ -3,6 +3,15 @@
 How the user and Claude build apps together. We learned it while building
 [Sport Conditions](https://github.com/leo-hyde/sport-conditions).
 
+## Where to find things
+| Question | Where |
+|---|---|
+| What is the playbook for, what's done and what's next? | [PLAN.md](PLAN.md) |
+| What's in progress or paused? | The open [pull requests](https://github.com/leo-hyde/claude-playbook/pulls) |
+| Why did we choose this? What's waiting on a decision? | [docs/decisions.md](docs/decisions.md) |
+| How does it work, and where can it fail? | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| How should an AI work here? | [AGENTS.md](AGENTS.md) |
+
 ## What this is
 This folder is a set of instructions and starting files for Claude Code, the
 AI coding tool. Claude Code calls a folder like this a **skill**: a packaged
@@ -18,14 +27,15 @@ app.
 |---|---|
 | `shared/` | **Copied into every project automatically.** The shared rules for Claude (`ai-dev-rules.md`), plus two small programs (scripts): one keeps sessions in step and checks nothing is lost, the other keeps each project's copy up to date |
 | `SKILL.md` | The playbook itself: first questions, planning documents, setting up, building, checking |
-| `templates/` | Starting points copied once into a new project: the plan (SPEC), the look (DESIGN), the AI's instructions (AGENTS.md, read by Claude through a one-line CLAUDE.md and by other AI tools directly), the status page, the decisions log, a feature plan, a style sheet, a Cloudflare Worker (a small program that runs online) and a GitHub Action (a job GitHub runs for you) |
+| `templates/` | Starting points copied once into a new project: the front door (README), the plan with every feature (PLAN), the look (DESIGN), the AI's instructions (AGENTS.md, pointers only, read by Claude through a one-line CLAUDE.md and by other AI tools directly), the decisions log, a feature spec, a style sheet, a Cloudflare Worker (a small program that runs online) and a GitHub Action (a job GitHub runs for you) |
 | `reference/` | Know-how Claude reads when it needs it: how to design a screen, a design checklist and review, matching a client's brand, GitHub and hosting steps, past mistakes and their fixes, working from phone and Mac, and making sure AI-built work is understood and safe |
+| `methods/` | Written ways of doing recurring work, one page each: build or change a feature, research to a document, pick up where we left off |
 | `styles/` | **The style library**: a few looks a new app can choose from, and a gallery (`gallery.html`) showing each one on the same sample screen |
-| `owner/` | Everything specific to the playbook's owner: `profile.md` (accounts, devices, how they like to work; copied into every project as `.claude/rules/owner.md`) and `personal-CLAUDE.md` (notes for Claude that only apply on the owner's Mac, a copy of `~/.claude/CLAUDE.md`). Someone copying the playbook replaces this folder |
+| `owner/` | Everything specific to the playbook's owner: `profile.md` (accounts, devices, how they like to work; copied into every project as `.claude/rules/owner.md`) and `personal-CLAUDE.md` (notes for Claude that only apply on the owner's Mac, a copy of `~/.claude/CLAUDE.md`) and `output-styles/` (how short Claude's replies are on the Mac). Someone copying the playbook replaces this folder |
 | `specs/` | Plans for changes to the playbook itself, agreed before they're built |
 | `tools/serve.py` | A small program that shows a project in the browser on the Mac, always with the latest files |
 | `tools/styles.py`, `tools/page-check.js` | Small programs for design: one builds the style library and checks its colours are readable; the other measures a page on phone and desktop (width, button sizes, accessibility) and takes screenshots |
-| `docs/` | How this playbook works, the decisions behind it, and where it's up to |
+| `docs/` | How this playbook works and the decisions behind it |
 
 ## Change it once, every project follows
 The shared rules live in one file here: `shared/ai-dev-rules.md`. To change them,
