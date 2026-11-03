@@ -1,34 +1,36 @@
 # Instructions for AI assistants
 
-Every AI coding tool working in this project reads this file: Claude Code
-(through `CLAUDE.md`, which imports it) and others such as Codex, Cursor or
-Copilot. **Keep it short (under ~100 lines) and stable**: only what's specific
-to this project and that an assistant would get wrong without it.
+<One line: what this repo is.> **Read [README.md](README.md) and
+[PLAN.md](PLAN.md) first**, then the open pull requests.
 
-**Read these too, before starting:** `.claude/rules/playbook.md` (the user's
-general rules: how we work, explaining, checking, the phone/Mac handover,
-using tokens well) and `.claude/rules/owner.md` (who the user is). Both are
-synced from the playbook: don't repeat them here. Claude Code loads them by
-itself.
+Every AI tool working here reads this file (Claude Code through `CLAUDE.md`,
+which imports it). The user's general rules load separately
+(`.claude/rules/playbook.md`, `.claude/rules/owner.md`): don't repeat them.
 
-What we're building: [SPEC.md](SPEC.md). How it looks: [DESIGN.md](DESIGN.md).
-How it's built: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Where we are:
-[docs/STATUS.md](docs/STATUS.md). Why: [docs/decisions.md](docs/decisions.md).
-
-## About this project
-- <One line: what the app does.> Live at https://<github-user>.github.io/<repo>/
+<!-- Pointers, not copies: if a fact has a home elsewhere (README, PLAN.md,
+specs/, docs/decisions.md, docs/ARCHITECTURE.md, DESIGN.md), link to it and
+never restate it. No plans, status, history or descriptions of the code.
+About 50-80 lines. -->
 
 ## Commands
 - Check: <the project's test / preview / check command>
+- Run: <how to open or run the app>
 
-## Conventions
-- Plain HTML/CSS/JS with `<script>` tags (no ES modules, no build step) so it
-  opens by double-clicking `index.html`. Libraries from a CDN, exact versions.
-- **Follow DESIGN.md** for anything visual; add new components to it.
-- **Build from SPEC.md**; propose changes to it before building them.
-- Pushing to `main` updates the live site, so only push working, tested steps.
-
-## Gotchas
+## Rules and traps for this repo
+Only what lives nowhere else and an assistant would get wrong without it.
+- <e.g. "pushing to main updates the live site", "a bot saves data to main daily">
 - <Usage limits of the data sources, odd behaviours, things that went wrong.>
-- Pushing and previewing on the Mac: see the owner's notes (playbook
-  `owner/profile.md`).
+- Anything visual follows [DESIGN.md](DESIGN.md).
+
+## Methods (written ways of doing recurring work)
+From the playbook (`methods/`): build or change a feature
+(`build-a-feature.md`), research to a document (`research-to-doc.md`), pick up
+where we left off (`pick-up-where-we-left-off.md`).
+This repo's own:
+- <none yet. Add one after doing a job twice: when to use it, inputs, steps
+  with "stop and ask" points, output, done check. Over three: a `methods/` folder.>
+
+## Always / ask first / never
+- **Always:** <e.g. run the check before opening a pull request>
+- **Ask first:** <e.g. anything that changes what users' saved data looks like>
+- **Never:** <e.g. hard-code the API key>
