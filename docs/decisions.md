@@ -11,6 +11,16 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 3 Nov 2026: Agile delivery is written down as a reference page, not a new rule
+- **What:** `reference/agile-delivery.md` names how the playbook already works
+  (short cycles, an ordered list, done means checked, a look-back) and adds a
+  work-in-progress limit, a swap rule and a scheduled look-back. Default: a
+  light hybrid. Proposed; adjust after real use.
+- **Why:** the user asked to formalise habits the playbook already has; it
+  came from a consulting project that needs to reuse it.
+- **Rejected:** a line in `ai-dev-rules.md` (it is at 144 of its 150 lines, and
+  a change there needs the fixed test tasks run first); full Scrum.
+
 ## 2 Nov 2026: No canary or releases for now; projects read the playbook's main
 **What:** every project syncs from the playbook's `main` (the default in
 `shared/playbook-sync.sh`); one last release (`release-2026-11-02`) moves

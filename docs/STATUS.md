@@ -6,7 +6,7 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Mac, 2 Nov 2026: merged the off-the-shelf review; pruned the rules against Anthropic's best-practices page, checked with four fixed test tasks (`tests/rule-tasks.md`); AGENTS.md is now each project's main rules file (templates, catch-up `2026-11-02-agents-md`, this repo too); canary and releases switched off, projects read `main` (decisions.md, 2 Nov); idea issue #12 |
+| Last session | Mac, 3 Nov 2026: added `reference/agile-delivery.md` (running a project in short cycles; proposed, from a consulting project) and its row in SKILL.md. Before that: Mac, 2 Nov 2026: merged the off-the-shelf review; pruned the rules against Anthropic's best-practices page, checked with four fixed test tasks (`tests/rule-tasks.md`); AGENTS.md is now each project's main rules file (templates, catch-up `2026-11-02-agents-md`, this repo too); canary and releases switched off, projects read `main` (decisions.md, 2 Nov); idea issue #12 |
 | Ended cleanly? | Yes, on `main`. **`release-2026-11-02` released 2 Nov** (the user's yes): the last release; every project now moves to reading `main`. Tags `release-2026-10-28` and `release-2026-11-02` are on GitHub |
 | Mid-flight work | None. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
 | Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json`. Proposed, waiting for the user's decisions: `specs/distinctive-design.md` (apps that don't look AI-made) |

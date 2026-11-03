@@ -117,6 +117,7 @@ Then push, wait for the live site to update, and check it there too.
 | `reference/document-projects.md` | Set-up changes for a project that is mostly documents: plan, sourced facts, positions, agreed decisions |
 | `reference/team-review.md` | Review rounds in Google Docs and Slides with the repo file as master; the "How to edit" lines |
 | `reference/research-to-doc.md` | Turning a question into a spec or decision document: brief, research, outline, critique, one batch of decisions, write once |
+| `reference/agile-delivery.md` | Running a project in short cycles on purpose: the loop, the rules, and how it sits inside a client contract |
 | `reference/design-method.md` | How Claude designs a screen: purpose, structure, patterns, words, look, accessibility, checking |
 | `reference/ux-checklist.md` | The design and UX review checklist |
 | `reference/design-review.md` | The design pass after a step that changes screens: measure, look, report |
