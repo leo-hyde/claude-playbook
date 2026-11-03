@@ -11,6 +11,33 @@ saved snapshot of the files; to **push** is to send commits to GitHub; the
 a session opens; a **hook** makes Claude Code run a script automatically at a
 set moment. More in [ARCHITECTURE.md](ARCHITECTURE.md).
 
+## 3 Nov 2026: How we run projects: PLAN.md, pull requests, methods, five-line replies (agreed)
+- **What:** step 1 of a plan the user agreed (in a private project, 3 Nov):
+  each repo answers each question in one place: README (front door),
+  PLAN.md (every feature, grouped Now / Next / Later / Paused / Done /
+  Dropped; replaces SPEC.md), specs, decisions.md (every decision and change
+  of mind, proposed or agreed) and AGENTS.md (pointers only). Work in
+  progress is an open pull request, labelled `paused` when stopped, merged
+  by Claude when checked. STATUS.md is retired. Three methods in `methods/`.
+  Session start lists open pull requests (soft limit 5, paused included),
+  paused ones over two weeks, branches without one at any age, and proposed
+  decisions. Replies lead with at most five lines. A "Concise for Leo"
+  output style for Mac sessions.
+- **Why:** facts were spread over long documents that disagreed, features
+  the user wanted got lost from specs, and unfinished branches went
+  unnoticed. Each part follows a named practice: README, Scrum's product
+  backlog, Now/Next/Later, Definition of Done, decision records (Nygard),
+  GitHub flow, Kanban work-in-progress limits, Anthropic's feature list.
+- **The end-of-reply check now blocks on the Mac too** (replaces part of the
+  27 Oct entry: the Mac only reminded). **Why:** the plan says unfinished
+  work must always be visible on GitHub; a reminder was easy to miss.
+- **Older projects keep working:** the scripts check SPEC.md and STATUS.md
+  until a project has a PLAN.md. **Why:** the plan pilots on one project
+  for a week before rolling out; a catch-up moves the others after that.
+- **Rejected:** a drag-and-drop GitHub board (only if the list proves too
+  hard); draft pull requests (private repos need a paid plan); a hook on
+  reply length (the style and the rule first; "too long" tightens them).
+
 ## 3 Nov 2026: Agile delivery is written down as a reference page, not a new rule
 - **What:** `reference/agile-delivery.md` names how the playbook already works
   (short cycles, an ordered list, done means checked, a look-back) and adds a

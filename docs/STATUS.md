@@ -6,18 +6,18 @@ Current state of the playbook. Overwrite, don't append; history is `git log`.
 
 | | |
 |---|---|
-| Last session | Mac, 3 Nov 2026: added `reference/agile-delivery.md` (running a project in short cycles; proposed, from a consulting project) and its row in SKILL.md. Before that: Mac, 2 Nov 2026: merged the off-the-shelf review; pruned the rules against Anthropic's best-practices page, checked with four fixed test tasks (`tests/rule-tasks.md`); AGENTS.md is now each project's main rules file (templates, catch-up `2026-11-02-agents-md`, this repo too); canary and releases switched off, projects read `main` (decisions.md, 2 Nov); idea issue #12 |
-| Ended cleanly? | Yes, on `main`. **`release-2026-11-02` released 2 Nov** (the user's yes): the last release; every project now moves to reading `main`. Tags `release-2026-10-28` and `release-2026-11-02` are on GitHub |
-| Mid-flight work | None. The style gallery is a private page: https://claude.ai/artifact/7VcWzzwMK3gVXiWHgGDE7b |
-| Next step | Sport Conditions issue #13 (priority): fix the nine design-review findings, the first real use of the design method. Then playbook issue #9: tick favourite styles on the gallery page instead of editing `styles/candidates.json`. Proposed, waiting for the user's decisions: `specs/distinctive-design.md` (apps that don't look AI-made) |
-| Check first | Each project's next session: it applies catch-up `2026-11-02-agents-md` (CLAUDE.md becomes `@AGENTS.md`) and its rules still load. If a playbook change breaks projects, recommend bringing releases back (AGENTS.md) |
+| Last session | Mac, 3 Nov 2026, late: built step 1 of "how we run projects" v1.0 (agreed in a private project): templates (README, PLAN, spec, decisions, AGENTS as pointers), `methods/` (build a feature, research to a document, pick up where we left off), session start lists pull requests / branches without one / proposed decisions, end-of-reply check blocks only on unsaved work (Mac too), PLAN.md replaces STATUS.md in the checks (older projects keep theirs), rules rewritten (five-line replies, "Where things live" by question, pull requests), "Concise for Leo" output style (`owner/output-styles/`). decisions.md and RELEASES.md, 3 Nov |
+| Ended cleanly? | Yes, on `main` |
+| Mid-flight work | None |
+| Next step | Step 2 of the plan: pilot on one project for a week (README, PLAN.md with every feature, pull requests). Install the output style on the Mac. Then look back, write the catch-up that moves other projects to PLAN.md, roll out |
+| Check first | Every project's next session gets the new rules and session script. Older projects still have SPEC.md and STATUS.md: the scripts check those until a PLAN.md exists. The Mac now blocks a reply's end on unpushed work: watch for loops or annoyance |
 
 ## Where we are
 The shared folder (the rules, the session script and the sync) is copied into
 every project when a session opens: Sport Conditions, a private project, AEC
 Tech Radar and its helper repo. Projects get changes only when the user
 pushes them to `main` (no releases since 2 Nov 2026).
-Kept tests (114 cases) run on Linux and macOS on every push.
+Kept tests (130 cases) run on Linux and macOS on every push.
 
 Released in `release-2026-10-28` (`specs/design-and-styles.md`):
 - a UX method (`reference/design-method.md`), a rewritten checklist with the
@@ -44,6 +44,14 @@ On `main`, not yet released (`specs/efficient-sessions.md`,
   MIT licence.
 
 ## Next steps
+- **How we run projects (3 Nov plan), in order:** (2) pilot on one project for
+  a week; (3) look back, then a catch-up (`shared/catch-up.md`) moves the
+  other projects to README + PLAN.md (STATUS.md retired, SPEC.md renamed);
+  (4) the playbook's own README and PLAN.md, close issues #4 and #14; (5) tidy
+  old branches, one repo at a time, with the user's yes. **Untested:** whether
+  a cloud session loads an output style kept in the repo
+  (`.claude/output-styles/` plus `outputStyle` in `.claude/settings.json`);
+  Anthropic's docs don't say. Try it in the pilot's first cloud session.
 - **From the 2 Nov review (decisions.md), each its own playbook session, in
   this order:** (a) ~~prune the rules~~ done 2 Nov; (b) ~~adopt AGENTS.md~~ done 2 Nov (AGENTS.md is the main file); (c) move situational rules into skills, synced like the subagents;
   (d) freeze the sync scripts and count, from projects' history, what each

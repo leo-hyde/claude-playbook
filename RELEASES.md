@@ -10,6 +10,13 @@ Each entry: a heading with the release tag (`## release-YYYY-MM-DD`, with
 last line naming any catch-up it brings (or "Catch-up: none").
 `scripts/release.sh` refuses to release without one for its tag.
 
+## 3 Nov 2026 (on main; releases are off)
+How projects are run changes: each repo gets a PLAN.md with every feature, and work in progress is an open pull request you can see on GitHub.
+- New templates (README, PLAN, spec, decisions, AGENTS as pointers) and three written methods in `methods/`: build a feature (list every feature for you to confirm first), research to a document (one growing document, decisions written in it), pick up where we left off.
+- Session start lists open pull requests (a warning over five), paused ones over two weeks, branches without a pull request at any age, and decisions waiting on you. The end-of-reply check blocks only on unsaved work, now on the Mac too. A push to main needs PLAN.md (older projects: STATUS.md, until they move over).
+- Replies start with at most five lines; a "Concise for Leo" output style for the Mac.
+- Catch-up: none yet. Projects move to PLAN.md after a week's pilot on one project.
+
 ## release-2026-11-02
 The last release: from now on, playbook changes reach your projects at their next session, as soon as they're on the playbook's main.
 - Each project's rules move from CLAUDE.md to AGENTS.md, so other AI tools can follow them too; CLAUDE.md becomes one line that imports it.
